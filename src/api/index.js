@@ -1,4 +1,8 @@
 import axios from './config';
+// import qs from 'qs'
 
-/** 合同容量 用户地址 */
-export let rlDzData = dataobj => axios.post('/index.php?r=/index/htrl', dataobj);
+/**
+ * 登录
+ * @param {*} dataobj 
+ */
+export let login = dataobj => axios.post('/login',dataobj);

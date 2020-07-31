@@ -9,10 +9,11 @@ Router.prototype.push = function push(location) {
   return routerPush.call(this, location).catch(error => error)
 }
 
-import Mainer from "@/components/Mainer";
-import Login from "@/components/Login";
-
-
+// import Home from "@/components/Home";
+// import Login from "@/components/Login";
+const Home =  resolve => require(['@/components/Home'],resolve)
+const Login =  resolve => require(['@/components/Login'],resolve)
+const Map =  resolve => require(['@/components/map'],resolve)
 Vue.use(Router);
 let router = new Router({
   linkActiveClass: "active",
@@ -23,17 +24,23 @@ let router = new Router({
       name: "login",
       component: Login
     }, {
-      path: "/mainer",
-      name: 'mainer',
-      component: Mainer,
+      path: "/home",
+      name: 'home',
+      component: Home,
+      redirect:'/home/map',
+      children: [{
+        path: "map",
+        name: 'map',
+        component: Map,
+      }]
     },
     {
       path: '/',
-      redirect: { name: 'mainer' },
+      redirect: { name: 'home' },
     }
     , {
       path: '*',
-      redirect: { name: 'mainer' },
+      redirect: { name: 'home' },
     },
   ]
 });

@@ -11,7 +11,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/ywptapi': {
-        target: 'http://192.168.20.215:8096/', //你要访问的服务器域名
+        target: 'http://192.168.20.213:8080/', //你要访问的服务器域名
         changeOrigin: true, //允许跨域
         pathRewrite: {
           '^/xzfwapi': '/'
