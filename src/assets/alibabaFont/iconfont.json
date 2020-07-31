@@ -1,0 +1,65 @@
+{
+  "id": "1473817",
+  "name": "星洲能源服务中心",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "14819260",
+      "name": "园区概览",
+      "font_class": "yuanqugailan",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "14819285",
+      "name": "需求侧响应",
+      "font_class": "xuqiucexiangying",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "14819030",
+      "name": "储能响应",
+      "font_class": "chunengxiangying",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "7956069",
+      "name": "退出",
+      "font_class": "tuichu",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    },
+    {
+      "icon_id": "11836542",
+      "name": "告警中心",
+      "font_class": "gaojingzhongxin",
+      "unicode": "e622",
+      "unicode_decimal": 58914
+    },
+    {
+      "icon_id": "1727562",
+      "name": "326数值下降",
+      "font_class": "shuzhixiajiang",
+      "unicode": "e8f9",
+      "unicode_decimal": 59641
+    },
+    {
+      "icon_id": "1727565",
+      "name": "325数值上升",
+      "font_class": "shuzhishangsheng",
+      "unicode": "e8fa",
+      "unicode_decimal": 59642
+    },
+    {
+      "icon_id": "10268989",
+      "name": "负荷",
+      "font_class": "fuhe",
+      "unicode": "e6a3",
+      "unicode_decimal": 59043
+    }
+  ]
+}
