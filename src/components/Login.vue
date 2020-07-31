@@ -56,14 +56,10 @@ export default {
             username: this.ruleForm.username,
             password: this.ruleForm.password,
           }).then(res => {
-            let type = res.status == 1 ? 'success' : 'error'
-            this.$message({ type, message: res.info })
-            if (res.status == 1) {
-              // this.setUserInfo(res)
-              this.$router.push({ name: 'yct' })
-            }
+            console.log(res)
+            let type = res.code == 200 ? 'success' : 'error'
+            this.$message({ type, message: res.msg })
           })
-          this.$message.error('用户名或密码错误');
         }
       })
     },

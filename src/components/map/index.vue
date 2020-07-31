@@ -1,24 +1,20 @@
 <template>
   <div class='ywMap'>
     <div class="amap-page-container">
-      <el-amap ref="map" vid="amapDemo" :amap-manager="amapManager" :center="center" :zoom="zoom" :plugin="plugin" :events="events" class="amap-demo">
+      <el-amap ref="map" vid="amapDemo" :amap-manager="amapManager" :zoom="zoom" :events="events" class="amap-demo">
       </el-amap>
-      <div class="toolbar">
-        <button @click="getMap()">get map</button>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
-import {amapManager, lazyAMapApiLoaderInstance} from 'vue-amap'
+import { amapManager, lazyAMapApiLoaderInstance } from 'vue-amap'
 export default {
   components: {},
   data() {
     return {
       amapManager,
       zoom: 12,
-      center: [121.59996, 31.197646],
       events: {
         init: (o) => {
           console.log(o.getCenter())
@@ -29,26 +25,34 @@ export default {
         },
         moveend: () => {},
         zoomchange: () => {},
-        click: (e) => {
-          alert('map clicked')
-        },
       },
-      plugin: [
-        'ToolBar',
-        {
-          pName: 'MapType',
-          defaultType: 0,
-          events: {
-            init(o) {
-              console.log(o)
-            },
-          },
-        },
-      ],
+  
     }
   },
   created() {},
   mounted() {},
-  methods: {},
+  methods: {
+    getMap() {
+      // amap vue component
+      console.log(amapManager._componentMap)
+      // gaode map instance
+      console.log(amapManager._map)
+    },
+  },
 }
 </script>
+<style scoped>
+.ywMap {
+  position: relative;
+  height: 100%;
+}
+.ywMap .amap-page-container {
+  width: 100%;
+  height: 100%;
+  /* position: absolute;
+  left: 0;
+  top: 0; */
+  border: 1px solid #999;
+  z-index: 1111111111;
+}
+</style>

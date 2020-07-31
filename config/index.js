@@ -14,7 +14,7 @@ module.exports = {
         target: 'http://192.168.20.213:8080/', //你要访问的服务器域名
         changeOrigin: true, //允许跨域
         pathRewrite: {
-          '^/xzfwapi': '/'
+          '^/ywptapi': '/'
         }
       }
     },
