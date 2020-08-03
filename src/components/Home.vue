@@ -1,15 +1,18 @@
 <template>
   <div class='homeContainer'>
-    <div class="mapMenuControl">
-      <div class="homeLogo">
-        <img :src="logo">
-      </div>
-      <div class="mapMuneBtn">
-        <span class="arrow "></span>
-      </div>
-    </div>
+    <!--<div class="mapMenuControl">-->
+      <!--<div class="homeLogo">-->
+        <!--<img :src="logo">-->
+      <!--</div>-->
+      <!--<div class="mapMuneBtn">-->
+        <!--<span class="arrow "></span>-->
+      <!--</div>-->
+    <!--</div>-->
     <div class="homeRight">
       <div class="navigation">
+        <div class="homeLogo">
+          <img :src="logo">
+        </div>
         <div class="homeSearch">
           <input type="text" placeholder="搜索">
           <span class="el-icon-search searchBtn"></span>
@@ -20,11 +23,11 @@
           <li>
             <router-link tag="div" to='/home'><span class="icon iconfont icon-daohangshouye"></span><span>首页</span></router-link>
           </li>
-          <li>
-            <router-link tag="div" to='/home2'><span class="icon iconfont icon-jiankong"></span><span>监控平台</span></router-link>
+          <li style="width: 150px;">
+            <router-link tag="div" to='operationMonitor'><span class="icon iconfont icon-jiankong"></span><span>运行监控分析</span></router-link>
           </li>
           <li>
-            <router-link tag="div" to='/home3'><span class="icon iconfont icon-baobiao"></span><span>监控平台</span></router-link>
+            <router-link tag="div" to='report'><span class="icon iconfont icon-baobiao"></span><span>报表</span></router-link>
           </li>
         </ul>
         <div class="homeTime"><Time /></div>
@@ -49,13 +52,15 @@ export default {
   },
   data() {
     return {
+      mapshow:true,
       logo: require('@/assets/img/logo.png'),
     }
   },
   computed: {},
   watch: {},
   methods: {},
-  created() {},
+  created() {
+  },
 }
 </script>
 <style scoped>

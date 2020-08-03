@@ -32,6 +32,14 @@ let router = new Router({
         path: "map",
         name: 'map',
         component: Map,
+      },{
+        path: "operationMonitor",
+        name: 'operationMonitor',
+        component: resolve => require(['@/components/opeMon/operationMonitor'],resolve),
+      },{
+        path: "report",
+        name: 'report',
+        component: resolve => require(['@/components/report/report'],resolve),
       }]
     },
     {
