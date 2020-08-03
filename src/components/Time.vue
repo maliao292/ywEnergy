@@ -4,13 +4,13 @@
 
 <script>
 export default {
-  name: 'RealtimeMonitoring',
   data () {
     return {
       times: ''
     }
   },
   mounted() {
+    this.newtime()
      setInterval(() => { this.newtime() }, 1000)
   },
   methods: {
@@ -36,5 +36,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+span{
+  color: #cccccc;
+}
 </style>

@@ -11,16 +11,178 @@
   width: 100vw;
   display: flex;
   justify-content: space-between;
+}
+
+.homeContainer .homeRight {
+  width: 100%;
+  flex-shrink: 1;
+  display: flex;
+  justify-content: space-between;
   flex-direction: column;
 }
 
 .homeContainer .navigation {
-  height: 70px;
-  border: 1px solid #ccc;
+  height: 50px;
   flex-shrink: 0;
+  width: 100%;
+  background: #011329;
+}
+
+.navigation {
+  display: flex;
+  justify-content: space-between;
 }
 
 .homeContainer .homeContent {
   height: 100%;
   background-color: #EEE;
+}
+
+.navigation .homeSearch {
+  padding: 10px;
+  width: 250px;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.navigation .homeSearch b {
+  height: 100%;
+  display: inline-block;
+  width: 0;
+  border: 2px solid #ccc;
+  vertical-align: middle;
+  margin-left: 10px;
+}
+
+.homeSearch .searchBtn {
+  font-size: 20px;
+}
+
+.navigation .homeSearch input {
+  width: 80%;
+  height: 100%;
+  color: #fff;
+  outline: none;
+  border: none;
+  background-color: transparent;
+}
+
+.navigation .homeSearch input::placeholder {
+  color: #ccc;
+}
+
+.homeProName {
+  height: 50px;
+  line-height: 50px;
+  padding: 0 30px;
+  color: #fff;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.navigation ul {
+  width: 100%;
+  flex-shrink: 1;
+  display: inline-flex;
+  justify-content: space-around;
+}
+
+.navigation ul li {
+  width: 120px;
+  color: #fff;
+  line-height: 50px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.navigation ul li div.active {
+  border-bottom: 4px solid #fff;
+  height: 100%;
+}
+
+.navigation ul li div span {
+  display: inline-block;
+  margin-right: 5px;
+  font-size: 18px;
+  color: #ccc;
+}
+
+.navigation ul li div.active span {
+  color: #fff;
+}
+
+.navigation ul li div span.icon {
+  font-size: 20px;
+}
+
+.homeTime {
+  width: 300px;
+  line-height: 50px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.userMsg {
+  width: 400px;
+  padding: 0 30px;
+  line-height: 50px;
+}
+
+.userMsg .username {
+  color: #ccc;
+}
+
+.userMsg img {
+  border-radius: 50%;
+}
+
+.logout {
+  color: #eee;
+  height: 50px;
+  line-height: 50px;
+  padding: 0 30px;
+  font-size: 20px;
+}
+
+.mapMenuControl .homeLogo {
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.mapMenuControl .mapMuneBtn {
+  height: 100%;
+  display: flex;
+  flex-shrink: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.mapMuneBtn .arrow {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-top: 10px solid transparent;
+  border-right: 10px solid #333;
+  border-bottom: 10px solid transparent;
+}
+
+.mapMuneBtn .arrow.menuActve {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-right: 10px solid transparent;
+  border-top: 10px solid transparent;
+  border-left: 10px solid #333;
+  border-bottom: 10px solid transparent;
+}
+
+.mapMenuControl {
+  width: 60px;
+  flex-shrink: 0;
+  display: inline-flex;
+  justify-content: space-between;
+  flex-direction: column;
 }
