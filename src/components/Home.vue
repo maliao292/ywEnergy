@@ -18,7 +18,7 @@
           <span class="el-icon-search searchBtn"></span>
           <b></b>
         </div>
-        <div class="homeProName">义乌市通讯基站能源管控平台</div>
+        <div class="homeProName">义乌市通讯基站能源管控平台  </div>
         <ul>
           <li>
             <router-link tag="div" to='/home'><span class="icon iconfont icon-daohangshouye"></span><span>首页</span></router-link>
