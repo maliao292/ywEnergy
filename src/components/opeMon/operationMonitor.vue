@@ -2,14 +2,16 @@
   <div class="modelContent">
     <div class="modelCon_left">
       <ul class="modelConLeftUl">
-        <li class="monitorIcon monitorIconActive">
+        <li class="monitorIcon">
           <router-link tag="div" to='cellAndAir'>
-            <img src="@/assets/img/opeMon/powerIcon_active.png" alt="">
+            <!--<img src="@/assets/img/opeMon/powerIcon_active.png" alt="">-->
+            <span class="backOne backOneIcon"></span>
           </router-link>
         </li>
         <li class="monitorIcon">
           <router-link tag="div" to='loadAnalyze'>
-            <img src="@/assets/img/opeMon/analyzeIcon.png" alt="">
+            <!--<img src="@/assets/img/opeMon/analyzeIcon.png" alt="">-->
+            <span class="backOne backTwoIcon"></span>
           </router-link>
         </li>
       </ul>
