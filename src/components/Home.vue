@@ -24,10 +24,10 @@
             <router-link tag="div" to='/home'><span class="icon iconfont icon-daohangshouye"></span><span>首页</span></router-link>
           </li>
           <li style="width: 150px;">
-            <router-link tag="div" to='operationMonitor'><span class="icon iconfont icon-jiankong"></span><span>运行监控分析</span></router-link>
+            <router-link tag="div" to='/home/operationMonitor/cellAndAir'><span class="icon iconfont icon-jiankong"></span><span>运行监控分析</span></router-link>
           </li>
           <li>
-            <router-link tag="div" to='report'><span class="icon iconfont icon-baobiao"></span><span>报表</span></router-link>
+            <router-link tag="div" to='/home/report'><span class="icon iconfont icon-baobiao"></span><span>报表</span></router-link>
           </li>
         </ul>
         <div class="homeTime"><Time /></div>

@@ -2,5 +2,39 @@
 .modelContent{
   width: 100%;
   height: calc(100vh - 50px);
+  display: flex;
+}
 
+.modelCon_left{
+  width: 50px;
+  height: 100%;
+  background: #ffffff;
+  padding-top: 50px;
+}
+
+.modelConLeftUl{
+
+}
+
+.monitorIcon{
+  width: 50px;
+  height: 50px;
+  margin-bottom: 50px;
+  text-align: center;
+  line-height: 50px;
+  cursor: pointer;
+}
+.monitorIcon img {
+  display: inline-block;
+  border: none;
+  vertical-align: middle;
+}
+.monitorIconActive{
+  background: #f7f9fb;
+  border-left: 3px solid #3b85de;
+}
+
+.modelCon_right{
+  width: 100%;
+  height: 100%;
 }

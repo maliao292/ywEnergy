@@ -36,6 +36,15 @@ let router = new Router({
         path: "operationMonitor",
         name: 'operationMonitor',
         component: resolve => require(['@/components/opeMon/operationMonitor'],resolve),
+        children: [{
+          path: "cellAndAir",
+          name: 'cellAndAir',
+          component:  resolve => require(['@/components/opeMon/cellAndAir'],resolve),
+        },{
+          path: "loadAnalyze",
+          name: 'loadAnalyze',
+          component:  resolve => require(['@/components/opeMon/loadAnalyze'],resolve),
+        }]
       },{
         path: "report",
         name: 'report',
