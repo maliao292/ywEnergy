@@ -1,5 +1,7 @@
 <template>
-
+  <div>
+    <p>运行监控分析</p>
+  </div>
 </template>
 
 <script>
