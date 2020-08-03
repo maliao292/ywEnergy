@@ -5,7 +5,7 @@
     </div>
     <div class="amap-page-container">
       <el-amap ref="map" vid="amapDemo" :amap-manager="amapManager" :zoom="zoom" :events="events" class="amap-demo">
-        <el-amap-marker v-for="(marker, index) in markers" :key=index :position="marker.position" :events="marker.events" :visible="marker.visible" :draggable="marker.draggable" :vid="index"></el-amap-marker>
+        <el-amap-marker v-for="(marker, index) in markers" :key=index :position="marker.position" :events="marker.events" :icon="marker.icon" :visible="marker.visible" :draggable="marker.draggable" :vid="index"></el-amap-marker>
       </el-amap>
     </div>
     <transition name='fade'>
@@ -104,9 +104,13 @@ export default {
       markers: [
         {
           position: [121.5273285, 31.21515044],
+          icon: require('@/assets/img/d.png'),
           events: {
             click: () => {
               // alert('click marker')
+            },
+            mousemove:(e) => {
+              
             },
             dragend: (e) => {
               console.log('---event---: dragend')
@@ -116,7 +120,8 @@ export default {
           visible: true,
           draggable: false,
           template: '<span>1</span>',
-        },{
+        },
+        {
           position: [121.5273285, 31.2195044],
           events: {
             click: () => {
@@ -130,7 +135,7 @@ export default {
           visible: true,
           draggable: false,
           template: '<span>1</span>',
-        }
+        },
       ],
       events: {
         init: (o) => {
