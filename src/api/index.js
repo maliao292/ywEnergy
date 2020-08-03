@@ -6,6 +6,6 @@ import qs from 'qs'
  * @param {*} dataobj 
  */
 export let login = dataobj => axios.post('/login',qs.stringify(dataobj));
-// export let login = dataobj => axios.get('/hello');
+export let logout = dataobj => axios.post('/logout',qs.stringify(dataobj));
 
 

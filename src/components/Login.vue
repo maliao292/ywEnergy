@@ -56,9 +56,11 @@ export default {
             username: this.ruleForm.username,
             password: this.ruleForm.password,
           }).then(res => {
-            console.log(res)
             let type = res.code == 200 ? 'success' : 'error'
             this.$message({ type, message: res.msg })
+            if(res.code == 200){
+              this.$router.push({name:'home'})
+            }
           })
         }
       })

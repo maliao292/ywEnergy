@@ -32,7 +32,7 @@
           <img :src="logo" alt="">
           <span class="username">admin </span>
         </div>
-        <div class="logout icon iconfont icon-tuichu"></div>
+        <div class="logout icon iconfont icon-tuichu" @click="logoutFun"></div>
       </div>
       <div class="homeContent">
         <router-view></router-view>
@@ -43,6 +43,7 @@
 
 <script>
 import Time from './Time'
+import { logout } from '@/api'
 export default {
   components: {
     Time,
@@ -54,7 +55,17 @@ export default {
   },
   computed: {},
   watch: {},
-  methods: {},
+  methods: {
+    async logoutFun() {
+      let res = await logout()
+      let type = res.code == 200 ? 'success' : 'error'
+      if (res.code == 200) {
+        this.$router.push({ name: 'login' })
+      } else {
+        this.$message({ type, message: res.msg })
+      }
+    },
+  },
   created() {},
 }
 </script>
