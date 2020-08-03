@@ -21,7 +21,7 @@
         <div class="homeProName">义乌市通讯基站能源管控平台  </div>
         <ul>
           <li>
-            <router-link tag="div" to='/home'><span class="icon iconfont icon-daohangshouye"></span><span>首页</span></router-link>
+            <router-link tag="div" to='/home/map'><span class="icon iconfont icon-daohangshouye"></span><span>首页</span></router-link>
           </li>
           <li style="width: 150px;">
             <router-link tag="div" to='/home/operationMonitor/cellAndAir'><span class="icon iconfont icon-jiankong"></span><span>运行监控分析</span></router-link>
