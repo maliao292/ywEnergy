@@ -32,8 +32,9 @@
   display: flex;
   justify-content: space-between;
 }
+
 /*logo*/
-.homeLogo{
+.homeLogo {
   width: 50px;
   height: 50px;
   line-height: 50px;
@@ -44,7 +45,6 @@
 
 .homeContainer .homeContent {
   height: 100%;
-  background-color: #EEE;
 }
 
 .navigation .homeSearch {
@@ -169,6 +169,7 @@
 }
 
 .mapMuneBtn .arrow {
+  cursor: pointer;
   display: inline-block;
   width: 0;
   height: 0;
@@ -194,4 +195,89 @@
   display: inline-flex;
   justify-content: space-between;
   flex-direction: column;
+}
+
+.menuList .el-menu {
+  border-right: none;
+}
+
+.mapUseEleMsg {
+  position: absolute;
+  top: 30px;
+  left: 280px;
+  right: 230px;
+  z-index: 12;
+}
+
+.mapUseEleMsg ul {
+  display: flex;
+  justify-content: space-between;
+}
+
+.mapUseEleMsg ul li {
+  padding: 15px 20px;
+  border-radius: 10px;
+  color: #fff;
+  width: 200px;
+}
+
+.mapUseEleMsg ul li p {
+  margin-bottom: 10px;
+}
+
+.mapUseEleMsg ul li p b {
+  font-size: 28px;
+}
+
+.mapUseEleMsg ul li p span {
+  display: inline-block;
+  margin-left: 20px;
+  font-size: 14px;
+}
+
+.mapUseEleMsg ul li:nth-child(1) {
+  background-image: linear-gradient(#327ad2, #5aa3fb);
+}
+
+.mapUseEleMsg ul li:nth-child(2) {
+  background-image: linear-gradient(#40b9e2, #5ecdf4);
+}
+
+.mapUseEleMsg ul li:nth-child(3) {
+  background-image: linear-gradient(#10c0b6, #2bd7d5);
+}
+
+.mapUseEleMsg ul li:nth-child(4) {
+  background-image: linear-gradient(#0abf69, #26d688);
+}
+
+.mapUseEleMsg ul li:nth-child(5) {
+  background-image: linear-gradient(#745dfc, #93acfa);
+}
+
+.iconStatus {
+  position: absolute;
+  top: 150px;
+  right: 20px;
+  bottom: 0;
+  z-index: 12;
+}
+.iconStatus  li{
+  cursor: pointer;
+  width: 90px;
+  height: 90px;
+  border-radius: 10px;
+  background: #fff;
+  margin-bottom: 10%;
+  box-shadow: 5px 5px 10px #ccc;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.iconStatus  li p{
+  font-size: 14px;
+  color: #666;
+  margin-top: 5px;
 }
