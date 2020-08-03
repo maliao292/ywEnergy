@@ -33,8 +33,9 @@ let router = new Router({
         name: 'map',
         component: Map,
       },{
-        path: "operationMonitor",
+        path: "/home/operationMonitor",
         name: 'operationMonitor',
+        redirect:'/home/operationMonitor/cellAndAir',
         component: resolve => require(['@/components/opeMon/operationMonitor'],resolve),
         children: [{
           path: "cellAndAir",

@@ -139,8 +139,6 @@ export default {
       ],
       events: {
         init: (o) => {
-          console.log(o.markers)
-          // this.$refs.map.$amap.setFitView(o.markers)
           console.log(o.getCenter())
           this.$nextTick(() => {
             this.$refs.map.$amap.setFitView()
