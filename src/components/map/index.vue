@@ -5,6 +5,7 @@
     </div>
     <div class="amap-page-container">
       <el-amap ref="map" vid="amapDemo" :amap-manager="amapManager" :zoom="zoom" :events="events" class="amap-demo">
+        <el-amap-marker v-for="(marker, index) in markers" :key=index :position="marker.position" :events="marker.events" :visible="marker.visible" :draggable="marker.draggable" :vid="index"></el-amap-marker>
       </el-amap>
     </div>
     <transition name='fade'>
@@ -100,9 +101,45 @@ export default {
       menushow: false,
       amapManager,
       zoom: 12,
+      markers: [
+        {
+          position: [121.5273285, 31.21515044],
+          events: {
+            click: () => {
+              // alert('click marker')
+            },
+            dragend: (e) => {
+              console.log('---event---: dragend')
+              this.markers[0].position = [e.lnglat.lng, e.lnglat.lat]
+            },
+          },
+          visible: true,
+          draggable: false,
+          template: '<span>1</span>',
+        },{
+          position: [121.5273285, 31.2195044],
+          events: {
+            click: () => {
+              // alert('click marker')
+            },
+            dragend: (e) => {
+              console.log('---event---: dragend')
+              this.markers[0].position = [e.lnglat.lng, e.lnglat.lat]
+            },
+          },
+          visible: true,
+          draggable: false,
+          template: '<span>1</span>',
+        }
+      ],
       events: {
         init: (o) => {
+          console.log(o.markers)
+          // this.$refs.map.$amap.setFitView(o.markers)
           console.log(o.getCenter())
+          this.$nextTick(() => {
+            this.$refs.map.$amap.setFitView()
+          })
           console.log(this.$refs.map.$$getInstance())
           o.getCity((result) => {
             console.log(result)
