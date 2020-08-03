@@ -1,0 +1,5 @@
+/*运行监控分析样式*/
+.modelContent{
+  width: 100%;
+  height: calc(100vh - 50px);
+}

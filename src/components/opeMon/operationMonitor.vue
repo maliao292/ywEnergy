@@ -1,12 +1,12 @@
 <template>
-  <div>
-    <p>运行监控分析</p>
+  <div class="modelContent">
+
   </div>
 </template>
 
 <script>
     export default {
-        name: "qwer"
+        name: "operationMonitor"
     }
 </script>
 

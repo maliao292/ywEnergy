@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App'
 import '@/assets/css/common.css'
 import '@/assets/css/style.css'
+import '@/assets/css/style_zl.css'
 import '@/assets/alibabaFont/iconfont.css'
 import router from './router'
 import ElementUI from 'element-ui';
