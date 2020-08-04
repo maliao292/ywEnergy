@@ -14,11 +14,14 @@
           <img :src="logo">
         </div>
         <div class="homeSearch">
-          <input type="text" placeholder="搜索">
-          <span class="el-icon-search searchBtn"></span>
-          <b></b>
+          <template v-show="isMapPage == map">
+            <input type="text" placeholder="搜索">
+            <span class="el-icon-search searchBtn"></span>
+            <b></b>
+          </template>
+
         </div>
-        <div class="homeProName">义乌市通讯基站能源管控平台  </div>
+        <div class="homeProName">义乌市通讯基站能源管控平台 </div>
         <ul>
           <li>
             <router-link tag="div" to='/home/map'><span class="icon iconfont icon-daohangshouye"></span><span>首页</span></router-link>
@@ -45,23 +48,32 @@
 </template>
 
 <script>
-  import Time from './Time'
-  export default {
-    components: {
-      Time,
-    },
-    data() {
-      return {
-        mapshow:true,
-        logo: require('@/assets/img/logo.png'),
-      }
-    },
-    computed: {},
-    watch: {},
-    methods: {},
-    created() {
-    },
-  }
+import Time from './Time'
+export default {
+  components: {
+    Time,
+  },
+  data() {
+    return {
+      isMapPage:true,
+      mapshow: true,
+      logo: require('@/assets/img/logo.png'),
+    }
+  },
+  computed: {},
+  watch: {},
+  methods: {},
+  created() {
+    this.isMapPage = this.$route.name
+  },
+  beforeEnter(to, from, next){
+
+　　　　console.log(to)
+
+　　//　　next() //正常跳转，不写的话，不会跳转
+
+　　}
+}
 </script>
 <style scoped>
 </style>
