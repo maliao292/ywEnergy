@@ -263,7 +263,8 @@
   bottom: 0;
   z-index: 12;
 }
-.iconStatus  li{
+
+.iconStatus li {
   cursor: pointer;
   width: 90px;
   height: 90px;
@@ -277,8 +278,53 @@
   text-align: center;
 }
 
-.iconStatus  li p{
+.iconStatus li p {
   font-size: 14px;
   color: #666;
   margin-top: 5px;
+}
+
+.amap-info-close {
+  display: none;
+}
+
+.alstyle h2 {
+  font-size: 16px;
+  color: #333;
+}
+
+.alstyle ul li {
+  margin-top: 5px;
+}
+
+.alstyle ul li span {
+  font-size: 14px;
+}
+
+.alstyle ul li span:first-child {
+  color: #666;
+
+}
+
+.alstyle ul li:first-child span:last-child {
+  color: #0184e2;
+}
+
+.alstyle .c1{
+  color: #0fd564;
+}
+.alstyle .c2{
+  color: #d436e4;
+}
+.alstyle .c3{
+  color: #98b833;
+}
+.alstyle .c4{
+  color: #a693d6;
+}
+.alstyle .c5{
+  color: #173e8a;
+}
+.alstyle .c6{
+  color: #fd8b15;
 }

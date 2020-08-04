@@ -6,6 +6,7 @@
     <div class="amap-page-container">
       <el-amap ref="map" vid="amapDemo" :amap-manager="amapManager" :zoom="zoom" :events="events" class="amap-demo">
         <el-amap-marker v-for="(marker, index) in markers" :key=index :position="marker.position" :events="marker.events" :icon="marker.icon" :visible="marker.visible" :draggable="marker.draggable" :vid="index"></el-amap-marker>
+        <el-amap-info-window v-if="window" :position="window.position" :visible="window.visible" :content="window.content"></el-amap-info-window>
       </el-amap>
     </div>
     <transition name='fade'>
@@ -84,6 +85,7 @@
 </template> 
 
 <script>
+import markerLabel from './markerLabel'
 import { amapManager, lazyAMapApiLoaderInstance } from 'vue-amap'
 import { mapMarker } from '@/api'
 import MapMenu from './MapMenu'
@@ -99,28 +101,39 @@ export default {
         w: require('@/assets/img/w.png'),
         l: require('@/assets/img/l.png'),
       },
+      alsImg: {
+        s1: require('@/assets/img/als1.png'),
+        s2: require('@/assets/img/als2.png'),
+        s3: require('@/assets/img/als3.png'),
+        s4: require('@/assets/img/als4.png'),
+        s5: require('@/assets/img/als5.png'),
+        s6: require('@/assets/img/als6.png'),
+
+      },
       menushow: false,
       amapManager,
       zoom: 12,
       markers: [
-        {
-          position: [121.5273285, 31.21515044],
-          icon: require('@/assets/img/d.png'),
-          events: {
-            click: () => {
-              // alert('click marker')
-            },
-            mousemove: (e) => {},
-            dragend: (e) => {
-              console.log('---event---: dragend')
-              this.markers[0].position = [e.lnglat.lng, e.lnglat.lat]
-            },
-          },
-          visible: true,
-          draggable: false,
-          template: '<span>1</span>',
-        }
+        // {
+        //   position: [121.5273285, 31.21515044],
+        //   icon: require('@/assets/img/d.png'),
+        //   events: {
+        //     click: () => {
+        //       // alert('click marker')
+        //     },
+        //     mousemove: (e) => {},
+        //     dragend: (e) => {
+        //       console.log('---event---: dragend')
+        //       this.markers[0].position = [e.lnglat.lng, e.lnglat.lat]
+        //     },
+        //   },
+        //   visible: true,
+        //   draggable: false,
+        //   template: '<span>1</span>',
+        // }
       ],
+      windows: [],
+      window: '',
       events: {
         init: (o) => {
           // console.log(o.getCenter())
@@ -137,15 +150,30 @@ export default {
       },
     }
   },
-  created() {
-
-  },
+  created() {},
   mounted() {
-        mapMarker().then((res) => {
-      let markers = res.data.map((v) => {
+    let self = this
+    let windows = []
+    mapMarker().then((res) => {
+      let markers = res.data.map((v, i) => {
         console.log(v)
-        let icon = require('@/assets/img/s'+v.runStatus+'.png')
-        
+        let icon = require('@/assets/img/s' + v.runStatus + '.png')
+        windows.push({
+          position: [Number(v.longitude), Number(v.latitude)],
+          content: `
+          <div class='alstyle'>
+            <h2>${v.stationName}</h2>
+            <ul>
+              <li><span>基站负荷：</span><span>${i}8.6 kW</span></li>
+              <li><span>电池状态：</span><span class="c1"><img src="${this.alsImg.s1}" /> 待机</span></li>
+              <li><span>空调状态：</span><span><img src="${this.alsImg.s2}" /> 开启</span></li>
+              <li><span>室内温度：</span><span>32 ℃</span></li>
+            <ul>
+          </div>
+          
+          `,
+          visible: false,
+        })
         return {
           position: [Number(v.longitude), Number(v.latitude)],
           icon,
@@ -153,21 +181,35 @@ export default {
             click: () => {
               // alert('click marker')
             },
-            mousemove: (e) => {},
+            mousemove: (e) => {
+              self.windows.forEach((window) => {
+                window.visible = false
+              })
+
+              self.window = self.windows[i]
+              self.$nextTick(() => {
+                self.window.visible = true
+              })
+            },
+
+            mouseout: (e) => {
+              self.windows.forEach((window) => {
+                window.visible = false
+              })
+            },
           },
           visible: true,
           draggable: false,
-          template: '<span>1</span>',
+          template: markerLabel,
         }
       })
-      this.markers = markers;
-
-      if(this.$refs.map.$amap){
-         this.$nextTick(() => {
-            this.$refs.map.$amap.setFitView()
-          })
-      }
- 
+      this.markers = markers
+      this.windows = windows
+      // if (this.$refs.map.$amap) {
+      //   this.$nextTick(() => {
+      //     this.$refs.map.$amap.setFitView()
+      //   })
+      // }
     })
   },
   methods: {
