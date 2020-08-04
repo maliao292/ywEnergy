@@ -85,6 +85,7 @@
 
 <script>
 import { amapManager, lazyAMapApiLoaderInstance } from 'vue-amap'
+import { mapMarker } from '@/api'
 import MapMenu from './MapMenu'
 export default {
   components: { MapMenu },
@@ -109,9 +110,7 @@ export default {
             click: () => {
               // alert('click marker')
             },
-            mousemove:(e) => {
-              
-            },
+            mousemove: (e) => {},
             dragend: (e) => {
               console.log('---event---: dragend')
               this.markers[0].position = [e.lnglat.lng, e.lnglat.lat]
@@ -120,32 +119,17 @@ export default {
           visible: true,
           draggable: false,
           template: '<span>1</span>',
-        },
-        {
-          position: [121.5273285, 31.2195044],
-          events: {
-            click: () => {
-              // alert('click marker')
-            },
-            dragend: (e) => {
-              console.log('---event---: dragend')
-              this.markers[0].position = [e.lnglat.lng, e.lnglat.lat]
-            },
-          },
-          visible: true,
-          draggable: false,
-          template: '<span>1</span>',
-        },
+        }
       ],
       events: {
         init: (o) => {
-          console.log(o.getCenter())
+          // console.log(o.getCenter())
           this.$nextTick(() => {
             this.$refs.map.$amap.setFitView()
           })
-          console.log(this.$refs.map.$$getInstance())
+          // console.log(this.$refs.map.$$getInstance())
           o.getCity((result) => {
-            console.log(result)
+            // console.log(result)
           })
         },
         moveend: () => {},
@@ -153,15 +137,46 @@ export default {
       },
     }
   },
-  created() {},
-  mounted() {},
+  created() {
+
+  },
+  mounted() {
+        mapMarker().then((res) => {
+      let markers = res.data.map((v) => {
+        console.log(v)
+        let icon = require('@/assets/img/s'+v.runStatus+'.png')
+        
+        return {
+          position: [Number(v.longitude), Number(v.latitude)],
+          icon,
+          events: {
+            click: () => {
+              // alert('click marker')
+            },
+            mousemove: (e) => {},
+          },
+          visible: true,
+          draggable: false,
+          template: '<span>1</span>',
+        }
+      })
+      this.markers = markers;
+
+      if(this.$refs.map.$amap){
+         this.$nextTick(() => {
+            this.$refs.map.$amap.setFitView()
+          })
+      }
+ 
+    })
+  },
   methods: {
     menuShowBtn() {},
     getMap() {
       // amap vue component
-      console.log(amapManager._componentMap)
-      // gaode map instance
-      console.log(amapManager._map)
+      // console.log(amapManager._componentMap)
+      // // gaode map instance
+      // console.log(amapManager._map)
     },
   },
 }
