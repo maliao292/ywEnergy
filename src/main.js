@@ -12,6 +12,10 @@ import VueAMap from 'vue-amap';
 Vue.use(ElementUI);
 Vue.use(VueAMap);
 
+// 引入echarts
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts
+
 VueAMap.initAMapApiLoader({
   key: '	6749e07e6a17a94ea7bc2a164f9202dd',
   plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor'],

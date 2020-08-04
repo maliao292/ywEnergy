@@ -47,9 +47,15 @@ let router = new Router({
           component:  resolve => require(['@/components/opeMon/loadAnalyze'],resolve),
         }]
       },{
-        path: "report",
+        path: "/home/report",
         name: 'report',
+        redirect:'/home/report/reportTable',
         component: resolve => require(['@/components/report/report'],resolve),
+        children: [{
+          path: "reportTable",
+          name: 'reportTable',
+          component:  resolve => require(['@/components/report/reportTable'],resolve),
+        }]
       }]
     },
     {
