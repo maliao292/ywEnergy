@@ -157,7 +157,7 @@ export default {
     mapMarker().then((res) => {
       let markers = res.data.map((v, i) => {
         console.log(v)
-        let icon = require('@/assets/img/s' + v.runStatus + '.png')
+        let icon = require('@/assets/img/s' + (v.runStatus?v.runStatus:1) + '.png')
         windows.push({
           position: [Number(v.longitude), Number(v.latitude)],
           content: `
