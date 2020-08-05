@@ -85,10 +85,19 @@
 </template> 
 
 <script>
+import Vue from 'vue'
+import VueAMap from 'vue-amap';
 import markerLabel from './markerLabel'
 import { amapManager, lazyAMapApiLoaderInstance } from 'vue-amap'
 import { mapMarker } from '@/api'
 import MapMenu from './MapMenu'
+Vue.use(VueAMap);
+VueAMap.initAMapApiLoader({
+  key: '	6749e07e6a17a94ea7bc2a164f9202dd',
+  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor'],
+  // 默认高德 sdk 版本为 1.4.4
+  v: '1.4.4'
+});
 export default {
   components: { MapMenu },
   data() {
@@ -136,13 +145,13 @@ export default {
       window: '',
       events: {
         init: (o) => {
-          // console.log(o.getCenter())
+          console.log(o.getCenter())
           this.$nextTick(() => {
             this.$refs.map.$amap.setFitView()
           })
           // console.log(this.$refs.map.$$getInstance())
           o.getCity((result) => {
-            // console.log(result)
+            console.log(result)
           })
         },
         moveend: () => {},
