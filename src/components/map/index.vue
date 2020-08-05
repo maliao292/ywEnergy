@@ -5,7 +5,8 @@
     </div>
     <div class="amap-page-container">
       <el-amap ref="map" vid="amapDemo" :amap-manager="amapManager" :zoom="zoom" :events="events" class="amap-demo">
-        <el-amap-marker v-for="(marker, index) in markers" :key=index :position="marker.position" :events="marker.events" :icon="marker.icon" :visible="marker.visible" :draggable="marker.draggable" :vid="index"></el-amap-marker>
+        <el-amap-marker v-for="(marker, index) in markers" :key=index :position="marker.position" :events="marker.events" :icon="marker.icon" :visible="marker.visible" :draggable="marker.draggable"
+          :vid="index"></el-amap-marker>
         <el-amap-info-window v-if="window" :position="window.position" :visible="window.visible" :content="window.content"></el-amap-info-window>
       </el-amap>
     </div>
@@ -46,60 +47,75 @@
           <div>
             <img :src="iconImg.d" alt="">
           </div>
-          <p>1</p>
+          <p>{{statusNum.num1}}</p>
         </li>
         <li>
           <div>
             <img :src="iconImg.c" alt="">
           </div>
-          <p>1</p>
+          <p>{{statusNum.num2}}</p>
         </li>
         <li>
           <div>
             <img :src="iconImg.f" alt="">
           </div>
-          <p>1</p>
+          <p>{{statusNum.num3}}</p>
         </li>
         <li>
           <div>
             <img :src="iconImg.t" alt="">
           </div>
-          <p>1</p>
+          <p>{{statusNum.num4}}</p>
         </li>
         <li>
           <div>
             <img :src="iconImg.w" alt="">
           </div>
 
-          <p>1</p>
+          <p>{{statusNum.num5}}</p>
         </li>
         <li>
           <div>
             <img :src="iconImg.l" alt="">
           </div>
-          <p>1</p>
+          <p>{{statusNum.num6}}</p>
         </li>
       </ul>
+    </div>
+    <div class="alertWindow yctList" v-if="showList">
+      <div class="container">
+        <StationMsg :stationDetail='stationDetail' @close='closeAl'>{{jzname}}</StationMsg>
+      </div>
     </div>
   </div>
 </template> 
 
 <script>
 import Vue from 'vue'
-import VueAMap from 'vue-amap';
+import VueAMap from 'vue-amap'
 import markerLabel from './markerLabel'
 import { amapManager, lazyAMapApiLoaderInstance } from 'vue-amap'
 import { mapMarker } from '@/api'
 import MapMenu from './MapMenu'
-Vue.use(VueAMap);
+import StationMsg from './StationMsg'
+Vue.use(VueAMap)
 VueAMap.initAMapApiLoader({
   key: '	6749e07e6a17a94ea7bc2a164f9202dd',
-  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor'],
+  plugin: [
+    'AMap.Autocomplete',
+    'AMap.PlaceSearch',
+    'AMap.Scale',
+    'AMap.OverView',
+    'AMap.ToolBar',
+    'AMap.MapType',
+    'AMap.PolyEditor',
+    'AMap.CircleEditor',
+  ],
   // 默认高德 sdk 版本为 1.4.4
-  v: '1.4.4'
-});
+  v: '1.4.4',
+})
 export default {
-  components: { MapMenu },
+  components: { MapMenu, StationMsg },
   data() {
     return {
       iconImg: {
@@ -117,9 +133,20 @@ export default {
         s4: require('@/assets/img/als4.png'),
         s5: require('@/assets/img/als5.png'),
         s6: require('@/assets/img/als6.png'),
-
+        s7: require('@/assets/img/als7.png'),
       },
+      statusNum: {
+        num1: 0,
+        num2: 0,
+        num3: 0,
+        num4: 0,
+        num5: 0,
+        num6: 0,
+      },
+      stationDetail: {},
+      showList: false,
       menushow: false,
+      jzname: '',
       amapManager,
       zoom: 12,
       markers: [
@@ -154,32 +181,91 @@ export default {
             console.log(result)
           })
         },
-        moveend: () => {},
-        zoomchange: () => {},
+        moveend: () => { },
+        zoomchange: () => { },
       },
     }
   },
-  created() {},
+  created() { },
   mounted() {
     let self = this
     let windows = []
     mapMarker().then((res) => {
-      let markers = res.data.map((v, i) => {
+      this.statusNum = res.data.statusNum
+      let markers = res.data.list.map((v, i) => {
         console.log(v)
-        let icon = require('@/assets/img/s' + (v.runStatus?v.runStatus:1) + '.png')
+        let icon = require('@/assets/img/s' + (v.runStatus ? v.runStatus : 1) + '.png')
+        let dcColor = 'c1', ktColor = 'c1', dcImg = 1, ktImg = 1, dcText = '充电', ktText = '停止';
+        switch (v.runStatus) {
+          case 3:
+            dcColor = 'c1';
+            ktColor = 'c4';
+            dcImg = 3;
+            ktImg = 6;
+            dcText = '充电';
+            dcText = '停止';
+            break;
+          case 4:
+            dcColor = 'c1';
+            ktColor = 'c5';
+            dcImg = 3;
+            ktImg = 7;
+            dcText = '充电';
+            dcText = '开启';
+            break;
+          case 5:
+            dcColor = 'c2';
+            ktColor = 'c4';
+            dcImg = 4;
+            ktImg = 6;
+            dcText = '放电';
+            dcText = '停止';
+            break;
+          case 6:
+            dcColor = 'c2';
+            ktColor = 'c5';
+            dcImg = 4;
+            ktImg = 7;
+            dcText = '放电';
+            dcText = '开启';
+            break;
+          case 7:
+            dcColor = 'c3';
+            ktColor = 'c4';
+            dcImg = 5;
+            ktImg = 6;
+            dcText = '待机';
+            dcText = '停止';
+            break;
+          case 8:
+            dcColor = 'c3';
+            ktColor = 'c5';
+            dcImg = 5;
+            ktImg = 7;
+            dcText = '待机';
+            dcText = '开启';
+            break;
+        }
         windows.push({
           position: [Number(v.longitude), Number(v.latitude)],
           content: `
           <div class='alstyle'>
             <h2>${v.stationName}</h2>
             <ul>
-              <li><span>基站负荷：</span><span>${i}8.6 kW</span></li>
-              <li><span>电池状态：</span><span class="c1"><img src="${this.alsImg.s1}" /> 待机</span></li>
-              <li><span>空调状态：</span><span><img src="${this.alsImg.s2}" /> 开启</span></li>
-              <li><span>室内温度：</span><span>32 ℃</span></li>
+              <li><span>基站负荷：</span><span>${ v.allPower ? v.allPower : ''} kW</span></li>
+              <li style="${ v.runStatus == 1 || v.runStatus == 2 || !v.runStatus ? 'display:none' : ''}">
+                <span>电池状态：</span>
+                <span class="${dcColor}">
+                <img src="${this.alsImg['s' + dcImg]}" /> 
+                ${dcText}</span>
+              </li>
+              <li style="${ v.runStatus == 1 || v.runStatus == 2 || !v.runStatus ? 'display:none' : ''}">
+                <span>空调状态：</span>
+                <span class="${ktColor}"><img src="${this.alsImg['s' + ktImg]}" /> ${ktText}</span>
+              </li>
+              <li><span>室内温度：</span><span>${ v.temperature ? v.temperature : ''} ℃</span></li>
             <ul>
           </div>
-          
           `,
           visible: false,
         })
@@ -188,7 +274,9 @@ export default {
           icon,
           events: {
             click: () => {
-              // alert('click marker')
+              this.jzname = v.stationName
+              this.stationDetail = v
+              this.showList = true
             },
             mousemove: (e) => {
               self.windows.forEach((window) => {
@@ -214,20 +302,23 @@ export default {
       })
       this.markers = markers
       this.windows = windows
-      // if (this.$refs.map.$amap) {
-      //   this.$nextTick(() => {
-      //     this.$refs.map.$amap.setFitView()
-      //   })
-      // }
+      if (this.$refs.map.$amap) {
+        this.$nextTick(() => {
+          this.$refs.map.$amap.setFitView()
+        })
+      }
     })
   },
   methods: {
-    menuShowBtn() {},
+    menuShowBtn() { },
     getMap() {
       // amap vue component
       // console.log(amapManager._componentMap)
       // // gaode map instance
       // console.log(amapManager._map)
+    },
+    closeAl() {
+      this.showList = false
     },
   },
 }
@@ -287,5 +378,10 @@ export default {
   width: 200px;
   z-index: 11;
   background: #000710;
+}
+.container {
+  max-width: 1350px;
+  width: 80%;
+  max-height: 80%;
 }
 </style>
