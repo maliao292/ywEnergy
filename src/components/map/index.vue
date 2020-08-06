@@ -144,7 +144,7 @@ export default {
         num6: 0,
       },
       stationDetail: {},
-      showList: false,
+      showList: true,
       menushow: false,
       jzname: '',
       amapManager,
@@ -383,5 +383,6 @@ export default {
   max-width: 1350px;
   width: 80%;
   max-height: 80%;
+  height: 80%;
 }
 </style>
