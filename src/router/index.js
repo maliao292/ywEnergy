@@ -11,9 +11,10 @@ Router.prototype.push = function push(location) {
 
 // import Home from "@/components/Home";
 // import Login from "@/components/Login";
-const Home =  resolve => require(['@/components/Home'],resolve)
-const Login =  resolve => require(['@/components/Login'],resolve)
-const Map =  resolve => require(['@/components/map'],resolve)
+const Home = resolve => require(['@/components/Home'], resolve)
+const Login = resolve => require(['@/components/Login'], resolve)
+const Map = resolve => require(['@/components/map'], resolve)
+const Screen = resolve => require(['@/components/screen'], resolve)
 Vue.use(Router);
 let router = new Router({
   linkActiveClass: "active",
@@ -27,36 +28,40 @@ let router = new Router({
       path: "/home",
       name: 'home',
       component: Home,
-      redirect:'/home/map',
+      redirect: '/home/map',
       children: [{
         path: "map",
         name: 'map',
         component: Map,
-      },{
+      }, {
         path: "/home/operationMonitor",
         name: 'operationMonitor',
-        redirect:'/home/operationMonitor/cellAndAir',
-        component: resolve => require(['@/components/opeMon/operationMonitor'],resolve),
+        redirect: '/home/operationMonitor/cellAndAir',
+        component: resolve => require(['@/components/opeMon/operationMonitor'], resolve),
         children: [{
           path: "cellAndAir",
           name: 'cellAndAir',
-          component:  resolve => require(['@/components/opeMon/cellAndAir'],resolve),
-        },{
+          component: resolve => require(['@/components/opeMon/cellAndAir'], resolve),
+        }, {
           path: "loadAnalyze",
           name: 'loadAnalyze',
-          component:  resolve => require(['@/components/opeMon/loadAnalyze'],resolve),
+          component: resolve => require(['@/components/opeMon/loadAnalyze'], resolve),
         }]
-      },{
+      }, {
         path: "/home/report",
         name: 'report',
-        redirect:'/home/report/reportTable',
-        component: resolve => require(['@/components/report/report'],resolve),
+        redirect: '/home/report/reportTable',
+        component: resolve => require(['@/components/report/report'], resolve),
         children: [{
           path: "reportTable",
           name: 'reportTable',
-          component:  resolve => require(['@/components/report/reportTable'],resolve),
+          component: resolve => require(['@/components/report/reportTable'], resolve),
         }]
       }]
+    }, {
+      path: "/screen",
+      name: "screen",
+      component: Screen
     },
     {
       path: '/',

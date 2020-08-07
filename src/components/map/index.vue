@@ -144,30 +144,12 @@ export default {
         num6: 0,
       },
       stationDetail: {},
-      showList: true,
+      showList: false,
       menushow: false,
       jzname: '',
       amapManager,
       zoom: 12,
-      markers: [
-        // {
-        //   position: [121.5273285, 31.21515044],
-        //   icon: require('@/assets/img/d.png'),
-        //   events: {
-        //     click: () => {
-        //       // alert('click marker')
-        //     },
-        //     mousemove: (e) => {},
-        //     dragend: (e) => {
-        //       console.log('---event---: dragend')
-        //       this.markers[0].position = [e.lnglat.lng, e.lnglat.lat]
-        //     },
-        //   },
-        //   visible: true,
-        //   draggable: false,
-        //   template: '<span>1</span>',
-        // }
-      ],
+      markers: [],
       windows: [],
       window: '',
       events: {

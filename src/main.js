@@ -8,8 +8,9 @@ import router from './router'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import store from './store/index';
-
 Vue.use(ElementUI);
+import myCharts from './chartMethod'
+Vue.use(myCharts)
 
 // 引入echarts
 import echarts from 'echarts'

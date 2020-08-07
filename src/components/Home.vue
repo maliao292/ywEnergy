@@ -38,6 +38,7 @@
           <img :src="logo" alt="">
           <span class="username">admin </span>
         </div>
+        <div @click="toScreen" style="color:#fff;cursor:pointer">大屏</div>
         <div class="logout icon iconfont icon-tuichu"></div>
       </div>
       <div class="homeContent">
@@ -55,24 +56,26 @@ export default {
   },
   data() {
     return {
-      isMapPage:true,
+      isMapPage: true,
       mapshow: true,
       logo: require('@/assets/img/logo.png'),
     }
   },
   computed: {},
   watch: {},
-  methods: {},
+  methods: {
+    toScreen() { this.$router.push({ name: 'screen' }) }
+  },
   created() {
     this.isMapPage = this.$route.name
   },
-  beforeEnter(to, from, next){
+  beforeEnter(to, from, next) {
 
-　　　　console.log(to)
+    console.log(to)
 
-　　//　　next() //正常跳转，不写的话，不会跳转
+    //　　next() //正常跳转，不写的话，不会跳转
 
-　　}
+  }
 }
 </script>
 <style scoped>
