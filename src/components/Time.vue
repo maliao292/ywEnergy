@@ -1,9 +1,12 @@
 <template>
- <span class='time'>{{times}}</span>
+ <span class='time' :class="fontName">{{times}}</span>
 </template>
 
 <script>
 export default {
+  props:{
+    fontName:'',
+  },
   data () {
     return {
       times: ''
@@ -38,5 +41,11 @@ export default {
 <style scoped>
 span{
   color: #cccccc;
+}
+.circle{
+  font-family: circle;
+  font-size: 26px;
+  color: #a8daee;
+  vertical-align: middle;
 }
 </style>

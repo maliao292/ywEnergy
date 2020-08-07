@@ -6,6 +6,34 @@
     url("../timeFont/time.svg") format("svg");
 }
 
+/* 大屏左上角字体 */
+@font-face {
+  font-family: "circle";
+  src: url("../fontFamily/circle.eot");
+  src: url("../fontFamily/circle.woff") format("woff"),
+    url("../fontFamily/circle.ttf") format("truetype"),
+    url("../fontFamily/circle.svg") format("svg");
+}
+
+/* 大屏左上角时间 后面的TIME */
+@font-face {
+  font-family: "time";
+  src: url("../fontFamily/time.eot");
+  src: url("../fontFamily/time.woff") format("woff"),
+    url("../fontFamily/time.ttf") format("truetype"),
+    url("../fontFamily/time.svg") format("svg");
+}
+
+
+/* 页头标题 */
+@font-face {
+  font-family: "stitle";
+  src: url("../fontFamily/stitle.eot");
+  src: url("../fontFamily/stitle.woff") format("woff"),
+    url("../fontFamily/stitle.ttf") format("truetype"),
+    url("../fontFamily/stitle.svg") format("svg");
+}
+
 .homeContainer {
   height: 100vh;
   width: 100vw;
@@ -564,51 +592,104 @@
 .ktbtn.active:nth-child(2) {
   background-image: linear-gradient(#97b731, #c1d85b);
 }
-.stationTopL ul{
+
+.stationTopL ul {
   padding: 10px 0;
 }
-.stationTopL ul li{
+
+.stationTopL ul li {
   padding: 10px 0;
 }
-.stationTopL span{
+
+.stationTopL span {
   font-size: 14px;
   color: #666;
 }
-.stationTopL.dcmsg ul li b{
-    display: inline-block;
-    color: #4c8aeb;
-    margin-right: 10px;
-    font-size: 20px;
+
+.stationTopL.dcmsg ul li b {
+  display: inline-block;
+  color: #4c8aeb;
+  margin-right: 10px;
+  font-size: 20px;
 }
-.stationTopL.dcmsg ul li b+span{
+
+.stationTopL.dcmsg ul li b+span {
   font-size: 12px;
   color: #999;
 }
-.stationTopL.ktmsg ul li b{
-    display: inline-block;
-    color: #f08e53;
-    margin-right: 10px;
-    font-size: 20px;
+
+.stationTopL.ktmsg ul li b {
+  display: inline-block;
+  color: #f08e53;
+  margin-right: 10px;
+  font-size: 20px;
 }
-.stationTopL ul li b+span{
+
+.stationTopL ul li b+span {
   font-size: 12px;
   color: #999;
 }
-.strategy_s>div:first-child{
+
+.strategy_s>div:first-child {
   font-size: 14px;
 }
-.strategy_s>div:first-child b{
-  color:#4eb4ee;
+
+.strategy_s>div:first-child b {
+  color: #4eb4ee;
   font-weight: 400;
   float: right;
 }
-.strategy_s>div:last-child{
+
+.strategy_s>div:last-child {
   font-size: 0;
   padding: 10px 0;
 }
-.strategy_s>div:last-child span{
+
+.strategy_s>div:last-child span {
   display: inline-block;
   width: 50%;
   text-align: center;
   color: #666;
+}
+
+.screenConrainer {
+  background-image: url(../img/screen/BG.jpg);
+  background-size: 100% 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.screenTitle {
+  height: 70px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+  flex-shrink: 0;
+}
+
+.screenCon {
+  height: 100%;
+  border: 1px solid #ccc;
+  flex-shrink: 1;
+  display: flex;
+  justify-content: space-between;
+}
+
+.screenCon>div {
+  border: 1px solid #ccc;
+  padding: 20px;
+}
+
+.screenCon>div:nth-child(1),
+.screenCon>div:nth-child(3) {
+  width: 500px;
+  flex-shrink: 0;
+}
+
+.screenCon>div:nth-child(2) {
+  width: 100%;
+  flex-shrink: 1;
 }
