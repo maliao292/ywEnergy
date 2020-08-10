@@ -3,26 +3,28 @@
       <p class="monConTit" >运行监控分析 - <span class="TitactiveColor">电池与空调监控</span></p>
       <!--下拉选框-->
       <div class="monChosen">
-        <el-select v-model="stationParam.value1" placeholder="请选择" class="monStaSelect">
+        <el-select v-model="stationParam.streetId" placeholder="请选择" class="monStaSelect">
           <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
+            v-for="item in streetOption"
+            :key="item.id"
+            :label="item.stationName"
+            :value="item.id">
           </el-option>
         </el-select>
-        <el-select v-model="stationParam.value2" placeholder="请选择" class="monStaSelect">
+        <el-select v-model="stationParam.stationId" placeholder="请选择" class="monStaSelect">
           <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
+            v-for="item in stationOption"
+            :key="item.id"
+            :label="item.stationName"
+            :value="item.id">
           </el-option>
         </el-select>
         <el-date-picker
-          v-model="stationParam.value3"
+          v-model="stationParam.queryDate"
           type="date"
           placeholder="选择日期"
+          format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd"
           class="monStaSelect"
         >
         </el-date-picker>
@@ -36,13 +38,13 @@
             <div class="monEcharts_chart" id="chargeDischarge" ref="chargeDischargeChart"></div>
             <div class="monEcharts_info">
               <div class="monEcharts_infoEach">
-                <div>当日削峰电量 <span class="specialSt1">5.6</span> <span class="specialUnit1">kWh</span></div>
+                <div>当日削峰电量 <span class="specialSt1">{{dccfd.xfdl}}</span> <span class="specialUnit1">kWh</span></div>
               </div>
               <div class="monEcharts_infoEach">
-                <div>当日填谷电量 <span class="specialSt1">6.2</span> <span class="specialUnit1">kWh</span></div>
+                <div>当日填谷电量 <span class="specialSt1">{{dccfd.tgdl}}</span> <span class="specialUnit1">kWh</span></div>
               </div>
               <div class="monEcharts_infoEach">
-                <div>充放电比 <span class="specialSt1 specialSt2">88.5%</span></div>
+                <div>充放电比 <span class="specialSt1 specialSt2">{{dccfd.cfdb}}</span></div>
               </div>
             </div>
           </div>
@@ -55,18 +57,18 @@
             <div class="monEcharts_info">
               <div class="monEcharts_infoEach monEcharts_infoEachDou">
                 <div>
-                  <p style="height: 40px;">当日室内最高温度 <span class="specialSt1 specialSt3">32 ℃</span></p>
-                  <p style="height: 50px;">最高时刻 <span class="specialStTime">11:00</span></p>
+                  <p style="height: 40px;">当日室内最高温度 <span class="specialSt1 specialSt3">{{wdykt.snMaxTemp}} ℃</span></p>
+                  <p style="height: 50px;">最高时刻 <span class="specialStTime">{{wdykt.snMaxTempTime}}</span></p>
                 </div>
               </div>
               <div class="monEcharts_infoEach">
                 <div>
-                  <p style="height: 40px;">当日室外最高温度 <span class="specialSt1 specialSt4">36 ℃</span></p>
-                  <p style="height: 50px;">最高时刻 <span class="specialStTime">12:00</span></p>
+                  <p style="height: 40px;">当日室外最高温度 <span class="specialSt1 specialSt4">{{wdykt.swMaxTemp}} ℃</span></p>
+                  <p style="height: 50px;">最高时刻 <span class="specialStTime">{{wdykt.swMaxTempTime}}</span></p>
                 </div>
               </div>
               <div class="monEcharts_infoEach">
-                <div>空调用电 <span class="specialSt1">1.9</span> <span class="specialUnit1">kWh</span></div>
+                <div>空调用电 <span class="specialSt1">{{wdykt.kkyd}}</span> <span class="specialUnit1">kWh</span></div>
               </div>
             </div>
           </div>
@@ -77,6 +79,8 @@
 </template>
 
 <script>
+  import { getStreetInfo,getStationInfo, getDccfd ,getWdkt } from '@/api/operationMonitor'
+
     export default {
       name: "cellAndAir",
       data() {
@@ -85,10 +89,24 @@
             value: '选项1',
             label: '选项1'
           }],
+          streetOption: [],
+          stationOption: [],
           stationParam: {
-            value1: '',
-            value2: '',
-            value3: ''
+            streetId: null,
+            stationId: null,
+            queryDate: ''
+          },
+          dccfd: { // 充放电
+            xfdl: null,
+            tgdl: null,
+            cfdb: null
+          },
+          wdykt: { // 温度与空调
+            snMaxTemp: null,
+            snMaxTempTime: null,
+            swMaxTemp: null,
+            swMaxTempTime: null,
+            kkyd: null
           },
           chart_line1: {
             //图表实例
@@ -113,216 +131,293 @@
           },
         }
       },
+      created() {
+        // 获取街道信息
+        getStreetInfo().then(res => {
+          // console.log(res);
+          if (res.code == 200) {
+            this.streetOption = res.data
+            this.stationParam.streetId = res.data[0].id
+
+            // let stationParam = {streetId: this.stationParam.streetId}
+            getStationInfo(this.stationParam.streetId).then(response => {
+              console.log(response);
+              this.stationOption = response.data
+              this.stationParam.stationId = response.data[0].id
+
+              this.getDccfdImfo()
+              this.getWdktImfo()
+            })
+
+          } else {
+            this.streetOption = []
+            this.stationParam.streetId = null
+            this.stationParam.stationId = null
+          }
+        })
+
+        // 获取今天日期
+        this.getThisTime()
+
+
+      },
       mounted() {
-        this.renderChart_line1()
+        // this.renderChart_line1()
         this.renderChart_line2()
       },
       methods: {
+        // 获取当前时间
+        getThisTime(){
+          var _this = this;
+          let yy = new Date().getFullYear();
+          var mm =new Date().getMonth() < 10 ? "0" + (new Date().getMonth() + 1) : new Date().getMonth() + 1;
+          var dd = new Date().getDate() <10 ? "0" + new Date().getDate() : new Date().getDate();
+
+          _this.stationParam.queryDate = yy+'-'+mm+'-'+dd
+        },
         /**
          * 初始化图表
          */
         renderChart_line1() {
-          // this.chart_line.xAxisData = [];
-          this.chart_line1.yAxisData = [];
+          this.chart_line1.xAxisData = [];
+          this.chart_line1.yAxisData1 = [];
+          this.chart_line1.yAxisData2 = [];
 
-          this.chart_line1.dom = this.$echarts.init(this.$refs.chargeDischargeChart);
-          this.chart_line1.dom.setOption({
-            title: {},
-            tooltip: {
-              trigger: 'axis'
-            },
-            grid: {
-              left: "1%",
-              right: "1%",
-              top: "20%",
-              bottom: "1%",
-              containLabel: true
-            },
-            legend: {
-              show: true,
-              icon: "rect",
-              itemWidth:20,
-              itemHeight:3,
-              x: 'center',
-              top: '10',
-              textStyle: { //图例文字的样式
-                color: '#666666',
-                fontSize: 14
+
+        },
+
+        // 获取电流充放电功率
+        getDccfdImfo(){
+          // console.log(this.stationParam);
+
+          getDccfd(this.stationParam).then(res => {
+            // console.log(res);
+            this.dccfd.xfdl = res.data.xfdl
+            this.dccfd.tgdl = res.data.tgdl
+            this.dccfd.cfdb = res.data.cfdb
+
+            this.chart_line1.xAxisData = res.data.xdata
+            this.chart_line1.yAxisData1 = res.data.ydataA;
+            this.chart_line1.yAxisData2 = res.data.ydataB;
+
+            this.chart_line1.dom = this.$echarts.init(this.$refs.chargeDischargeChart);
+            this.chart_line1.dom.setOption({
+              title: {},
+              tooltip: {
+                trigger: 'axis'
               },
-              data: this.chart_line1.legend
-            },
-            xAxis: {
-              data: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24']
-            },
-            yAxis: [
-              {
-                name: "kW",
-                nameTextStyle :{
+              grid: {
+                left: "1%",
+                right: "1%",
+                top: "20%",
+                bottom: "1%",
+                containLabel: true
+              },
+              legend: {
+                show: true,
+                icon: "rect",
+                itemWidth:20,
+                itemHeight:3,
+                x: 'center',
+                top: '10',
+                textStyle: { //图例文字的样式
+                  color: '#666666',
                   fontSize: 14
                 },
-                itemStyle: {
-                  normal: {
-                    color: "#52a4f6",
-                  }
-                },
-                splitNumber : 2,
-              }
-            ],
-            series: [
-              {
-                symbol: "none",
-                name: this.chart_line1.legend[0],
-                type: "line",
-                smooth: true,
-                lineStyle: {
-                  normal: {
-                    width: 2
-                  }
-                },
-                itemStyle: {
-                  normal: {
-                    color: "#11d69c",
-                    lineStyle: {
-                      color: "#11d69c" // 改变折线颜色
-                    }
-                  }
-                },
-                data: [10,20,6,30,5]
+                data: this.chart_line1.legend
               },
-              {
-                symbol: "none",
-                name: this.chart_line1.legend[1],
-                type: "line",
-                smooth: true,
-                lineStyle: {
-                  normal: {
-                    width: 2
-                  }
-                },
-                itemStyle: {
-                  normal: {
-                    color: "#569bf0",
-                    lineStyle: {
-                      color: "#569bf0" // 改变折线颜色
+              xAxis: {
+                // data: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24']
+                data: this.chart_line1.xAxisData
+              },
+              yAxis: [
+                {
+                  name: "kW",
+                  nameTextStyle :{
+                    fontSize: 14
+                  },
+                  itemStyle: {
+                    normal: {
+                      color: "#52a4f6",
                     }
-                  }
+                  },
+                  splitNumber : 2,
+                }
+              ],
+              series: [
+                {
+                  symbol: "none",
+                  name: this.chart_line1.legend[0],
+                  type: "line",
+                  smooth: true,
+                  lineStyle: {
+                    normal: {
+                      width: 2
+                    }
+                  },
+                  itemStyle: {
+                    normal: {
+                      color: "#11d69c",
+                      lineStyle: {
+                        color: "#11d69c" // 改变折线颜色
+                      }
+                    }
+                  },
+                  data:  this.chart_line1.yAxisData1
                 },
-                data: [5,50,63,13,54]
-              }
-            ]
-          });
+                {
+                  symbol: "none",
+                  name: this.chart_line1.legend[1],
+                  type: "line",
+                  smooth: true,
+                  lineStyle: {
+                    normal: {
+                      width: 2
+                    }
+                  },
+                  itemStyle: {
+                    normal: {
+                      color: "#569bf0",
+                      lineStyle: {
+                        color: "#569bf0" // 改变折线颜色
+                      }
+                    }
+                  },
+                  data:  this.chart_line1.yAxisData2
+                }
+              ]
+            });
+          })
+
         },
+
+        // 获取温度与空调
+        getWdktImfo() {
+          getWdkt(this.stationParam).then(res => {
+
+            this.wdykt = res.data
+
+            this.chart_line2.xAxisData = res.data.xdata
+            this.chart_line2.yAxisData1 = res.data.ydataA;
+            this.chart_line2.yAxisData2 = res.data.ydataB;
+            this.chart_line2.yAxisData3 = res.data.ydataC;
+
+            this.chart_line2.dom = this.$echarts.init(this.$refs.airChart);
+            this.chart_line2.dom.setOption({
+              title: {},
+              tooltip: {
+                trigger: 'axis'
+              },
+              grid: {
+                left: "1%",
+                right: "1%",
+                top: "20%",
+                bottom: "1%",
+                containLabel: true
+              },
+              legend: {
+                show: true,
+                icon: "rect",
+                itemWidth:20,
+                itemHeight:3,
+                x: 'center',
+                top: '10',
+                textStyle: { //图例文字的样式
+                  color: '#666666',
+                  fontSize: 14
+                },
+                data: this.chart_line2.legend
+              },
+              xAxis: {
+                // data: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24']
+                data:this.chart_line2.xAxisData
+              },
+              yAxis: [
+                {
+                  name: "kW",
+                  nameTextStyle :{
+                    fontSize: 14
+                  },
+                  itemStyle: {
+                    normal: {
+                      color: "#52a4f6",
+                    }
+                  },
+                  splitNumber : 2,
+                }
+              ],
+              series: [
+                {
+                  symbol: "none",
+                  name: this.chart_line2.legend[0],
+                  type: "line",
+                  smooth: true,
+                  lineStyle: {
+                    normal: {
+                      width: 2
+                    }
+                  },
+                  itemStyle: {
+                    normal: {
+                      color: "#fc9c1b",
+                      lineStyle: {
+                        color: "#fc9c1b" // 改变折线颜色
+                      }
+                    }
+                  },
+                  data: this.chart_line2.yAxisData1
+                },
+                {
+                  symbol: "none",
+                  name: this.chart_line2.legend[1],
+                  type: "line",
+                  smooth: true,
+                  lineStyle: {
+                    normal: {
+                      width: 2
+                    }
+                  },
+                  itemStyle: {
+                    normal: {
+                      color: "#916bfa",
+                      lineStyle: {
+                        color: "#916bfa" // 改变折线颜色
+                      }
+                    }
+                  },
+                  data: this.chart_line2.yAxisData2
+                },
+                {
+                  symbol: "none",
+                  name: this.chart_line2.legend[2],
+                  type: "line",
+                  smooth: true,
+                  lineStyle: {
+                    normal: {
+                      width: 2
+                    }
+                  },
+                  itemStyle: {
+                    normal: {
+                      color: "#569bf0",
+                      lineStyle: {
+                        color: "#569bf0" // 改变折线颜色
+                      }
+                    }
+                  },
+                  data: this.chart_line2.yAxisData3
+                }
+              ]
+            });
+          })
+        },
+
 
         renderChart_line2() {
           // this.chart_line.xAxisData = [];
           this.chart_line2.yAxisData = [];
 
-          this.chart_line2.dom = this.$echarts.init(this.$refs.airChart);
-          this.chart_line2.dom.setOption({
-            title: {},
-            tooltip: {
-              trigger: 'axis'
-            },
-            grid: {
-              left: "1%",
-              right: "1%",
-              top: "20%",
-              bottom: "1%",
-              containLabel: true
-            },
-            legend: {
-              show: true,
-              icon: "rect",
-              itemWidth:20,
-              itemHeight:3,
-              x: 'center',
-              top: '10',
-              textStyle: { //图例文字的样式
-                color: '#666666',
-                fontSize: 14
-              },
-              data: this.chart_line2.legend
-            },
-            xAxis: {
-              data: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24']
-            },
-            yAxis: [
-              {
-                name: "kW",
-                nameTextStyle :{
-                  fontSize: 14
-                },
-                itemStyle: {
-                  normal: {
-                    color: "#52a4f6",
-                  }
-                },
-                splitNumber : 2,
-              }
-            ],
-            series: [
-              {
-                symbol: "none",
-                name: this.chart_line2.legend[0],
-                type: "line",
-                smooth: true,
-                lineStyle: {
-                  normal: {
-                    width: 2
-                  }
-                },
-                itemStyle: {
-                  normal: {
-                    color: "#fc9c1b",
-                    lineStyle: {
-                      color: "#fc9c1b" // 改变折线颜色
-                    }
-                  }
-                },
-                data: [10,20,6,30,5]
-              },
-              {
-                symbol: "none",
-                name: this.chart_line2.legend[1],
-                type: "line",
-                smooth: true,
-                lineStyle: {
-                  normal: {
-                    width: 2
-                  }
-                },
-                itemStyle: {
-                  normal: {
-                    color: "#916bfa",
-                    lineStyle: {
-                      color: "#916bfa" // 改变折线颜色
-                    }
-                  }
-                },
-                data: [5,50,63,13,54]
-              },
-              {
-                symbol: "none",
-                name: this.chart_line2.legend[2],
-                type: "line",
-                smooth: true,
-                lineStyle: {
-                  normal: {
-                    width: 2
-                  }
-                },
-                itemStyle: {
-                  normal: {
-                    color: "#569bf0",
-                    lineStyle: {
-                      color: "#569bf0" // 改变折线颜色
-                    }
-                  }
-                },
-                data: [5,50,63,13,54,12,32,23]
-              }
-            ]
-          });
+
         },
       }
     }

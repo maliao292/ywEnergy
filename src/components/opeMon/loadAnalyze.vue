@@ -23,6 +23,8 @@
         v-model="stationParam.value3"
         type="date"
         placeholder="选择日期"
+        format="yyyy-MM-dd"
+        value-format="yyyy-MM-dd"
         class="monStaSelect"
       >
       </el-date-picker>
