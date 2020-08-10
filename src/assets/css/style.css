@@ -34,14 +34,24 @@
     url("../fontFamily/stitle.svg") format("svg");
 }
 
-/*  LED num */
-/* @font-face {
-  font-family: "led";
-  src: url("../fontFamily/led.eot");
-  src: url("../fontFamily/led.woff") format("woff"),
-    url("../fontFamily/led.ttf") format("truetype"),
-    url("../fontFamily/led.svg") format("svg");
-} */
+/*  大屏页左上角数字 */
+@font-face {
+  font-family: "Medium";
+  src: url("../fontFamily/Medium.eot");
+  src: url("../fontFamily/Medium.woff") format("woff"),
+    url("../fontFamily/Medium.ttf") format("truetype"),
+    url("../fontFamily/Medium.svg") format("svg");
+}
+
+/*  大屏页面其他数字 */
+@font-face {
+  font-family: "Strong";
+  src: url("../fontFamily/Strong.eot");
+  src: url("../fontFamily/Strong.woff") format("woff"),
+    url("../fontFamily/Strong.ttf") format("truetype"),
+    url("../fontFamily/Strong.svg") format("svg");
+}
+
 .homeContainer {
   height: 100vh;
   width: 100vw;
@@ -709,6 +719,11 @@
   flex-direction: column;
 }
 
+.sreenLeft>div {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .enerynum {
   flex-shrink: 0;
 
@@ -722,6 +737,7 @@
   font-size: 24px;
   color: #f1fbf8;
   margin-bottom: 20px;
+  width: 100%;
 }
 
 .enerynum>div {
@@ -747,4 +763,100 @@
 
 .fw>div:nth-child(3) p i {
   color: #fd8c0d;
+}
+
+.enerynum>div.thisYearJZ span {
+  font-family: Strong;
+  font-size: 40px;
+  color: #00e676;
+}
+
+.enerynum>div.thisYearJZ p {
+  font-size: 16px;
+  color: #fff;
+  margin-top: 10px;
+}
+
+.enerynum>div.zjrl img {
+  vertical-align: middle;
+}
+
+.enerynum>div.zjrl p span {
+  font-family: Strong;
+  font-size: 40px;
+  color: #21eab6;
+  vertical-align: middle;
+  margin-left: 10px;
+}
+
+.enerynum>div.zjrl p span:last-child {
+  font-size: 14px;
+  vertical-align: bottom;
+}
+
+.enerynum>div.zjrl>span {
+  font-size: 16px;
+  color: #fff;
+  margin-top: 10px;
+}
+
+.screenMap {
+  position: relative;
+}
+
+.msgnum {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.msgnum p {
+  -webkit-line-clamp: 2;
+  background-image: -webkit-linear-gradient(top, #9aecfd, #3b86f0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.msgnum p span {
+  font-family: Medium;
+  font-size: 34px;
+}
+
+.msgnum p i {
+  font-size: 14px;
+  font-style: normal;
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.mapshow {
+  position: absolute;
+  left: 50px;
+  bottom: 0px;
+  width: 120%;
+  left: -150px;
+
+}
+
+.mapshow img {
+  width: 100%;
+  max-height: 90%;
+}
+
+.mapicon {
+  position: absolute;
+}
+
+.mapBtn {
+  position: absolute;
+  bottom: 50px;
+  right: 0;
+}
+
+.mapBtn>div {
+  font-size: 16px;
+  color: #fefefe;
 }
