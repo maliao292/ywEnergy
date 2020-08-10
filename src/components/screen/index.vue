@@ -16,20 +16,20 @@
       </div>
     </div>
     <div class="screenCon">
-      <div>
-        <div class="enerynum">
+      <div class="sreenLeft">
+        <div class="enerynum fw">
           <h4 class="modelTitle">能效服务</h4>
           <div>
             <span>用户总数</span>
-            <p><span>4545</span><span>户</span></p>
+            <p><i>4545</i><span>户</span></p>
           </div>
           <div>
             <span>装机容量</span>
-            <p><span>4545</span><span>MVA</span></p>
+            <p><i>4545</i><span>MVA</span></p>
           </div>
         </div>
 
-        <div id="screenPie" class="screenPie" style="width:100%;height:500px"></div>
+        <div id="screenPie" class="screenPie eccon" style="width:100%;height:300px"></div>
         <div class="enerynum">
           <h4 class="modelTitle">能效服务</h4>
           <div>
@@ -41,11 +41,11 @@
             <span>装机容量</span>
           </div>
         </div>
-        <div id="screenBar" class="screenBar" style="width:100%;height:500px"></div>
+        <div id="screenBar" class="screenBar eccon" style="width:100%;height:200px"></div>
       </div>
       <div></div>
       <div></div>
-    </div>
+    </div> 
   </div>
 </template>
 

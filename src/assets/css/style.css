@@ -34,6 +34,14 @@
     url("../fontFamily/stitle.svg") format("svg");
 }
 
+/*  LED num */
+/* @font-face {
+  font-family: "led";
+  src: url("../fontFamily/led.eot");
+  src: url("../fontFamily/led.woff") format("woff"),
+    url("../fontFamily/led.ttf") format("truetype"),
+    url("../fontFamily/led.svg") format("svg");
+} */
 .homeContainer {
   height: 100vh;
   width: 100vw;
@@ -681,6 +689,7 @@
 .screenCon>div {
   border: 1px solid #ccc;
   padding: 20px;
+  height: 100%;
 }
 
 .screenCon>div:nth-child(1),
@@ -692,4 +701,50 @@
 .screenCon>div:nth-child(2) {
   width: 100%;
   flex-shrink: 1;
+}
+
+.sreenLeft {
+  display: inline-flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.enerynum {
+  flex-shrink: 0;
+
+}
+
+.eccon {
+  flex-shrink: 1;
+}
+
+.modelTitle {
+  font-size: 24px;
+  color: #f1fbf8;
+  margin-bottom: 20px;
+}
+
+.enerynum>div {
+  display: inline-block;
+  width: 49%;
+}
+
+.enerynum>div span {
+  font-size: 14px;
+  color: #b0bec5;
+}
+
+.fw>div p i {
+  font-family: timeFont;
+  font-size: 40px;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.fw>div:nth-child(2) p i {
+  color: #00e676;
+}
+
+.fw>div:nth-child(3) p i {
+  color: #fd8c0d;
 }

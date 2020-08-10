@@ -95,7 +95,7 @@ let install = function (Vue) {
                         var myChart = echarts.init(document.getElementById(id))
                         var data = [{
                             value: 100,
-                            name: 'Chrome移动版',
+                            name: 'a',
                             label: {
                                 color: '#fff'
                             },
@@ -110,7 +110,7 @@ let install = function (Vue) {
                         },
                         {
                             value: 80,
-                            name: 'Google Chrome',
+                            name: 'b',
                             label: {
                                 color: '#fff'
                             },
@@ -125,7 +125,7 @@ let install = function (Vue) {
                         },
                         {
                             value: 65,
-                            name: '微信浏览器',
+                            name: 'c',
                             label: {
                                 color: '#fff'
                             },
@@ -140,7 +140,7 @@ let install = function (Vue) {
                         },
                         {
                             value: 65,
-                            name: '手机百度',
+                            name: 's',
                             label: {
                                 color: '#fff'
                             },
@@ -155,7 +155,7 @@ let install = function (Vue) {
                         },
                         {
                             value: 60,
-                            name: 'UC浏览器（其他）',
+                            name: 'e',
                             label: {
                                 color: '#fff'
                             },
@@ -170,37 +170,7 @@ let install = function (Vue) {
                         },
                         {
                             value: 60,
-                            name: 'QQ手机浏览器',
-                            label: {
-                                color: '#fff'
-                            },
-                            itemStyle: {
-
-                            },
-                            emphasis: {
-                                itemStyle: {
-
-                                }
-                            }
-                        },
-                        {
-                            value: 50,
-                            name: 'Safari移动版',
-                            label: {
-                                color: '#fff'
-                            },
-                            itemStyle: {
-
-                            },
-                            emphasis: {
-                                itemStyle: {
-
-                                }
-                            }
-                        },
-                        {
-                            value: 90,
-                            name: '其它',
+                            name: 'c',
                             label: {
                                 color: '#fff'
                             },
@@ -345,11 +315,11 @@ let install = function (Vue) {
                                     normal: {
                                         show: true,
                                         textStyle: {
-                                            fontSize: 18,
+                                            fontSize: 14,
                                             color: '#fff'
                                         },
                                         position: 'inside',
-                                        rotate: 30,
+                                        rotate: 60,
                                         align: 'right',
                                         fontWeight: 'bold',
                                         formatter: '{c}%'
@@ -442,7 +412,7 @@ let install = function (Vue) {
                                 top: '16%',
                                 containLabel: true
                             },
-                    
+
                             xAxis: {
                                 type: 'category',
                                 data: ['2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019'],
@@ -463,7 +433,6 @@ let install = function (Vue) {
 
                             yAxis: {
                                 type: 'value',
-                                max: '1200',
                                 axisLine: {
                                     show: false,
                                     lineStyle: {
