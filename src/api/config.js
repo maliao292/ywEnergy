@@ -1,7 +1,7 @@
 let loadingInstance;
 import axios from 'axios';
 // 增加默认的请求的 url;
-axios.defaults.timeout = 15000;
+axios.defaults.timeout = 150000;
 axios.defaults.baseURL = '/ywptapi/ywapi';
 
 // http请求拦截器
