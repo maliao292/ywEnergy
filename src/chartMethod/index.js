@@ -221,7 +221,6 @@ let install = function (Vue) {
                             }
                         }
 
-                        console.log(data3);
                         //最外层大圈的数据
                         var data1 = [];
 

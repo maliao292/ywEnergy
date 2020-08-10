@@ -54,53 +54,36 @@
         </div>
         <div class="mapshow">
           <img :src="map" alt="">
-          <!-- 光伏 -->
-          <!-- <span class="mapicon gf">
-            <img :src="gficon" alt="">
-          </span> -->
 
-          <!-- 负荷 -->
-          <span class="mapicon fh">
-            <img :src="fhicon" alt="">
+          <span class="mapicon fh" v-for="(val,key) in baseStationList" :key='key' :style="{top:val[0]+'%',left:val[1]+'%'}" @mouseenter="cpm(val)"  @mouseleave="cpmout(val)">
+            <img :src="modelIcon">
           </span>
+          <div class="msgWindow" v-show="showWindow" :style="{top:windowMsg[0]+4.3+'%',left:windowMsg[1]-3.8+'%'}">
+            <span class="artical"></span>
+            <h3>{{windowMsg[2].station}}</h3>
+            <ul>
+              <li v-for="(item,key) in windowMsg[2].msg" :key="key">
+                <div><span>{{item.key}}</span><span>{{item.val}}</span><span>{{item.unit}}</span></div>
+              </li>
+            </ul>
+          </div>
 
-          <!-- 储能 -->
-          <span class="mapicon cn">
-            <img :src="cnicon" alt="">
-          </span>
+          
         </div>
         <div class="mapBtn">
-          <div><img :src="gficon" alt=""><span class="yhc">{{yhc}}</span></div>
+          <div><img :src="modelIcon" alt=""><span class="yhc">{{yhc}}</span></div>
           <ul>
-            <li>
-              <span class="sm">商贸</span>
-            </li>
-            <li>
-              <span class="sm">商贸</span>
-            </li>
-            <li>
-              <span class="sm">商贸</span>
-            </li>
-            <li>
-              <span class="sm">商贸</span>
-            </li>
-            <li>
-              <span class="sm">商贸</span>
-            </li>
-            <li>
-              <span class="sm">商贸</span>
-            </li>
-            <li>
-              <span class="sm">商贸</span>
-            </li>
-            <li>
-              <span class="sm">商贸</span>
-            </li>
-            <li>
-              <span class="sm">商贸</span>
+            <li v-for="item in eneryDist" :key="item.value">
+              <span class="sm" :class="{active:activeDist===item.value}" @click="distChange(item.value,item.text)">{{item.text}}</span>
             </li>
           </ul>
+          <div class="mapModel">
+            <div v-for="item in modelDist" :key="item.value">
+              <span class="sm" :class="{active:activeModel===item.value}" @click="modelChange(item)">{{item.text}}</span>
+            </div>
+          </div>
         </div>
+
       </div>
       <div></div>
     </div>
@@ -119,33 +102,65 @@ export default {
       out: require('@/assets/img/screen/screenOut.png'),
       co2: require('@/assets/img/screen/co2.png'),
       map: require('@/assets/img/screen/ditu.png'),
-      gficon: require('@/assets/img/screen/screenY.png'),
-      fhicon: require('@/assets/img/screen/screenFh.png'),
-      cnicon: require('@/assets/img/screen/screenCn.png'),
+      modelIcon: require('@/assets/img/screen/screenY.png'),
       yhc: '负荷',
       eneryDist: [
         { value: 'sm', text: '商贸' },
         { value: 'wl', text: '物流' },
-        { value: '5g', text: '5G' },
+        { value: 'g5', text: '5G' },
         { value: 'ld', text: '路灯' },
         { value: 'cdz', text: '充电桩' },
         { value: 'gy', text: '工业' },
         { value: 'zht', text: '综合体 ' },
-        { value: 'zht', text: '小微园 ' },
+        { value: 'xwy', text: '小微园 ' },
       ],
-      gfPos: [
-        [100, 100]
+
+      modelDist: [
+        { value: 'y', text: '源', name: '光伏', icon: require('@/assets/img/screen/screenY.png') },
+        { value: 'h', text: '荷', name: '负荷', icon: require('@/assets/img/screen/screenFh.png') },
+        { value: 'c', text: '储', name: '储能', icon: require('@/assets/img/screen/screenCn.png') },
       ],
-      fhPos: [
-        [100, 100]
-      ],
-      cnPos: [
-        [100, 100]
-      ]
+      activeDist: 'sm',
+      activeModel: 'y',
+      baseStationList: [],
+      hMsg: {},
+      hMsg: {
+        g5: [
+          [42, 47.6, { station: '义乌茂后基站', msg: [{ key: '基站负荷：', val: 8.6, unit: '' }, { key: '可响应负荷：', val: 2.2 }] }],
+        ]
+      },
+      cMsg: {
+        g5: [
+          [45, 41, { station: '义乌茂后基站', msg: [{ key: '电池状态：', val: '待机' }, { key: '电池容量：', val: 8.6, unit: 'kW' }, { key: '可响应负荷：', val: 8.6, unit: 'kW' }] }],
+        ]
+      },
+      windowMsg: [0, 0, { station: '', msg: [{ key: '', val: '' }] }],
+      showWindow: false,
     };
   },
   methods: {
+    distChange(val) {
+      this.activeDist = val
+      let activeStation = this[this.activeModel + 'Msg'] ? this[this.activeModel + 'Msg'][val] : [];
+      this.baseStationList = activeStation ? activeStation : []
+    },
+    modelChange({ value, text, name, icon }) {
+      this.activeModel = value
+      this.yhc = name
+      this.modelIcon = icon
+      let activeStation = this[value + 'Msg'] ? this[value + 'Msg'][this.activeDist] : [];
+      this.baseStationList = activeStation ? activeStation : []
+    },
+    cpm(val) {
+      this.showWindow = true
 
+      if(this.showWindow){
+        this.windowMsg = val
+      }
+    },
+    cpmout(){
+       this.showWindow = false
+    }
   },
   created() {
 
