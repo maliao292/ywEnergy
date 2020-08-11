@@ -44,3 +44,39 @@ export function getWdkt(data) {
     }
   })
 }
+
+// 基站用电分析
+export function getJzydfx(data) {
+  return request({
+    url: '/analysis/jzydfx',
+    method: 'get',
+    params: {
+      stationId: data.stationId,
+      queryDate: data.queryDate,
+    }
+  })
+}
+
+// 分时用电分析
+export function getFSydfx(data) {
+  return request({
+    url: '/analysis/fsydfx',
+    method: 'get',
+    params: {
+      stationId: data.stationId,
+      queryDate: data.queryDate,
+    }
+  })
+}
+
+// 基站负荷
+export function getJzfh(data) {
+  return request({
+    url: '/analysis/jzfh',
+    method: 'get',
+    params: {
+      stationId: data.stationId,
+      queryDate: data.queryDate,
+    }
+  })
+}

@@ -3,7 +3,7 @@
       <p class="monConTit" >运行监控分析 - <span class="TitactiveColor">电池与空调监控</span></p>
       <!--下拉选框-->
       <div class="monChosen">
-        <el-select v-model="stationParam.streetId" placeholder="请选择" class="monStaSelect">
+        <el-select v-model="stationParam.streetId" placeholder="请选择" class="monStaSelect" @change="changeStreet">
           <el-option
             v-for="item in streetOption"
             :key="item.id"
@@ -11,7 +11,7 @@
             :value="item.id">
           </el-option>
         </el-select>
-        <el-select v-model="stationParam.stationId" placeholder="请选择" class="monStaSelect">
+        <el-select v-model="stationParam.stationId" placeholder="请选择" class="monStaSelect" @change="changeStation">
           <el-option
             v-for="item in stationOption"
             :key="item.id"
@@ -25,7 +25,9 @@
           placeholder="选择日期"
           format="yyyy-MM-dd"
           value-format="yyyy-MM-dd"
+          :clearable="false"
           class="monStaSelect"
+          @change="changeStation"
         >
         </el-date-picker>
       </div>
@@ -182,8 +184,6 @@
           this.chart_line1.xAxisData = [];
           this.chart_line1.yAxisData1 = [];
           this.chart_line1.yAxisData2 = [];
-
-
         },
 
         // 获取电流充放电功率
@@ -413,12 +413,29 @@
         },
 
 
-        renderChart_line2() {
-          // this.chart_line.xAxisData = [];
-          this.chart_line2.yAxisData = [];
+        // renderChart_line2() {
+        //   // this.chart_line.xAxisData = [];
+        //   this.chart_line2.yAxisData = [];
+        //
+        // },
 
+        // 改变街道
+        changeStreet() {
+          this.stationOption = []
+          getStationInfo(this.stationParam.streetId).then(response => {
+            console.log(response);
+            this.stationOption = response.data
+            this.stationParam.stationId = response.data[0].id
 
+            this.getDccfdImfo()
+            this.getWdktImfo()
+          })
         },
+        // 基站下拉框改变
+        changeStation() {
+          this.getDccfdImfo()
+          this.getWdktImfo()
+        }
       }
     }
 </script>
