@@ -5,37 +5,36 @@
     </div>
     <div class="amap-page-container">
       <el-amap ref="map" vid="amapDemo" :amap-manager="amapManager" :zoom="zoom" :events="events" class="amap-demo">
-        <el-amap-marker v-for="(marker, index) in markers" :key=index :position="marker.position" :events="marker.events" :icon="marker.icon" :visible="marker.visible" :draggable="marker.draggable"
-          :vid="index"></el-amap-marker>
+        <el-amap-marker v-for="(marker, index) in markers" :key=index :position="marker.position" :events="marker.events" :icon="marker.icon" :visible="marker.visible" :draggable="marker.draggable" :vid="index"></el-amap-marker>
         <el-amap-info-window v-if="window" :position="window.position" :visible="window.visible" :content="window.content"></el-amap-info-window>
       </el-amap>
     </div>
     <transition name='fade'>
       <div v-show='menushow' class="menuList">
-        <MapMenu />
+        <MapMenu @setmarker='setmarker' />
       </div>
     </transition>
 
     <div class="mapUseEleMsg">
       <ul>
         <li>
-          <p><b>530</b><span>个</span></p>
+          <p><b>{{topNum.stationNum}}</b><span>个</span></p>
           <span>基站总数</span>
         </li>
         <li>
-          <p><b>15600</b><span>kWh</span></p>
+          <p><b>{{topNum.disChargeAllNum}}</b><span>kWh</span></p>
           <span>本月总削峰电量</span>
         </li>
         <li>
-          <p><b>17500</b><span>kWh</span></p>
+          <p><b>{{topNum.chargeAllNum}}</b><span>kWh</span></p>
           <span>本月总填谷电量</span>
         </li>
         <li>
-          <p><b>15600</b><span>元</span></p>
+          <p><b>{{topNum.saveAllNum}}</b><span>元</span></p>
           <span>本月总节省电费</span>
         </li>
         <li>
-          <p><b>800</b><span>kW</span></p>
+          <p><b>{{topNum.allLoadNum}}</b><span>kW</span></p>
           <span>总可响应负荷</span>
         </li>
       </ul>
@@ -95,7 +94,7 @@ import Vue from 'vue'
 import VueAMap from 'vue-amap'
 import markerLabel from './markerLabel'
 import { amapManager, lazyAMapApiLoaderInstance } from 'vue-amap'
-import { mapMarker } from '@/api'
+import { mapMarker, topNum } from '@/api'
 import MapMenu from './MapMenu'
 import StationMsg from './StationMsg'
 Vue.use(VueAMap)
@@ -115,9 +114,19 @@ VueAMap.initAMapApiLoader({
   v: '1.4.4',
 })
 export default {
+  props: {
+    stationname: ''
+  },
   components: { MapMenu, StationMsg },
   data() {
     return {
+      topNum: {
+        stationNum: '',
+        allLoadNum: '',
+        saveAllNum: '',
+        disChargeAllNum: '',
+        chargeAllNum: ''
+      },
       iconImg: {
         d: require('@/assets/img/d.png'),
         c: require('@/assets/img/c.png'),
@@ -149,18 +158,19 @@ export default {
       jzname: '',
       amapManager,
       zoom: 12,
+      allmarkers: [],
       markers: [],
       windows: [],
       window: '',
       events: {
         init: (o) => {
-          console.log(o.getCenter())
+          // console.log(o.getCenter())
           this.$nextTick(() => {
             this.$refs.map.$amap.setFitView()
           })
           // console.log(this.$refs.map.$$getInstance())
           o.getCity((result) => {
-            console.log(result)
+            // console.log(result)
           })
         },
         moveend: () => { },
@@ -168,14 +178,30 @@ export default {
       },
     }
   },
-  created() { },
+  created() {
+    topNum().then((res)=>{
+      this.topNum = res.data
+    })
+  },
+
+  watch: {
+    stationname() {
+      let reg = new RegExp(this.stationname)
+      let markers = this.allmarkers.filter((v) => {
+        return reg.test(v.stationName)
+      })
+      this.markers = markers
+      this.$nextTick(() => {
+        this.$refs.map.$amap.setFitView()
+      })
+    },
+  },
   mounted() {
     let self = this
     let windows = []
     mapMarker().then((res) => {
       this.statusNum = res.data.statusNum
       let markers = res.data.list.map((v, i) => {
-        console.log(v)
         let icon = require('@/assets/img/s' + (v.runStatus ? v.runStatus : 1) + '.png')
         let dcColor = 'c1', ktColor = 'c1', dcImg = 1, ktImg = 1, dcText = '充电', ktText = '停止';
         switch (v.runStatus) {
@@ -252,11 +278,16 @@ export default {
           visible: false,
         })
         return {
+          stationName: v.stationName,
           position: [Number(v.longitude), Number(v.latitude)],
           icon,
           events: {
             click: () => {
+              if (!v.runStatus || v.runStatus == 1) {
+                return
+              }
               this.jzname = v.stationName
+
               this.stationDetail = v
               this.showList = true
             },
@@ -284,6 +315,7 @@ export default {
       })
       this.markers = markers
       this.windows = windows
+      this.allmarkers = markers
       if (this.$refs.map.$amap) {
         this.$nextTick(() => {
           this.$refs.map.$amap.setFitView()
@@ -293,6 +325,21 @@ export default {
   },
   methods: {
     menuShowBtn() { },
+    setmarker({ s }) {
+      let markers = this.allmarkers.filter((v) => {
+        return v.stationName === s
+      })
+      this.markers = markers
+      this.$nextTick(() => {
+        this.$refs.map.$amap.setFitView()
+      })
+    },
+    getAllMarks() {
+      this.markers = this.allmarkers
+      this.$nextTick(() => {
+        this.$refs.map.$amap.setFitView()
+      })
+    },
     getMap() {
       // amap vue component
       // console.log(amapManager._componentMap)

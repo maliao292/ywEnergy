@@ -14,8 +14,8 @@
           <img :src="logo">
         </div>
         <div class="homeSearch">
-            <input v-show="isMapPage == 'map'" type="text" placeholder="搜索">
-            <span v-show="isMapPage == 'map'" class="el-icon-search searchBtn"></span>
+            <input v-model="stationNameVal" v-show="isMapPage == 'map'" type="text" placeholder="搜索">
+            <span v-show="isMapPage == 'map'" class="el-icon-search searchBtn" @click="searchStation"></span>
             <b v-show="isMapPage == 'map'"></b>
         </div>
         <div class="homeProName">义乌市通讯基站能源管控平台 </div>
@@ -39,7 +39,7 @@
         <div class="logout icon iconfont icon-tuichu" @click="toLogin"></div>
       </div>
       <div class="homeContent">
-        <router-view></router-view>
+        <router-view ref='childNode' :stationname='stationname'></router-view>
       </div>
     </div>
   </div>
@@ -53,6 +53,8 @@ export default {
   },
   data() {
     return {
+      stationname:'',
+      stationNameVal:'',
       isMapPage: 'map',
       mapshow: true,
       logo: require('@/assets/img/logo.png'),
@@ -69,6 +71,13 @@ export default {
     toLogin() {
       this.$router.replace({ name: 'login' })
     },
+    searchStation(){
+      this.stationname = this.stationNameVal
+      if(!this.stationNameVal){
+        this.$refs.childNode.getAllMarks();
+      }
+      
+    },
     toScreen() { this.$router.push({ name: 'screen' }) }
   },
   created() {
@@ -78,4 +87,7 @@ export default {
 }
 </script>
 <style scoped>
+.searchBtn{
+  cursor: pointer;
+}
 </style>

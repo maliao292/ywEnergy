@@ -11,30 +11,31 @@
       <div class="stationData">
         <div class="stationProgress">
           <div class="gradientCon" style="padding: 10px 20px">
-            <div class="outTop residuele"><span>剩余电量：</span><span>30%</span></div>
+            <div class="outTop residuele"><span>剩余电量：</span><span>100%</span></div>
             <img :src="dc" alt="">
             <div class="outBottom">电池</div>
           </div>
           <div class="eledirection">
-            <div class="outTop cft"><span>4.00</span>kW</div>
-            <img class="cenarrow" :src="arrowl" alt="">
+            <div class="outTop cft"><span>{{stationNum.chargePower + stationNum.disChargePower}}</span>kW</div>
+            <img class="cenarrow" :src="stationNum.batteryStatus==0?arrowl:arrowr" alt="">
+            <!-- batteryStatus：0 -->
             <div class="outBottom cfd">充电</div>
           </div>
           <div class="gradientCon">
-            <div class="outTop cft"><span>4.00</span>kW</div>
+            <div class="outTop cft"><span>{{stationNum.allPower}}</span>kW</div>
             <div class="fh_s ">
-              <b><img :src="kg" alt=""></b><span>3.00 <b>kW</b> </span>
+              <b><img :src="kg" alt=""></b><span>{{stationNum.sourcePower}} <b>kW</b> </span>
             </div>
             <div class="fh_s ">
-              <b><img :src="kt" alt=""></b><span>3.00 <b>kW</b> </span>
+              <b><img :src="kt" alt=""></b><span>{{stationNum.airPower}} <b>kW</b> </span>
             </div>
             <div class="fh_s ">
-              <b><img :src="zm" alt=""></b><span>3.00 <b>kW</b> </span>
+              <b><img :src="zm" alt=""></b><span>{{stationNum.lightPower}} <b>kW</b> </span>
             </div>
             <div class="outBottom">负荷</div>
           </div>
           <div class="eledirection">
-            <div class="outTop cft"><span>4.00</span>kW</div>
+            <div class="outTop cft"><span>{{stationNum.allPower+stationNum.chargePower-stationNum.disChargePower}}</span>kW</div>
             <img class="cenarrow" :src="arrowl" alt="">
           </div>
           <div class="gradientCon">
@@ -47,24 +48,25 @@
           <div class="dcmsg stationTopL">
             <div class="stationConstrol">
               <span>电池状态：</span>
+              <!-- batteryStatus -->
               <img :src="dcimg" alt="">
               <div class="stationBtn">
                 <div>
                   <span @click="changedc('dcc')" :class="['dcbtn',{active:dcBtn==='dcc'}]">充电</span>
-                  <span @click="changedc('dcd')" :class="['dcbtn',{active:dcBtn==='dcd'}]">待机</span>
                   <span @click="changedc('dcf')" :class="['dcbtn',{active:dcBtn==='dcf'}]">放电</span>
+                  <span @click="changedc('dcd')" :class="['dcbtn',{active:dcBtn==='dcd'}]">待机</span>
                 </div>
               </div>
             </div>
             <ul>
               <li>
-                <span>本月总削峰电量：</span><b>156</b><span>kWh</span>
+                <span>本月总削峰电量：</span><b>{{stationNum.disChargeNum}}</b><span>kWh</span>
               </li>
               <li>
-                <span>本月总填谷电量：</span><b>156</b><span>kWh</span>
+                <span>本月总填谷电量：</span><b>{{stationNum.chargeNum}}</b><span>kWh</span>
               </li>
               <li>
-                <span>本月总节省电量：</span><b>156</b><span>元</span>
+                <span>本月总节省电费：</span><b>{{stationNum.saveNum}}</b><span>元</span>
               </li>
             </ul>
             <div class="strategy_s">
@@ -86,6 +88,7 @@
           <div class="ktmsg stationTopL">
             <div class="stationConstrol">
               <span>空调状态：</span>
+              <!-- airStatus 0停止 1开启-->
               <img :src="ktimg" alt="">
               <div class="stationBtn">
                 <div>
@@ -96,13 +99,13 @@
             </div>
             <ul>
               <li>
-                <span>室内温度：</span><b>156℃</b><span></span>
+                <span>室内温度：</span><b>{{stationNum.temperature}}℃</b><span></span>
               </li>
               <li>
-                <span>室外温度：</span><b>156℃</b><span></span>
+                <span>室外温度：</span><b>{{stationNum.outerTemperature}}℃</b><span></span>
               </li>
               <li>
-                <span>可响应负荷：</span><b style="color:#4c8aeb">156</b><span>kW</span>
+                <span>可响应负荷：</span><b style="color:#4c8aeb">{{stationNum.responsiveLoad}}</b><span>kW</span>
               </li>
             </ul>
             <div class="strategy_s">
@@ -132,7 +135,7 @@
 
 <script>
 import { Message } from 'element-ui'
-// import { cxAddData} from '@/api'
+import { stationDetailApi, mapLineData } from '@/api'
 import echarts from 'echarts'
 export default {
   props: {
@@ -159,10 +162,40 @@ export default {
       ktBtn: 'ktt',
       dcimg: require('@/assets/img/alcd.png'),
       ktimg: require('@/assets/img/altz.png'),
+      stationNum: {},
     }
   },
   created() {
-    console.log(this.stationDetail)
+    if (this.stationDetail.batteryStatus == 0) {
+      this.dcBtn = 'dcc';
+      this.dcimg = require('@/assets/img/alcd.png');
+    } else if (this.stationDetail.batteryStatus == 1) {
+      this.dcBtn = 'dcf';
+      this.dcimg = require('@/assets/img/alfd.png');
+    } if (this.stationDetail.batteryStatus == 2) {
+      this.dcBtn = 'dcd';
+      this.dcimg = require('@/assets/img/aldj.png');
+    }
+
+    if (this.stationDetail.airStatus == 0) {
+      this.ktBtn = 'ktt';
+      this.ktimg = require('@/assets/img/altz.png');
+    } else {
+      {
+        this.ktBtn = 'ktk';
+        this.ktimg = require('@/assets/img/alkq.png');
+      }
+    }
+    let obj = {}
+    let { batteryStatus, chargePower, disChargePower, allPower, sourcePower, airPower, lightPower, temperature, outerTemperature, responsiveLoad } = this.stationDetail
+    this.stationNum = { batteryStatus, chargePower, disChargePower, allPower, sourcePower, airPower, lightPower, temperature, outerTemperature, responsiveLoad }
+    stationDetailApi({ stationId: this.stationDetail.id }).then((res) => {
+      let { responsiveLoad, disChargeNum, chargeNum, saveNum } = res.data
+      obj = { responsiveLoad, disChargeNum, chargeNum, saveNum }
+      this.stationNum = { ...this.stationNum, ...obj }
+    })
+    //temperature outerTemperature responsiveLoad
+
   },
   methods: {
     changedc(sta) {
@@ -176,9 +209,53 @@ export default {
     changAl(formName) {
       this.$emit('close', false)
     },
+    //处理默认选中当前日期
+    getNowTime() {
+      var now = new Date();
+      var year = now.getFullYear(); //得到年份
+      var month = now.getMonth(); //得到月份
+      var date = now.getDate(); //得到日期
+      // var hour = " 00:00:00"; //默认时分秒 如果传给后台的格式为年月日时分秒，就需要加这个，如若不需要，此行可忽略
+      month = month + 1;
+      month = month.toString().padStart(2, "0");
+      date = date.toString().padStart(2, "0");
+      var defaultDate = `${year}-${month}-${date}`;
+      return defaultDate;
+    }
   },
   mounted() {
-    this.$chart.screenBacLine('stationLine')
+    mapLineData({ stationId: this.stationDetail.id, queryDate: this.getNowTime() }).then((res) => {
+      console.log(res.data)
+      let legendArr = [res.data.ydataNameA, res.data.ydataNameB, res.data.ydataNameC, res.data.ydataNameD],
+        xArr = res.data.xdata,
+        seriesArr = [{
+          name: res.data.ydataNameA,
+          type: 'line',
+          stack: '总量',
+          areaStyle: {},
+          data: res.data.ydataA
+        }, {
+          name: res.data.ydataNameB,
+          type: 'line',
+          stack: '总量',
+          areaStyle: {},
+          data: res.data.ydataB
+        }, {
+          name: res.data.ydataNameC,
+          type: 'line',
+          stack: '总量',
+          areaStyle: {},
+          data: res.data.ydataC
+        }, {
+          name: res.data.ydataNameD,
+          type: 'line',
+          stack: '总量',
+          areaStyle: {},
+          data: res.data.ydataD
+        }]
+    this.$chart.screenBacLine('stationLine', this.stationDetail.stationName, legendArr, xArr, seriesArr)
+
+    })
   }
 }
 </script>

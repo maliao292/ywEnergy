@@ -16,7 +16,7 @@
               <i class="icon iconfont icon-caidan"></i>
               <span>{{item.stationName}}</span>
             </template>
-            <el-menu-item v-for="itemc in item.children" :key="itemc.id" :index="itemc.stationName">{{itemc.stationName}}</el-menu-item>
+            <el-menu-item v-for="itemc in item.children" :key="itemc.id" :index="itemc.stationName" @click="changeStation(itemc.stationName)">{{itemc.stationName}}</el-menu-item>
           </el-submenu>
         </el-menu>
       </el-col>
@@ -42,8 +42,10 @@ export default {
       let res = await mapTree()
       this.menuList = res.data[0].children
     },
+    changeStation(s){
+      this.$emit('setmarker',{s})
+    },
     handleOpen(key, keyPath) {
-      console.log(key, keyPath)
     },
 
   },

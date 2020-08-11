@@ -12,3 +12,10 @@ export let mapTree = dataobj => axios.post('/index/queryTree',qs.stringify(datao
 // 地图 marker
 export let mapMarker = dataobj => axios.post('/index/queryView',qs.stringify(dataobj));
 
+//信息统计TOP 
+export let topNum = _ => axios.post('/index/queryTop');
+
+// 站点详情
+export let stationDetailApi = dataobj => axios.post('/index/queryInfo',qs.stringify(dataobj));
+// 地图详情折线图GET /analysis/jzfh
+export let mapLineData = dataobj => axios.get('/analysis/jzfh?stationId='+dataobj.stationId+'&queryDate='+dataobj.queryDate);

@@ -143,7 +143,6 @@
 
             // let stationParam = {streetId: this.stationParam.streetId}
             getStationInfo(this.stationParam.streetId).then(response => {
-              console.log(response);
               this.stationOption = response.data
               this.stationParam.stationId = response.data[0].id
 
