@@ -11,8 +11,8 @@
         <span class="timeFont">
           Welcome,admin!
         </span>
-        <img :src="back" alt="">
-        <img :src="out" alt="">
+        <img :src="back" alt="" @click="backFun">
+        <img :src="out" alt="" @click="toLogin">
       </div>
     </div>
     <div class="screenCon">
@@ -201,6 +201,12 @@ export default {
     },
     cpmout() {
       this.showWindow = false
+    },
+    backFun(){
+      this.$router.go(-1)
+    },
+    toLogin(){
+      this.$router.replace({name:'login'})
     }
   },
   created() {
@@ -372,6 +378,9 @@ export default {
 .userBtn span,
 .userBtn img {
   margin-left: 10px;
+}
+.userBtn img{
+  cursor: pointer;
 }
 </style>
 

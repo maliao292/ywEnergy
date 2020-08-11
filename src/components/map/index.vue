@@ -299,6 +299,7 @@ export default {
       // // gaode map instance
       // console.log(amapManager._map)
     },
+
     closeAl() {
       this.showList = false
     },

@@ -14,12 +14,9 @@
           <img :src="logo">
         </div>
         <div class="homeSearch">
-          <template v-show="isMapPage == map">
-            <input type="text" placeholder="搜索">
-            <span class="el-icon-search searchBtn"></span>
-            <b></b>
-          </template>
-
+            <input v-show="isMapPage == 'map'" type="text" placeholder="搜索">
+            <span v-show="isMapPage == 'map'" class="el-icon-search searchBtn"></span>
+            <b v-show="isMapPage == 'map'"></b>
         </div>
         <div class="homeProName">义乌市通讯基站能源管控平台 </div>
         <ul>
@@ -39,7 +36,7 @@
           <span class="username">admin </span>
         </div>
         <div @click="toScreen" style="color:#fff;cursor:pointer">大屏</div>
-        <div class="logout icon iconfont icon-tuichu"></div>
+        <div class="logout icon iconfont icon-tuichu" @click="toLogin"></div>
       </div>
       <div class="homeContent">
         <router-view></router-view>
@@ -56,26 +53,28 @@ export default {
   },
   data() {
     return {
-      isMapPage: true,
+      isMapPage: 'map',
       mapshow: true,
       logo: require('@/assets/img/logo.png'),
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+    $route(to, from) {
+      this.isMapPage = to.name
+    },
+  },
+
   methods: {
+    toLogin() {
+      this.$router.replace({ name: 'login' })
+    },
     toScreen() { this.$router.push({ name: 'screen' }) }
   },
   created() {
     this.isMapPage = this.$route.name
   },
-  beforeEnter(to, from, next) {
 
-    console.log(to)
-
-    //　　next() //正常跳转，不写的话，不会跳转
-
-  }
 }
 </script>
 <style scoped>
