@@ -28,7 +28,6 @@
             <p><i>4545</i><span>MVA</span></p>
           </div>
         </div>
-
         <div id="screenPie" class="screenPie eccon" style="width:100%;height:300px"></div>
         <div class="enerynum jztj">
           <h4 class="modelTitle">节支统计</h4>
@@ -41,7 +40,7 @@
             <span>装机容量</span>
           </div>
         </div>
-        <div id="screenBar" class="screenBar eccon" style="width:100%;height:200px"></div>
+        <div id="screenBar" class="screenBar eccon" style="width:100%;height:200px;overflow:hidden"></div>
       </div>
       <div class="screenMap">
         <div class="msgnum">
@@ -54,11 +53,11 @@
         </div>
         <div class="mapshow">
           <img :src="map" alt="">
-
-          <span class="mapicon fh" v-for="(val,key) in baseStationList" :key='key' :style="{top:val[0]+'%',left:val[1]+'%'}" @mouseenter="cpm(val)"  @mouseleave="cpmout(val)">
+          <span class="mapicon fh" v-for="(val,key) in baseStationList" :key='key' :style="{top:val[0]+'%',left:val[1]+'%'}" @mouseenter="cpm(val)" @mouseleave="cpmout(val)">
             <img :src="modelIcon">
           </span>
-          <div class="msgWindow" v-show="showWindow" :style="{top:windowMsg[0]+4.3+'%',left:windowMsg[1]-3.8+'%'}">
+
+          <div class="msgWindow" :class="activeModel" v-show="showWindow" :style="{top:windowMsg[0]+4.3+'%',left:windowMsg[1]-3.8+'%'}">
             <span class="artical"></span>
             <h3>{{windowMsg[2].station}}</h3>
             <ul>
@@ -68,7 +67,6 @@
             </ul>
           </div>
 
-          
         </div>
         <div class="mapBtn">
           <div><img :src="modelIcon" alt=""><span class="yhc">{{yhc}}</span></div>
@@ -83,9 +81,52 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="sreenRight">
+        <div>
+          <div class="modelTitle">储荷互动</div>
+          <div class="chhdNum">
+            <div class="third">
+              <p>
+                <span>秒切负荷</span><i>kW</i>
+              </p>
+              <span>4683.36</span>
+            </div>
+            <div class="third">
+              <p>
+                <span>目前负荷</span><i>kW</i>
+              </p>
+              <span>4683.36</span>
+            </div>
+            <div class="third">
+              <p>
+                <span>秒投储能</span><i>MW</i>
+              </p>
+              <span>4683.36</span>
+            </div>
+            <div class="half">
+              <p>
+                <span>感性无功</span><i>MVA</i>
+              </p>
+              <span>4683.36</span>
+            </div>
+            <div class="half">
+              <p>
+                <span>容性无功</span><i>MVA</i>
+              </p>
+              <span>4683.36</span>
+            </div>
+
+          </div>
+        </div>
+        <div class="lineCon">
+          <div id="gf"></div>
+          <div id="fh"></div>
+          <div id="cn"></div>
+
+        </div>
 
       </div>
-      <div></div>
     </div>
   </div>
 </template>
@@ -126,7 +167,7 @@ export default {
       hMsg: {},
       hMsg: {
         g5: [
-          [42, 47.6, { station: '义乌茂后基站', msg: [{ key: '基站负荷：', val: 8.6, unit: '' }, { key: '可响应负荷：', val: 2.2 }] }],
+          [42, 47.6, { station: '义乌茂后基站', msg: [{ key: '基站负荷：', val: 8.6, unit: 'kW' }, { key: '可响应负荷：', val: 2.2, unit: 'kW' }] }],
         ]
       },
       cMsg: {
@@ -154,20 +195,160 @@ export default {
     cpm(val) {
       this.showWindow = true
 
-      if(this.showWindow){
+      if (this.showWindow) {
         this.windowMsg = val
       }
     },
-    cpmout(){
-       this.showWindow = false
+    cpmout() {
+      this.showWindow = false
     }
   },
   created() {
 
   },
   mounted() {
+    function setData() {
+      let arr = []
+      for (var i = 0; i < 24; i++) {
+        arr.push((Math.random()*2000).toFixed(2))
+      }
+      return arr
+    }
     this.$chart.hzPie('screenPie')
     this.$chart.screenBar('screenBar')
+    // this.$chart.screenLine()
+    let legendArr = ['商贸', '物流', '5G', '路灯', '充电桩', '工业', '综合体', '小微园']
+    let xArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+
+    let seriesArr1 = [
+      {
+        name: '商贸',
+        type: 'line',
+        smooth: true,
+        data: setData()
+      }, {
+        name: '物流',
+        type: 'line',
+        smooth: true,
+        data: setData()
+      }, {
+        name: '5G',
+        type: 'line',
+        smooth: true,
+        data: setData()
+      }, {
+        name: '路灯',
+        type: 'line',
+        smooth: true,
+        data: setData()
+      }, {
+        name: '充电桩',
+        type: 'line',
+        smooth: true,
+        data: setData()
+      }, {
+        name: '工业',
+        type: 'line',
+        smooth: true,
+        data: setData()
+      }, {
+        name: '综合体',
+        type: 'line',
+        smooth: true,
+        data: setData()
+      }, {
+        name: '小微园',
+        type: 'line',
+        smooth: true,
+        data: setData()
+      }]
+    this.$chart.screenLine('gf', '光伏', legendArr,xArr,seriesArr1)
+      let seriesArr2 = [
+      {
+        name: '商贸',
+        type: 'line',
+        smooth: true,
+        data: setData()
+      }, {
+        name: '物流',
+        type: 'line',
+        smooth: true,
+        data: setData()
+      }, {
+        name: '5G',
+        type: 'line',
+        smooth: true,
+        data: setData()
+      }, {
+        name: '路灯',
+        type: 'line',
+        smooth: true,
+        data: setData()
+      }, {
+        name: '充电桩',
+        type: 'line',
+        smooth: true,
+        data: setData()
+      }, {
+        name: '工业',
+        type: 'line',
+        smooth: true,
+        data: setData()
+      }, {
+        name: '综合体',
+        type: 'line',
+        smooth: true,
+        data: setData()
+      }, {
+        name: '小微园',
+        type: 'line',
+        smooth: true,
+        data: setData()
+      }]
+    this.$chart.screenLine('fh', '负荷', legendArr,xArr,seriesArr2)
+      let seriesArr3 = [
+      {
+        name: '商贸',
+        type: 'line',
+        smooth: true,
+        data: setData()
+      }, {
+        name: '物流',
+        type: 'line',
+        smooth: true,
+        data: setData()
+      }, {
+        name: '5G',
+        type: 'line',
+        smooth: true,
+        data: setData()
+      }, {
+        name: '路灯',
+        type: 'line',
+        smooth: true,
+        data: setData()
+      }, {
+        name: '充电桩',
+        type: 'line',
+        smooth: true,
+        data: setData()
+      }, {
+        name: '工业',
+        type: 'line',
+        smooth: true,
+        data: setData()
+      }, {
+        name: '综合体',
+        type: 'line',
+        smooth: true,
+        data: setData()
+      }, {
+        name: '小微园',
+        type: 'line',
+        smooth: true,
+        data: setData()
+      }]
+    this.$chart.screenLine('cn', '储能', legendArr,xArr,seriesArr3)
   },
 }
 </script>

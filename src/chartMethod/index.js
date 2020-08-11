@@ -95,7 +95,7 @@ let install = function (Vue) {
                         var myChart = echarts.init(document.getElementById(id))
                         var data = [{
                             value: 100,
-                            name: 'a',
+                            name: '路灯',
                             label: {
                                 color: '#fff'
                             },
@@ -110,7 +110,7 @@ let install = function (Vue) {
                         },
                         {
                             value: 80,
-                            name: 'b',
+                            name: '充电桩',
                             label: {
                                 color: '#fff'
                             },
@@ -125,7 +125,7 @@ let install = function (Vue) {
                         },
                         {
                             value: 65,
-                            name: 'c',
+                            name: '工业',
                             label: {
                                 color: '#fff'
                             },
@@ -140,7 +140,7 @@ let install = function (Vue) {
                         },
                         {
                             value: 65,
-                            name: 's',
+                            name: '综合体',
                             label: {
                                 color: '#fff'
                             },
@@ -155,7 +155,7 @@ let install = function (Vue) {
                         },
                         {
                             value: 60,
-                            name: 'e',
+                            name: '小微园',
                             label: {
                                 color: '#fff'
                             },
@@ -170,7 +170,37 @@ let install = function (Vue) {
                         },
                         {
                             value: 60,
-                            name: 'c',
+                            name: '商贸',
+                            label: {
+                                color: '#fff'
+                            },
+                            itemStyle: {
+
+                            },
+                            emphasis: {
+                                itemStyle: {
+
+                                }
+                            }
+                        },
+                        {
+                            value: 60,
+                            name: '物流',
+                            label: {
+                                color: '#fff'
+                            },
+                            itemStyle: {
+
+                            },
+                            emphasis: {
+                                itemStyle: {
+
+                                }
+                            }
+                        },
+                        {
+                            value: 60,
+                            name: '5G',
                             label: {
                                 color: '#fff'
                             },
@@ -267,8 +297,6 @@ let install = function (Vue) {
                                 interval: 1,
                                 type: 'category',
                                 data: [],
-
-
                             },
                             //中间画圈圈的坐标轴
                             radiusAxis: {
@@ -411,10 +439,15 @@ let install = function (Vue) {
                                 top: '16%',
                                 containLabel: true
                             },
-
+                            legend: {
+                                textStyle: {
+                                    color: '#ccc'
+                                },
+                                data: ['今年', '去年']
+                            },
                             xAxis: {
                                 type: 'category',
-                                data: ['2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019'],
+                                data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
                                 axisLine: {
                                     lineStyle: {
                                         color: 'white'
@@ -432,6 +465,7 @@ let install = function (Vue) {
 
                             yAxis: {
                                 type: 'value',
+                                name: '万元',
                                 axisLine: {
                                     show: false,
                                     lineStyle: {
@@ -448,7 +482,7 @@ let install = function (Vue) {
                             },
 
                             series: [{
-                                name: '1',
+                                name: '今年',
                                 type: 'bar',
                                 barWidth: '15%',
                                 itemStyle: {
@@ -463,10 +497,10 @@ let install = function (Vue) {
                                         barBorderRadius: 12,
                                     },
                                 },
-                                data: [400, 400, 300, 300, 300, 400, 400, 400, 300]
+                                data: [400, 400, 300, 300, 300, 400, 400, 400, 300, 500, 500, 500, 500]
                             },
                             {
-                                name: '2',
+                                name: '去年',
                                 type: 'bar',
                                 barWidth: '15%',
                                 itemStyle: {
@@ -482,8 +516,100 @@ let install = function (Vue) {
                                     }
 
                                 },
-                                data: [400, 500, 500, 500, 500, 400, 400, 500, 500]
+                                data: [400, 500, 500, 500, 500, 400, 400, 500, 500, 500, 500, 400, 400]
                             }]
+                        };
+                        myChart.setOption(option);
+                    },
+                    screenLine(id, title, legendArr, xArr, seriesArr) {
+                        if (myChart != null && myChart != "" && myChart != undefined) {
+                            myChart.dispose();
+                        }
+                        var myChart = echarts.init(document.getElementById(id))
+                        let option = {
+                            color: ['#00e878', '#4bffff', '#0aa8fe', '#df017c', '#ff4612', '#8660f2', '#ffff40', '#ff9811', '#00e878'],
+                            title: {
+                                text: title,
+                                textStyle: {
+                                    color: '#fff'
+                                }
+                            },
+                            tooltip: {
+                                trigger: 'axis'
+                            },
+                            legend: {
+                                icon: "circle",   //  这个字段控制形状  类型包括 circle，rect ，roundRect，triangle，diamond，pin，arrow，none
+                                itemWidth: 10,  // 设置宽度
+                                itemHeight: 10, // 设置高度
+                                data: legendArr,
+                                textStyle: {
+                                    color: '#b2bfc8'
+                                }
+                            },
+                            grid: {
+                                left: '3%',
+                                right: '4%',
+                                bottom: '3%',
+                                containLabel: true
+                            },
+
+                            xAxis: {
+                                type: 'category',
+                                boundaryGap: false,
+                                axisLine: {
+                                    lineStyle: {
+                                        color: '#b2bfc8'
+                                    }
+                                },
+                                splitLine: {
+                                    show: false
+                                },
+                                data: xArr
+                            },
+                            yAxis: {
+                                type: 'value',
+                                axisLine: {
+                                    lineStyle: {
+                                        color: '#b2bfc8'
+                                    }
+                                },
+                                splitLine: {
+                                    show: false
+                                },
+                            },
+                            series: seriesArr
+                            // series: [
+                            //     {
+                            //         name: '邮件营销',
+                            //         type: 'line',
+                            //         stack: '总量',
+                            //         data: [120, 132, 101, 134, 90, 230, 210]
+                            //     },
+                            //     {
+                            //         name: '联盟广告',
+                            //         type: 'line',
+                            //         stack: '总量',
+                            //         data: [220, 182, 191, 234, 290, 330, 310]
+                            //     },
+                            //     {
+                            //         name: '视频广告',
+                            //         type: 'line',
+                            //         stack: '总量',
+                            //         data: [150, 232, 201, 154, 190, 330, 410]
+                            //     },
+                            //     {
+                            //         name: '直接访问',
+                            //         type: 'line',
+                            //         stack: '总量',
+                            //         data: [320, 332, 301, 334, 390, 330, 320]
+                            //     },
+                            //     {
+                            //         name: '搜索引擎',
+                            //         type: 'line',
+                            //         stack: '总量',
+                            //         data: [820, 932, 901, 934, 1290, 1330, 1320]
+                            //     }
+                            // ]
                         };
                         myChart.setOption(option);
                     }
