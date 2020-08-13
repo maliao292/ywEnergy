@@ -62,7 +62,6 @@ export default {
             username: this.ruleForm.username,
             password: this.ruleForm.password,
           }).then((res) => {
-            console.log(res)
             this.setToken(res.headers.authorization)
             this.setUser(this.ruleForm.username)
             res = res.data

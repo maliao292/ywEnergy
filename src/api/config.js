@@ -23,7 +23,6 @@ axios.interceptors.response.use(data => {// 响应成功关闭loading
   }
   return data.data
 }, err => {
-  console.log(err.response)
   if (err.response.data.code === 401) {
     window.location.href = '/login'
     localStorage.removeItem('ywIdentity')

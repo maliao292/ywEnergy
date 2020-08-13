@@ -225,7 +225,6 @@ export default {
   },
   mounted() {
     mapLineData({ stationId: this.stationDetail.id, queryDate: this.getNowTime() }).then((res) => {
-      console.log(res.data)
       let legendArr = [res.data.ydataNameA, res.data.ydataNameB, res.data.ydataNameC, res.data.ydataNameD],
         xArr = res.data.xdata,
         seriesArr = [{

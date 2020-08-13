@@ -164,13 +164,10 @@ export default {
       window: '',
       events: {
         init: (o) => {
-          // console.log(o.getCenter())
           this.$nextTick(() => {
             this.$refs.map.$amap.setFitView()
           })
-          // console.log(this.$refs.map.$$getInstance())
           o.getCity((result) => {
-            // console.log(result)
           })
         },
         moveend: () => { },
