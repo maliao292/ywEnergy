@@ -78,14 +78,13 @@ router.beforeEach((to, from, next) => {
   if (to.path === '/login') {
     next();
   } else {
-    // let token = sessionStorage.getItem('token');
-    // if (!token) {
-    //   next('/login');
-    //   return
-    // }
-
-
-    next();
+    let token = localStorage.getItem('ywIdentity');
+    let userName = localStorage.getItem('ywUserName');
+    if (!token||!userName) {
+      next('/login');
+      return
+    }
+    next();  
   }
 })
 

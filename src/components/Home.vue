@@ -33,7 +33,7 @@
         <div class="homeTime"><Time /></div>
         <div class="userMsg">
           <img :src="logo" alt="">
-          <span class="username">admin </span>
+          <span class="username">{{userName}} </span>
         </div>
         <div @click="toScreen" style="color:#fff;cursor:pointer">大屏</div>
         <div class="logout icon iconfont icon-tuichu" @click="toLogin"></div>
@@ -47,12 +47,14 @@
 
 <script>
 import Time from './Time'
+import { mapMutations } from 'vuex'
 export default {
   components: {
     Time,
   },
   data() {
     return {
+      userName:'',
       stationname:'',
       stationNameVal:'',
       isMapPage: 'map',
@@ -68,7 +70,9 @@ export default {
   },
 
   methods: {
+    ...mapMutations(['clearInfo']),
     toLogin() {
+      this.clearInfo();
       this.$router.replace({ name: 'login' })
     },
     searchStation(){
@@ -81,6 +85,7 @@ export default {
     toScreen() { this.$router.push({ name: 'screen' }) }
   },
   created() {
+    this.userName = localStorage.getItem('ywUserName')
     this.isMapPage = this.$route.name
   },
 

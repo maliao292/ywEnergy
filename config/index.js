@@ -46,13 +46,13 @@ module.exports = {
 
   build: {
     // Template for index.html
-    // index: path.resolve(__dirname, '../dist/index.html'),
+    index: path.resolve(__dirname, '../dist/index.html'),
     //C:\Users\Administrator\Desktop\nginx-1.16.1\html_xzfw
-    index: path.resolve(__dirname, 'C:/Users/Administrator/Desktop/nginx-1.16.1/html_xzfw/index.html'),
+    // index: path.resolve(__dirname, 'C:/Users/Administrator/Desktop/nginx-1.16.1/html_xzfw/index.html'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, 'C:/Users/Administrator/Desktop/nginx-1.16.1/html_xzfw'),
-    // assetsRoot: path.resolve(__dirname, '../dist'),
+    // assetsRoot: path.resolve(__dirname, 'C:/Users/Administrator/Desktop/nginx-1.16.1/html_xzfw'),
+    assetsRoot: path.resolve(__dirname, '../dist'),
 
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',

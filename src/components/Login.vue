@@ -30,7 +30,7 @@
 
 <script>
 import { login } from '@/api'
-// import { mapMutations } from 'vuex'
+import { mapMutations } from 'vuex'
 export default {
   data() {
     return {
@@ -53,7 +53,7 @@ export default {
     this.keyupEnter()
   },
   methods: {
-    // ...mapMutations(['setUserInfo']),
+    ...mapMutations(['setToken','setUser']),
     dologin(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -62,6 +62,10 @@ export default {
             username: this.ruleForm.username,
             password: this.ruleForm.password,
           }).then((res) => {
+            console.log(res)
+            this.setToken(res.headers.authorization)
+            this.setUser(this.ruleForm.username)
+            res = res.data
             this.loging = false
             let type = res.code == 200 ? 'success' : 'error'
             this.$message({ type, message: res.msg })
@@ -75,7 +79,6 @@ export default {
     keyupEnter() {
       document.onkeydown = (e) => {
         if (e.keyCode === 13) {
-          console.log('enter')
           this.dologin('ruleForm')
         }
       }
