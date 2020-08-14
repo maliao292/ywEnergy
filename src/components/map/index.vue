@@ -4,7 +4,7 @@
       <span class="arrow" :class="{menuActve:menushow}" @click="menushow=!menushow"></span>
     </div>
     <div class="amap-page-container">
-      <el-amap ref="map" vid="amapDemo" :amap-manager="amapManager" :zoom="zoom" :events="events" class="amap-demo">
+      <el-amap ref="map" vid="amapDemo" :amap-manager="amapManager" :zoom="zoom" :center='center' :events="events" class="amap-demo">
         <el-amap-marker v-for="(marker, index) in markers" :key=index :position="marker.position" :events="marker.events" :icon="marker.icon" :visible="marker.visible" :draggable="marker.draggable" :vid="index"></el-amap-marker>
         <el-amap-info-window v-if="window" :position="window.position" :visible="window.visible" :content="window.content"></el-amap-info-window>
       </el-amap>
@@ -158,6 +158,8 @@ export default {
       jzname: '',
       amapManager,
       zoom: 12,
+      center: [120.081079,29.310772],
+
       allmarkers: [],
       markers: [],
       windows: [],
@@ -176,7 +178,7 @@ export default {
     }
   },
   created() {
-    topNum().then((res)=>{
+    topNum().then((res) => {
       this.topNum = res.data
     })
   },
@@ -208,7 +210,7 @@ export default {
             dcImg = 3;
             ktImg = 6;
             dcText = '充电';
-            dcText = '停止';
+            ktText = '停止';
             break;
           case 4:
             dcColor = 'c1';
@@ -216,7 +218,7 @@ export default {
             dcImg = 3;
             ktImg = 7;
             dcText = '充电';
-            dcText = '开启';
+            ktText = '开启';
             break;
           case 5:
             dcColor = 'c2';
@@ -224,7 +226,7 @@ export default {
             dcImg = 4;
             ktImg = 6;
             dcText = '放电';
-            dcText = '停止';
+            ktText = '停止';
             break;
           case 6:
             dcColor = 'c2';
@@ -232,7 +234,7 @@ export default {
             dcImg = 4;
             ktImg = 7;
             dcText = '放电';
-            dcText = '开启';
+            ktText = '开启';
             break;
           case 7:
             dcColor = 'c3';
@@ -240,7 +242,7 @@ export default {
             dcImg = 5;
             ktImg = 6;
             dcText = '待机';
-            dcText = '停止';
+            ktText = '停止';
             break;
           case 8:
             dcColor = 'c3';
@@ -248,7 +250,7 @@ export default {
             dcImg = 5;
             ktImg = 7;
             dcText = '待机';
-            dcText = '开启';
+            ktText = '开启';
             break;
         }
         windows.push({
@@ -257,7 +259,7 @@ export default {
           <div class='alstyle'>
             <h2>${v.stationName}</h2>
             <ul>
-              <li><span>基站负荷：</span><span>${ v.allPower ? v.allPower : ''} kW</span></li>
+              <li><span>基站负荷：</span><span>${ v.allPower ? (v.allPower).toFixed(2) : ''} kW</span></li>
               <li style="${ v.runStatus == 1 || v.runStatus == 2 || !v.runStatus ? 'display:none' : ''}">
                 <span>电池状态：</span>
                 <span class="${dcColor}">

@@ -11,7 +11,8 @@ import store from './store/index';
 Vue.use(ElementUI);
 import myCharts from './chartMethod'
 Vue.use(myCharts)
-
+import publicMethods from './chartMethod/publicMethods'
+Vue.use(publicMethods)
 // 引入echarts
 import echarts from 'echarts'
 Vue.prototype.$echarts = echarts

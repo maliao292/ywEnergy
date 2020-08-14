@@ -11,18 +11,18 @@
       <div class="stationData">
         <div class="stationProgress">
           <div class="gradientCon" style="padding: 10px 20px">
-            <div class="outTop residuele"><span>剩余电量：</span><span>100%</span></div>
+            <div class="outTop residuele"><span>剩余电量：</span><span>-%</span></div>
             <img :src="dc" alt="">
             <div class="outBottom">电池</div>
           </div>
           <div class="eledirection">
-            <div class="outTop cft"><span>{{stationNum.chargePower + stationNum.disChargePower}}</span>kW</div>
-            <img class="cenarrow" :src="stationNum.batteryStatus==0?arrowl:arrowr" alt="">
+            <div class="outTop cft"><span>{{(stationNum.chargePower + stationNum.disChargePower).toFixed(2)}}</span>kW</div>
+            <img v-if="stationDetail.batteryStatus != 2" class="cenarrow" :src="stationNum.batteryStatus==0?arrowl:arrowr" alt="">
             <!-- batteryStatus：0 -->
-            <div class="outBottom cfd">充电</div>
+            <div class="outBottom cfd">{{stationDetail.batteryStatus | statusFilter}}</div>
           </div>
           <div class="gradientCon">
-            <div class="outTop cft"><span>{{stationNum.allPower}}</span>kW</div>
+            <div class="outTop cft"><span>{{(stationNum.allPower).toFixed(2)}}</span>kW</div>
             <div class="fh_s ">
               <b><img :src="kg" alt=""></b><span>{{stationNum.sourcePower}} <b>kW</b> </span>
             </div>
@@ -35,7 +35,7 @@
             <div class="outBottom">负荷</div>
           </div>
           <div class="eledirection">
-            <div class="outTop cft"><span>{{stationNum.allPower+stationNum.chargePower-stationNum.disChargePower}}</span>kW</div>
+            <div class="outTop cft"><span>{{(stationNum.allPower+stationNum.chargePower).toFixed(2)}}</span>kW</div>
             <img class="cenarrow" :src="arrowl" alt="">
           </div>
           <div class="gradientCon">
@@ -225,36 +225,105 @@ export default {
   },
   mounted() {
     mapLineData({ stationId: this.stationDetail.id, queryDate: this.getNowTime() }).then((res) => {
-      let legendArr = [res.data.ydataNameA, res.data.ydataNameB, res.data.ydataNameC, res.data.ydataNameD],
-        xArr = res.data.xdata,
-        seriesArr = [{
-          name: res.data.ydataNameA,
-          type: 'line',
-          stack: '总量',
-          areaStyle: {},
-          data: res.data.ydataA
-        }, {
-          name: res.data.ydataNameB,
-          type: 'line',
-          stack: '总量',
-          areaStyle: {},
-          data: res.data.ydataB
-        }, {
-          name: res.data.ydataNameC,
-          type: 'line',
-          stack: '总量',
-          areaStyle: {},
-          data: res.data.ydataC
-        }, {
-          name: res.data.ydataNameD,
-          type: 'line',
-          stack: '总量',
-          areaStyle: {},
-          data: res.data.ydataD
-        }]
-    this.$chart.screenBacLine('stationLine', this.stationDetail.stationName, legendArr, xArr, seriesArr)
+      let legendArr = [
+        { name: res.data.ydataNameA, icon: 'rect' },
+        { name: res.data.ydataNameB, icon: 'rect' },
+        { name: res.data.ydataNameC, icon: 'rect' },
+        { name: res.data.ydataNameD },
+      ]
+
+
+
+      let seriesArr = [{
+        name: res.data.ydataNameA,
+        type: 'line',
+        stack: '总量',
+        symbol:'none',
+        itemStyle: {
+          normal: {
+            color: '#c5b0ff',//改变折线点的颜色
+            lineStyle: {
+              width:0,
+              color: '#c5b0ff' //改变折线颜色
+            }
+          }
+        },
+        areaStyle: {
+          color: '#c5b0ff'
+        },
+        data: res.data.ydataA
+      }, {
+        name: res.data.ydataNameB,
+        type: 'line',
+        stack: '总量',
+        symbol:'none',
+        itemStyle: {
+          normal: {
+            color: '#ffc77a',//改变折线点的颜色
+            lineStyle: {
+              width:0,
+              color: '#ffc77a' //改变折线颜色
+            }
+          }
+        },
+        areaStyle: {
+          color: '#ffc77a'
+        },
+        data: res.data.ydataB
+      }, {
+        name: res.data.ydataNameC,
+        type: 'line',
+        stack: '总量',
+        symbol:'none',
+        itemStyle: {
+          normal: {
+            color: '#b7e685',//改变折线点的颜色
+            lineStyle: {
+              width:0,
+              color: '#b7e685' //改变折线颜色
+            }
+          }
+        },
+        areaStyle: {
+          color: '#b7e685'
+        },
+        data: res.data.ydataC
+      }, {
+        name: res.data.ydataNameD,
+        type: 'line',
+        itemStyle: {
+          normal: {
+            color: '#f97540',//改变折线点的颜色
+            lineStyle: {
+              color: '#f97540' //改变折线颜色
+            }
+          }
+        },
+        data: res.data.ydataD
+      }]
+
+      let xInterVal = this.$publicMethods.getInterVal({ begin: res.data.xdata[0], end: res.data.xdata[1] ? res.data.xdata[1] : '00:15' })
+      let xArr = this.$publicMethods.getMinuteForX(xInterVal)
+      this.$chart.screenBacLine('stationLine', this.stationDetail.stationName, legendArr, xArr, seriesArr)
 
     })
+  },
+  filters: {
+    statusFilter(e) {
+      let st = '充电'
+      switch (e) {
+        case 0:
+          st = '充电'
+          break
+        case 1:
+          st = '放电'
+          break
+        case 2:
+          st = '待机'
+          break
+      }
+      return st
+    }
   }
 }
 </script>

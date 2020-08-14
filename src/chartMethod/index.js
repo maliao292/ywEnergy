@@ -7,7 +7,7 @@ let install = function (Vue) {
                     screenBacLine(id,title='',legendArr=[],xArr=[],seriesArr=[]) {
                         var myChart = echarts.init(document.getElementById(id))
                         let option = {
-                            color:['#b9e889','#ffc97e','#c7b2ff','#4c8aeb'],
+                            color:['#a5b8ff','#fffd7a','#7dd656','#f97540'],
                             title: {
                                 text: title
                             },
