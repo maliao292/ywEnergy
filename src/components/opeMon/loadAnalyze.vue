@@ -91,7 +91,8 @@
         chart_fenshiPie: {
           //图表实例
           dom: null,
-          legend: ["尖","峰","平","谷"],
+          // legend: ["尖","峰","平","谷"],
+          legend: ["尖","峰","谷"],
         },
         chart_station: {
           //图表实例
@@ -259,8 +260,8 @@
                     name: this.chart_fenshiPie.legend[0]
                   },
                   {value: fsData.offPeakBfb, name: this.chart_fenshiPie.legend[1]},
-                  {value: fsData.shoulderBfb, name: this.chart_fenshiPie.legend[2]},
-                  {value: fsData.peakBfb, name: this.chart_fenshiPie.legend[3]},
+                  // {value: fsData.shoulderBfb, name: this.chart_fenshiPie.legend[2]},
+                  {value: fsData.peakBfb, name: this.chart_fenshiPie.legend[2]},
                 ],
                 emphasis: {
                   itemStyle: {
@@ -275,6 +276,27 @@
         })
       },
 
+      timeSlot (step) {   //  step = 间隔的分钟
+        var date = new Date()
+        date.setHours('00')    // 时分秒设置从零点开始
+        date.setSeconds('00')
+        date.setUTCMinutes('00')
+        // console.log(date.getHours())
+        // console.log(date.getSeconds())
+        // console.log(new Date(date.getTime()))
+
+        var arr = [], timeArr = [];
+        var slotNum = 24*60/step   // 算出多少个间隔
+        for (var f = 0; f <= slotNum; f++) {   //  stepM * f = 24H*60M
+          // arr.push(new Date(Number(date.getTime()) + Number(step*60*1000*f)))   //  标准时间数组
+          var time = new Date(Number(date.getTime()) + Number(step*60*1000*f))  // 获取：零点的时间 + 每次递增的时间
+          var hour = '', sec = '';
+          time.getHours() < 10 ? hour = '0' + time.getHours() : hour = time.getHours()  // 获取小时
+          time.getMinutes() < 10 ? sec = '0' + time.getMinutes() : sec = time.getMinutes()   // 获取分钟
+          timeArr.push(hour + ':' + sec)
+        }
+        return timeArr
+      },
       // 基站负荷折线图
       renderChart_station(){
         getJzfh(this.stationParam).then(res => {
@@ -316,10 +338,14 @@
             },
             xAxis: [
               {
-                type: 'category',
+                axisLabel: {
+                  show: true,
+                  interval:3
+                },
+                data: this.timeSlot(15),
                 boundaryGap: false,
+                type: 'category',
                 // data: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24']
-                data: stationLoadData.xdata
               }
             ],
             yAxis: [
@@ -338,53 +364,58 @@
             ],
             series: [
               {
+                symbol: "none",
                 name: this.chart_station.legend[0],
                 type: 'line',
                 stack: '总量',
                 itemStyle : {
                   normal : {
-                    color : '#c5b0ff',//改变折线点的颜色
+                    color : '#a5b8ff',//改变折线点的颜色
                     lineStyle:{
-                      color:'#9d7bf3' //改变折线颜色
+                      color:'#a5b8ff', //改变折线颜色
+                      width:0
                     }
                   }
                 },
                 areaStyle: {
-                  color: '#c5b0ff'
+                  color: '#a5b8ff'
                 },
                 data: stationLoadData.ydataA
               },
               {
+                symbol: "none",
                 name: this.chart_station.legend[1],
                 type: 'line',
                 stack: '总量',
                 itemStyle : {
                   normal : {
-                    color : '#ffc77a',//改变折线点的颜色
+                    color : '#fffd7a',//改变折线点的颜色
                     lineStyle:{
-                      color:'#ed9c2d' //改变折线颜色
+                      color:'#fffd7a', //改变折线颜色
+                      width:0
                     }
                   }
                 },
                 areaStyle: {
-                  color: '#ffc77a'
+                  color: '#fffd7a'
                 },
                 data: stationLoadData.ydataB
               },
               {
+                symbol: "none",
                 name: this.chart_station.legend[2],
                 type: 'line',
                 stack: '总量',
                 itemStyle : {
                   normal : {
-                    color : '#b7e685',//改变折线点的颜色
+                    color : '#7dd656',//改变折线点的颜色
                     lineStyle:{
-                      color:'#6dba18' //改变折线颜色
+                      color:'#7dd656' //改变折线颜色
                     }
                   }
                 },
                 areaStyle: {
-                  color: '#b7e685'
+                  color: '#7dd656'
                 },
                 data: stationLoadData.ydataC
               },
@@ -395,7 +426,8 @@
                   normal : {
                     color : '#f97540',//改变折线点的颜色
                     lineStyle:{
-                      color:'#f97540' //改变折线颜色
+                      color:'#f97540', //改变折线颜色
+                      width:2,
                     }
                   }
                 },

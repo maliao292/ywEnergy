@@ -164,7 +164,7 @@
       },
       mounted() {
         // this.renderChart_line1()
-        this.renderChart_line2()
+        // this.renderChart_line2()
       },
       methods: {
         // 获取当前时间
@@ -185,11 +185,34 @@
           this.chart_line1.yAxisData2 = [];
         },
 
+        timeSlot (step) {   //  step = 间隔的分钟
+          var date = new Date()
+          date.setHours('00')    // 时分秒设置从零点开始
+          date.setSeconds('00')
+          date.setUTCMinutes('00')
+          // console.log(date.getHours())
+          // console.log(date.getSeconds())
+          // console.log(new Date(date.getTime()))
+
+          var arr = [], timeArr = [];
+          var slotNum = 24*60/step   // 算出多少个间隔
+          for (var f = 0; f <= slotNum; f++) {   //  stepM * f = 24H*60M
+            // arr.push(new Date(Number(date.getTime()) + Number(step*60*1000*f)))   //  标准时间数组
+            var time = new Date(Number(date.getTime()) + Number(step*60*1000*f))  // 获取：零点的时间 + 每次递增的时间
+            var hour = '', sec = '';
+            time.getHours() < 10 ? hour = '0' + time.getHours() : hour = time.getHours()  // 获取小时
+            time.getMinutes() < 10 ? sec = '0' + time.getMinutes() : sec = time.getMinutes()   // 获取分钟
+            timeArr.push(hour + ':' + sec)
+          }
+          return timeArr
+        },
+
         // 获取电流充放电功率
         getDccfdImfo(){
           // console.log(this.stationParam);
 
           getDccfd(this.stationParam).then(res => {
+            // console.log(this.timeSlot(15));
             // console.log(res);
             this.dccfd.xfdl = res.data.xfdl
             this.dccfd.tgdl = res.data.tgdl
@@ -226,8 +249,13 @@
                 data: this.chart_line1.legend
               },
               xAxis: {
-                // data: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24']
-                data: this.chart_line1.xAxisData
+                // data: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24'],
+                axisLabel: {
+                  show: true,
+                  interval:3
+                },
+                data: this.timeSlot(15),
+                boundaryGap: false,
               },
               yAxis: [
                 {
@@ -297,8 +325,8 @@
             this.wdykt = res.data
 
             this.chart_line2.xAxisData = res.data.xdata
-            this.chart_line2.yAxisData1 = res.data.ydataA;
-            this.chart_line2.yAxisData2 = res.data.ydataB;
+            this.chart_line2.yAxisData1 = res.data.ydataB;
+            this.chart_line2.yAxisData2 = res.data.ydataA;
             this.chart_line2.yAxisData3 = res.data.ydataC;
 
             this.chart_line2.dom = this.$echarts.init(this.$refs.airChart);
@@ -329,7 +357,12 @@
               },
               xAxis: {
                 // data: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24']
-                data:this.chart_line2.xAxisData
+                axisLabel: {
+                  show: true,
+                  interval:3
+                },
+                data: this.timeSlot(15),
+                boundaryGap: false,
               },
               yAxis: [
                 {
@@ -337,10 +370,21 @@
                   nameTextStyle :{
                     fontSize: 14
                   },
+                  min:0,
+                  max:5,
                   itemStyle: {
                     normal: {
                       color: "#52a4f6",
                     }
+                  },
+                  splitNumber : 2,
+                },
+                {
+                  name: "℃",
+                  min:0,
+                  max:50,
+                  nameTextStyle :{
+                    fontSize: 14
                   },
                   splitNumber : 2,
                 }
@@ -364,6 +408,7 @@
                       }
                     }
                   },
+                  yAxisIndex: 1,
                   data: this.chart_line2.yAxisData1
                 },
                 {
@@ -384,6 +429,7 @@
                       }
                     }
                   },
+                  yAxisIndex: 1,
                   data: this.chart_line2.yAxisData2
                 },
                 {
@@ -443,5 +489,12 @@
   .monStaSelect>>>.el-input__inner{
     border: none;
     box-shadow: 2px 2px 10px 2px rgba(2, 27, 50, 0.1);
+  }
+  .monEcharts_info{
+    min-width: 310px;
+  }
+  .monEcharts_info>>>.monEcharts_infoEach{
+    min-width: 310px;
+    width: auto;
   }
 </style>

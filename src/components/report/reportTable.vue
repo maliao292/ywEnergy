@@ -69,7 +69,8 @@
         :data="tableData"
         max-height="800"
         :row-class-name="tabRowClassName"
-        style="width: 100%">
+        style="width: 99%"
+      >
         <el-table-column label="序号" width="60" align="center">
           <template slot-scope="scope">
             {{ scope.$index+1 }}
@@ -193,7 +194,7 @@
         //获取表格数据
         getTable() {
           getReportTable(this.stationParam).then(res => {
-            console.log(res);
+            // console.log(res);
             if(res.code == 200) {
               this.tableData = res.data
             }
@@ -217,7 +218,7 @@
 
         // 表格条纹样式
         tabRowClassName({row,rowIndex}){
-          console.log(row,rowIndex);
+          // console.log(row,rowIndex);
           let index = rowIndex + 1;
           if(index %2 == 1){
             return 'special-row'
@@ -228,7 +229,7 @@
         changeStreet() {
           this.stationOption = []
           getStationInfo(this.stationParam.streetId).then(response => {
-            console.log(response);
+            // console.log(response);
             this.stationOption = response.data
             this.stationParam.stationId = response.data[0].id
 
