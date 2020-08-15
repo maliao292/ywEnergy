@@ -7,19 +7,19 @@ let install = function (Vue) {
                     screenBacLine(id,title='',legendArr=[],xArr=[],seriesArr=[]) {
                         var myChart = echarts.init(document.getElementById(id))
                         let option = {
-                            color:['#a5b8ff','#fffd7a','#7dd656','#f97540'],
+                            color:['#f00','#0ff','#f0f','#00f'],
                             title: {
                                 text: title
                             },
-                            tooltip: {
-                                trigger: 'axis',
-                                axisPointer: {
-                                    type: 'cross',
-                                    label: {
-                                        backgroundColor: '#6a7985'
-                                    }
-                                }
-                            },
+                            // tooltip: {
+                            //     trigger: 'axis',
+                            //     axisPointer: {
+                            //         type: 'cross',
+                            //         label: {
+                            //             backgroundColor: '#6a7985'
+                            //         }
+                            //     }
+                            // },
                             legend: {
                                 data: legendArr
                             },

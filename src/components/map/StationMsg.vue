@@ -238,54 +238,59 @@ export default {
         name: res.data.ydataNameA,
         type: 'line',
         stack: '总量',
-        symbol:'none',
+        symbol: 'none',
         itemStyle: {
           normal: {
-            color: '#c5b0ff',//改变折线点的颜色
+            color: '#a5b8ff',//改变折线点的颜色
             lineStyle: {
-              width:0,
-              color: '#c5b0ff' //改变折线颜色
+              width:10,
+              color: '#a5b8ff' //改变折线颜色
             }
           }
         },
         areaStyle: {
-          color: '#c5b0ff'
+          color: '#a5b8ff',
+          opacity: 1
+     
         },
         data: res.data.ydataA
       }, {
         name: res.data.ydataNameB,
         type: 'line',
         stack: '总量',
-        symbol:'none',
+        symbol: 'none',
         itemStyle: {
           normal: {
-            color: '#ffc77a',//改变折线点的颜色
+            color: '#fffd7a',//改变折线点的颜色
             lineStyle: {
-              width:0,
-              color: '#ffc77a' //改变折线颜色
+              width: 5,
+              color: '#fffd7a' //改变折线颜色
             }
           }
         },
         areaStyle: {
-          color: '#ffc77a'
+          color: '#fffd7a',
+          opacity: 1
+   
         },
         data: res.data.ydataB
       }, {
         name: res.data.ydataNameC,
         type: 'line',
         stack: '总量',
-        symbol:'none',
+        symbol: 'none',
         itemStyle: {
           normal: {
             color: '#b7e685',//改变折线点的颜色
             lineStyle: {
-              width:0,
+              width: 0,
               color: '#b7e685' //改变折线颜色
             }
           }
         },
         areaStyle: {
-          color: '#b7e685'
+          color: '#b7e685',
+          opacity: 1
         },
         data: res.data.ydataC
       }, {
