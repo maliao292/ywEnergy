@@ -6,7 +6,7 @@
         <Time style="display:inline-block;width:285px" :fontName='fontName' />
         <span class="timeFont">TIME</span>
       </div>
-      <div class="stitle">义乌源荷储集成平台</div>
+      <div class="stitle">义乌市源荷储智能集成平台</div>
       <div class="userBtn">
         <span class="timeFont">
           Welcome,admin!
@@ -45,11 +45,11 @@
       <div class="screenMap">
         <div class="msgnum">
           <p>户数</p>
-          <p><span>1873</span> <i>户</i> </p>
+          <p><span>{{ychAllData.stationNum}}</span> <i>户</i> </p>
           <p>容量</p>
-          <p><span>1873</span> <i>MW</i> </p>
-          <p>总发电功率</p>
-          <p><span>1873</span><i>MW</i></p>
+          <p><span>{{ychAllData.volume}}</span> <i>MW</i> </p>
+          <p>{{allText}}</p>
+          <p><span>{{ychAllData.allLoadNum}}</span><i>MW</i></p>
         </div>
         <div class="mapshow">
           <img :src="map" alt="">
@@ -133,10 +133,20 @@
 
 <script>
 import Time from '../Time'
+import { screenMidData, screenCLine, screenFLine } from '@/api'
 export default {
   components: { Time },
   data() {
     return {
+      allText: '总发电功率',
+      ychAllData: {
+        allLoadNum: '',
+        volume: '',
+        stationNum: '',
+      },
+      ychAllDataContent: {
+
+      },
       fontName: 'circle',
       clock: require('@/assets/img/screen/screenTime.png'),
       back: require('@/assets/img/screen/screenBack.png'),
@@ -157,35 +167,92 @@ export default {
       ],
 
       modelDist: [
-        { value: 'y', text: '源', name: '光伏', icon: require('@/assets/img/screen/screenY.png') },
-        { value: 'h', text: '荷', name: '负荷', icon: require('@/assets/img/screen/screenFh.png') },
-        { value: 'c', text: '储', name: '储能', icon: require('@/assets/img/screen/screenCn.png') },
+        { value: 'y', text: '源', name: '光伏', icon: require('@/assets/img/screen/screenY.png'), allText: '总发电功率' },
+        { value: 'h', text: '荷', name: '负荷', icon: require('@/assets/img/screen/screenFh.png'), allText: '总可响应负荷' },
+        { value: 'c', text: '储', name: '储能', icon: require('@/assets/img/screen/screenCn.png'), allText: '总可响应负荷' },
       ],
       activeDist: 'sm',
       activeModel: 'y',
       baseStationList: [],
-      hMsg: {},
+
+      yMsg: {},
       hMsg: {
         g5: [
-          [42, 47.6, { station: '义乌茂后基站', msg: [{ key: '基站负荷：', val: 8.6, unit: 'kW' }, { key: '可响应负荷：', val: 2.2, unit: 'kW' }] }],
+          // [42, 47.6, { station: '义乌茂后基站', msg: [{ key: '基站负荷：', val: 8.6, unit: 'kW' }, { key: '可响应负荷：', val: 2.2, unit: 'kW' }] }],
         ]
       },
       cMsg: {
         g5: [
-          [45, 41, { station: '义乌茂后基站', msg: [{ key: '电池状态：', val: '待机' }, { key: '电池容量：', val: 8.6, unit: 'kW' }, { key: '可响应负荷：', val: 8.6, unit: 'kW' }] }],
+          //   [45, 41, { station: '义乌溪干西基站', msg: [{ key: '电池状态：', val: '待机' }, { key: '电池容量：', val: 8.6, unit: 'kW' }, { key: '可响应负荷：', val: 8.6, unit: 'kW' }] }],
         ]
       },
       windowMsg: [0, 0, { station: '', msg: [{ key: '', val: '' }] }],
       showWindow: false,
     };
   },
+  created() {
+    this.getMiddleData()
+  },
   methods: {
+    async getMiddleData() {
+      let res = await screenMidData();
+      let { c_volume, h_volume, allLoadNum, stationNum } = res.data
+      this.ychAllData = { allLoadNum, stationNum }
+      this.ychAllData.volume = this.ychAllDataContent['y_volume'] ? this.ychAllDataContent['y_volume'] : 0
+      this.ychAllDataContent = { c_volume, h_volume }
+      let list = res.data.list
+      let st = '充电'
+      switch (list[1].batteryStatus) {
+        case 0:
+          st = '充电'
+          break
+        case 1:
+          st = '放电'
+          break
+        case 2:
+          st = '待机'
+          break
+      }
+      this.hMsg.g5[0] = [42, 47.6, { station: '义乌茂后基站', msg: [{ key: '基站负荷：', val: list[0]['allPower'], unit: 'kW' }, { key: '可响应负荷：', val: list[0]['responsiveLoad'], unit: 'kW' }] }];
+      this.cMsg.g5[0] = [45, 41, { station: '义乌溪干西基站', msg: [{ key: '电池状态：', val: st }, { key: '电池容量：', val: list[1].sourceFixPower, unit: 'kW' }, { key: '可响应负荷：', val: list[1].responsiveLoad, unit: 'kW' }] }];
+    },
+    async getFLineData() {
+      let res = await screenFLine()
+      let xInterVal = this.$publicMethods.getInterVal({ begin: res.data.xData[0], end: res.data.xData[1] ? res.data.xData[1] : '00:15' })
+      let xArr = this.$publicMethods.getMinuteForX(xInterVal)
+      this.$chart.screenLine('fh', '负荷', this.getLines(res.data.yData)['legendArr'], xArr, this.getLines(res.data.yData)['seriesArr'])
+    },
+    async getCLineData() {
+      let res = await screenCLine()
+      let xInterVal = this.$publicMethods.getInterVal({ begin: res.data.xData[0], end: res.data.xData[1] ? res.data.xData[1] : '00:15' })
+      let xArr = this.$publicMethods.getMinuteForX(xInterVal)
+      this.$chart.screenLine('cn', '储能', this.getLines(res.data.yData)['legendArr'], xArr, this.getLines(res.data.yData)['seriesArr'])
+      this.$chart.screenLine('gf', '光伏', this.getLines(res.data.yData)['legendArr'], xArr, [])
+    },
+    getLines(yData) {
+      let legendArr = [], seriesArr = []
+      yData.forEach(({ name, arr }) => {
+        legendArr.push(name)
+        seriesArr.push({
+          name: name,
+          type: 'line',
+          smooth: false,
+          symbol: 'none',
+          data: arr
+        })
+      })
+      return {
+        legendArr, seriesArr
+      }
+    },
     distChange(val) {
       this.activeDist = val
       let activeStation = this[this.activeModel + 'Msg'] ? this[this.activeModel + 'Msg'][val] : [];
       this.baseStationList = activeStation ? activeStation : []
     },
-    modelChange({ value, text, name, icon }) {
+    modelChange({ value, text, name, icon, allText }) {
+      this.ychAllData.volume = this.ychAllDataContent[value + '_volume'] ? this.ychAllDataContent[value + '_volume'] : 0
+      this.allText = allText
       this.activeModel = value
       this.yhc = name
       this.modelIcon = icon
@@ -202,159 +269,28 @@ export default {
     cpmout() {
       this.showWindow = false
     },
-    backFun(){
+    backFun() {
       this.$router.go(-1)
     },
-    toLogin(){
-      this.$router.replace({name:'login'})
+    toLogin() {
+      this.$router.replace({ name: 'login' })
     }
   },
-  created() {
 
-  },
   mounted() {
+    this.getCLineData()
+    this.getFLineData()
     function setData() {
       let arr = []
       for (var i = 0; i < 24; i++) {
-        arr.push((Math.random()*2000).toFixed(2))
+        arr.push((Math.random() * 2000).toFixed(2))
       }
       return arr
     }
     this.$chart.hzPie('screenPie')
     this.$chart.screenBar('screenBar')
-    // this.$chart.screenLine()
-    let legendArr = ['商贸', '物流', '5G', '路灯', '充电桩', '工业', '综合体', '小微园']
-    let xArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
 
-    let seriesArr1 = [
-      {
-        name: '商贸',
-        type: 'line',
-        smooth: true,
-        data: setData()
-      }, {
-        name: '物流',
-        type: 'line',
-        smooth: true,
-        data: setData()
-      }, {
-        name: '5G',
-        type: 'line',
-        smooth: true,
-        data: setData()
-      }, {
-        name: '路灯',
-        type: 'line',
-        smooth: true,
-        data: setData()
-      }, {
-        name: '充电桩',
-        type: 'line',
-        smooth: true,
-        data: setData()
-      }, {
-        name: '工业',
-        type: 'line',
-        smooth: true,
-        data: setData()
-      }, {
-        name: '综合体',
-        type: 'line',
-        smooth: true,
-        data: setData()
-      }, {
-        name: '小微园',
-        type: 'line',
-        smooth: true,
-        data: setData()
-      }]
-    this.$chart.screenLine('gf', '光伏', legendArr,xArr,seriesArr1)
-      let seriesArr2 = [
-      {
-        name: '商贸',
-        type: 'line',
-        smooth: true,
-        data: setData()
-      }, {
-        name: '物流',
-        type: 'line',
-        smooth: true,
-        data: setData()
-      }, {
-        name: '5G',
-        type: 'line',
-        smooth: true,
-        data: setData()
-      }, {
-        name: '路灯',
-        type: 'line',
-        smooth: true,
-        data: setData()
-      }, {
-        name: '充电桩',
-        type: 'line',
-        smooth: true,
-        data: setData()
-      }, {
-        name: '工业',
-        type: 'line',
-        smooth: true,
-        data: setData()
-      }, {
-        name: '综合体',
-        type: 'line',
-        smooth: true,
-        data: setData()
-      }, {
-        name: '小微园',
-        type: 'line',
-        smooth: true,
-        data: setData()
-      }]
-    this.$chart.screenLine('fh', '负荷', legendArr,xArr,seriesArr2)
-      let seriesArr3 = [
-      {
-        name: '商贸',
-        type: 'line',
-        smooth: true,
-        data: setData()
-      }, {
-        name: '物流',
-        type: 'line',
-        smooth: true,
-        data: setData()
-      }, {
-        name: '5G',
-        type: 'line',
-        smooth: true,
-        data: setData()
-      }, {
-        name: '路灯',
-        type: 'line',
-        smooth: true,
-        data: setData()
-      }, {
-        name: '充电桩',
-        type: 'line',
-        smooth: true,
-        data: setData()
-      }, {
-        name: '工业',
-        type: 'line',
-        smooth: true,
-        data: setData()
-      }, {
-        name: '综合体',
-        type: 'line',
-        smooth: true,
-        data: setData()
-      }, {
-        name: '小微园',
-        type: 'line',
-        smooth: true,
-        data: setData()
-      }]
-    this.$chart.screenLine('cn', '储能', legendArr,xArr,seriesArr3)
+
   },
 }
 </script>
@@ -379,7 +315,7 @@ export default {
 .userBtn img {
   margin-left: 10px;
 }
-.userBtn img{
+.userBtn img {
   cursor: pointer;
 }
 </style>

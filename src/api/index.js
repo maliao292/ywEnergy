@@ -19,3 +19,11 @@ export let topNum = _ => axios.post('/index/queryTop');
 export let stationDetailApi = dataobj => axios.post('/index/queryInfo',qs.stringify(dataobj));
 // 地图详情折线图GET /analysis/jzfh
 export let mapLineData = dataobj => axios.get('/analysis/jzfh?stationId='+dataobj.stationId+'&queryDate='+dataobj.queryDate);
+
+
+// 大屏数据
+export let screenMidData = _ =>axios.post('/screen/queryMiddle');
+// 负荷折线
+export let screenFLine = _ =>axios.post('/screen/queryLoadChart');
+// 储能折线
+export let screenCLine = _ =>axios.post('/screen/selectEnergyChart');

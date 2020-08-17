@@ -18,7 +18,7 @@
             <span v-show="isMapPage == 'map'" class="el-icon-search searchBtn" @click="searchStation"></span>
             <b v-show="isMapPage == 'map'"></b>
         </div>
-        <div class="homeProName">义乌市通讯基站能源管控平台 </div>
+        <div class="homeProName">义乌市源荷储智能集成平台 </div>
         <ul>
           <li>
             <router-link tag="div" to='/home/map'><span class="icon iconfont icon-daohangshouye"></span><span>首页</span></router-link>

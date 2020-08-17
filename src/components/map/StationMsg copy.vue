@@ -137,6 +137,10 @@
 import { Message } from 'element-ui'
 import { stationDetailApi, mapLineData } from '@/api'
 import echarts from 'echarts'
+
+import HighCharts from 'highcharts'
+import highchartsMore from 'highcharts/highcharts-more';
+highchartsMore(HighCharts);
 export default {
   props: {
     stationDetail: {},
@@ -166,10 +170,6 @@ export default {
     }
   },
   created() {
-    // 筛选站点数据，倒霉后台把所有基站数据全部拿给前端，真TM懒
-
-
-
     if (this.stationDetail.batteryStatus == 0) {
       this.dcBtn = 'dcc';
       this.dcimg = require('@/assets/img/alcd.png');
@@ -203,78 +203,12 @@ export default {
   },
   methods: {
     changedc(sta) {
-      if (sta === this.dcBtn) return
-      let st = '充电'
-      switch (sta) {
-        case 'dcc':
-          st = '充电'
-          break
-        case 'dcf':
-          st = '放电'
-          break
-        case 'dcd':
-          st = '待机'
-          break
-      }
-      let fragment = `
-          <ul>
-            <li><span>设备名称：</span><b>电池</b></li>
-            <li><span>控制指令：</span><b>${st}</b></li>
-          </ul>
-          <h3>即将下发控制指令，是否确认继续</h3>
-      `
-      this.$alert(fragment, '控制下发警告', {
-        dangerouslyUseHTMLString: true,
-        confirmButtonText: '确认',
-        showCancelButton: true,
-        cancelButtonText: '取消',
-        showClose: false,
-        customClass: 'yeallowAlert',
-      }).then(() => {
-        this.dcBtn = sta;
-        this.dcimg = this.stationBtnStatus[this.dcBtn]
-        // this.$message({
-        //   type: 'info',
-        //   message: '保存修改'
-        // });
-      });
-
+      this.dcBtn = sta;
+      this.dcimg = this.stationBtnStatus[this.dcBtn]
     },
     changekt(sta) {
-      if (sta === this.ktBtn) return
-      let st = '停止'
-      switch (sta) {
-        case 'ktt':
-          st = '停止'
-          break
-        case 'ktk':
-          st = '开启'
-          break
-
-      }
-      let fragment = `
-          <ul>
-            <li><span>设备名称：</span><b>空调</b></li>
-            <li><span>控制指令：</span><b>${st}</b></li>
-          </ul>
-          <h3>即将下发控制指令，是否确认继续</h3>
-      `
-      this.$alert(fragment, '控制下发警告', {
-        dangerouslyUseHTMLString: true,
-        confirmButtonText: '确认',
-        showCancelButton: true,
-        cancelButtonText: '取消',
-        showClose: false,
-        customClass: 'yeallowAlert',
-      }).then(() => {
-        this.ktBtn = sta;
-        this.ktimg = this.stationBtnStatus[this.ktBtn]
-        // this.$message({
-        //   type: 'info',
-        //   message: '保存修改'
-        // });
-      });
-
+      this.ktBtn = sta;
+      this.ktimg = this.stationBtnStatus[this.ktBtn]
     },
     changAl(formName) {
       this.$emit('close', false)
@@ -295,45 +229,52 @@ export default {
   },
   mounted() {
     mapLineData({ stationId: this.stationDetail.id, queryDate: this.getNowTime() }).then((res) => {
-      let legendArr = [
-        { name: res.data.ydataNameA, icon: 'rect' },
-        { name: res.data.ydataNameB, icon: 'rect' },
-        { name: res.data.ydataNameC, icon: 'rect' },
-        { name: res.data.ydataNameD },
-      ]
-
+      let xInterVal = this.$publicMethods.getInterVal({ begin: res.data.xdata[0], end: res.data.xdata[1] ? res.data.xdata[1] : '00:15' })
+      let xArr = this.$publicMethods.getMinuteForX(xInterVal)
+      let minTickInterval_1 = (xArr.length / 10).toFixed(0);
 
 
       let seriesArr = [{
         name: res.data.ydataNameA,
         type: 'line',
-        stack: '总量',
-        symbol: 'none',
-        itemStyle: {
-          normal: {
-            color: '#a5b8ff',//改变折线点的颜色
-            lineStyle: {
-              width: 0,
-              color: '#a5b8ff' //改变折线颜色
-            }
+        stack: 'a',
+        stacking: "normal",
+        marker: {
+          enabled: false,
+        },
+        lineColor: '#f00',
+        color: '#f00',
+        fillOpacity: 1,
+        states: {
+          hover: {
+            marker: {
+              height:0,
+              enabled: false,
+            },
           }
         },
-        areaStyle: {
-          color: '#a5b8ff',
-          opacity: 1
 
-        },
         data: res.data.ydataA
       }, {
         name: res.data.ydataNameB,
         type: 'line',
-        stack: '总量',
-        symbol: 'none',
+        stack: 'a',
+        stacking: "normal",
+        marker: {
+          enabled: false,
+        },
+        states: {
+          hover: {
+            marker: {
+              enabled: false,
+            },
+          }
+        },
         itemStyle: {
           normal: {
             color: '#fffd7a',//改变折线点的颜色
             lineStyle: {
-              width: 0,
+              width: 5,
               color: '#fffd7a' //改变折线颜色
             }
           }
@@ -347,8 +288,20 @@ export default {
       }, {
         name: res.data.ydataNameC,
         type: 'line',
-        stack: '总量',
-        symbol: 'none',
+        stack: 'a',
+        stacking: "normal",
+        animation: false,
+        enabled: false,
+        marker: {
+          enabled: false,
+        },
+        states: {
+          hover: {
+            marker: {
+              enabled: false,
+            },
+          }
+        },
         itemStyle: {
           normal: {
             color: '#b7e685',//改变折线点的颜色
@@ -366,6 +319,16 @@ export default {
       }, {
         name: res.data.ydataNameD,
         type: 'line',
+        marker: {
+          enabled: false,
+        },
+        states: {
+          hover: {
+            marker: {
+              enabled: false,
+            },
+          }
+        },
         itemStyle: {
           normal: {
             color: '#f97540',//改变折线点的颜色
@@ -376,10 +339,55 @@ export default {
         },
         data: res.data.ydataD
       }]
+      var chart = HighCharts.chart('stationLine', {
+        chart: {
+          type: 'area'
+        },
+        title: {
+          text: '全球各大洲人口占比'
+        },
+        xAxis: {
+          min: 0,
+          max: xArr.length,//标签个数-1
+          categories: xArr,
+          minTickInterval: minTickInterval_1
+        },
+        yAxis: {
+          title: {
+            text: '百分比'
+          }
+        },
+        tooltip: {
+          //pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.percentage:.1f}%</b> ({point.y:,.0f} 百万)<br/>',
+          shared: true
+        },
+        plotOptions: {
+          area: {
+            stacking: 'percent',
+            lineColor: '#f00',
+            lineWidth: 0,
+            marker: {
+              enabled: false
+            }
+          }
+        },
+        series: seriesArr
+      });
 
-      let xInterVal = this.$publicMethods.getInterVal({ begin: res.data.xdata[0], end: res.data.xdata[1] ? res.data.xdata[1] : '00:15' })
-      let xArr = this.$publicMethods.getMinuteForX(xInterVal)
-      this.$chart.screenBacLine('stationLine', this.stationDetail.stationName, legendArr, xArr, seriesArr)
+
+
+      // let legendArr = [
+      //   { name: res.data.ydataNameA, icon: 'rect' },
+      //   { name: res.data.ydataNameB, icon: 'rect' },
+      //   { name: res.data.ydataNameC, icon: 'rect' },
+      //   { name: res.data.ydataNameD },
+      // ]
+
+
+
+      // let xInterVal = this.$publicMethods.getInterVal({ begin: res.data.xdata[0], end: res.data.xdata[1] ? res.data.xdata[1] : '00:15' })
+      // let xArr = this.$publicMethods.getMinuteForX(xInterVal)
+      // this.$chart.screenBacLine('stationLine', this.stationDetail.stationName, legendArr, xArr, seriesArr)
 
     })
   },

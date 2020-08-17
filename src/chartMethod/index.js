@@ -4,22 +4,19 @@ let install = function (Vue) {
         $chart: {
             get() {
                 return {
-                    screenBacLine(id,title='',legendArr=[],xArr=[],seriesArr=[]) {
+                    screenBacLine(id, title = '', legendArr = [], xArr = [], seriesArr = []) {
                         var myChart = echarts.init(document.getElementById(id))
                         let option = {
-                            color:['#f00','#0ff','#f0f','#00f'],
+                            color: ['#f00', '#0ff', '#f0f', '#00f'],
                             title: {
                                 text: title
                             },
-                            // tooltip: {
-                            //     trigger: 'axis',
-                            //     axisPointer: {
-                            //         type: 'cross',
-                            //         label: {
-                            //             backgroundColor: '#6a7985'
-                            //         }
-                            //     }
-                            // },
+                            tooltip: {
+                                trigger: 'axis',
+                                axisPointer: {
+                                    type: 'cross',
+                                }
+                            },
                             legend: {
                                 data: legendArr
                             },
@@ -41,7 +38,7 @@ let install = function (Vue) {
                                     type: 'value'
                                 }
                             ],
-                            series:seriesArr
+                            series: seriesArr
                             // series: [
                             //     {
                             //         name: '邮件营销',

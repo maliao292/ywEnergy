@@ -1013,3 +1013,42 @@
   height: 33%;
   overflow: hidden;
 }
+.el-message-box__header{
+  background: #ff9f19;
+}
+div.yeallowAlert{
+  border: none;
+}
+
+.yeallowAlert .el-message-box__title::before{
+  font-family: element-icons!important;
+  content: "\E7A3";
+  color:#fff;
+  font-size: 24px;
+  vertical-align: middle;
+}
+.yeallowAlert .el-message-box__header{
+  height: 40px;
+  line-height: 40px;
+  padding: 0 10px;
+}
+.yeallowAlert .el-message-box__title span{
+  color: #fff;
+  display: inline-block;
+  margin-left: 10px;
+    height: 40px;
+  line-height: 40px;
+  vertical-align: middle;
+  font-size: 16px;
+}
+.yeallowAlert ul li{
+  margin-bottom: 10px;
+}
+.yeallowAlert ul li span{
+  color: #999;
+}
+.yeallowAlert h3{
+  font-size: 16px;
+  color: #ff9f19;
+  margin-top: 10px;
+}

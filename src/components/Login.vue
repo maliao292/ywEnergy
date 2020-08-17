@@ -3,7 +3,7 @@
     <div class="logform">
       <p class="logProName">
         <img :src="pic" alt="">
-        <span>义乌市通讯基站能源管控平台</span>
+        <span>义乌市源荷储智能集成平台</span>
       </p>
       <div>
         <img :src="factory">
