@@ -215,20 +215,28 @@ export default {
       this.ychAllData.volume = this.ychAllDataContent['y_volume'] ? this.ychAllDataContent['y_volume'] : 0
       this.ychAllDataContent = { c_volume, h_volume }
       let list = res.data.list
-      let st = '充电'
-      switch (list[1].batteryStatus) {
-        case 0:
-          st = '充电'
-          break
-        case 1:
-          st = '放电'
-          break
-        case 2:
-          st = '待机'
-          break
+
+      function getst(batteryStatus) {
+        let st = '充电'
+        // list[1].batteryStatus
+        switch (batteryStatus) {
+          case 0:
+            st = '充电'
+            break
+          case 1:
+            st = '放电'
+            break
+          case 2:
+            st = '待机'
+            break
+        }
+        return st
       }
+
       this.hMsg.g5[0] = [42, 47.6, { station: '义乌茂后基站', msg: [{ key: '基站负荷：', val: list[0]['allPower'], unit: 'kW' }, { key: '可响应负荷：', val: list[0]['responsiveLoad'], unit: 'kW' }] }];
-      this.cMsg.g5[0] = [45, 41, { station: '义乌溪干西基站', msg: [{ key: '电池状态：', val: st }, { key: '电池容量：', val: list[1].sourceFixPower, unit: 'kW' }, { key: '可响应负荷：', val: list[1].responsiveLoad, unit: 'kW' }] }];
+      this.hMsg.g5[1] = [45, 41, { station: '义乌溪干西基站', msg: [{ key: '基站负荷：', val: list[1]['allPower'], unit: 'kW' }, { key: '可响应负荷：', val: list[1]['responsiveLoad'], unit: 'kW' }] }];
+      this.cMsg.g5[0] = [42, 47.6, { station: '义乌茂后基站', msg: [{ key: '电池状态：', val: getst(list[0].batteryStatus) }, { key: '电池容量：', val: list[0].sourceFixPower, unit: 'kW' }, { key: '可响应负荷：', val: list[0].responsiveLoad, unit: 'kW' }] }];
+      this.cMsg.g5[1] = [45, 41, { station: '义乌溪干西基站', msg: [{ key: '电池状态：', val: getst(list[1].batteryStatus) }, { key: '电池容量：', val: list[1].sourceFixPower, unit: 'kW' }, { key: '可响应负荷：', val: list[1].responsiveLoad, unit: 'kW' }] }];
     },
     async getFLineData() {
       let res = await screenFLine()
