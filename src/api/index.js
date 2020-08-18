@@ -20,6 +20,9 @@ export let stationDetailApi = dataobj => axios.post('/index/queryInfo',qs.string
 // 地图详情折线图GET /analysis/jzfh
 export let mapLineData = dataobj => axios.get('/analysis/jzfh?stationId='+dataobj.stationId+'&queryDate='+dataobj.queryDate);
 
+// 空调/电池控制
+export let controlerPort = ({stationId,type,isOpen}) => axios.get('/switch/air?stationId='+stationId+'&type='+type+'&isOpen='+isOpen);
+
 
 // 大屏数据
 export let screenMidData = _ =>axios.post('/screen/queryMiddle');

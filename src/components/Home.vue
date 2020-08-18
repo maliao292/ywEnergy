@@ -14,11 +14,17 @@
           <img :src="logo">
         </div>
         <div class="homeSearch">
-            <input v-model="stationNameVal" v-show="isMapPage == 'map'" type="text" placeholder="搜索">
-            <span v-show="isMapPage == 'map'" class="el-icon-search searchBtn" @click="searchStation"></span>
-            <b v-show="isMapPage == 'map'"></b>
+          <input v-model="stationNameVal" v-show="isMapPage == 'map'" type="text" placeholder="搜索">
+          <span v-show="isMapPage == 'map'" class="el-icon-search searchBtn" @click="searchStation"></span>
+          <b v-show="isMapPage == 'map'"></b>
         </div>
-        <div class="homeProName">义乌市源荷储智能集成平台 </div>
+        <div class="homeProName">义乌市源荷储智能集成平台 -- <b>{{currentIndustry}}</b></div>
+        <div class="hySelect">
+          <el-select popper-class='hySelect_s' v-model="hyvalue" placeholder="请选择" @change="changIndustry">
+            <el-option v-for="item in hyList" :key="item.value" :label="item.name" :value="item.value">
+            </el-option>
+          </el-select>
+        </div>
         <ul>
           <li>
             <router-link tag="div" to='/home/map'><span class="icon iconfont icon-daohangshouye"></span><span>首页</span></router-link>
@@ -32,7 +38,7 @@
         </ul>
         <div class="homeTime"><Time /></div>
         <div class="userMsg">
-          <img :src="logo" alt="">
+          <img :src="photo" alt="">
           <span class="username">{{userName}} </span>
         </div>
         <div @click="toScreen" style="color:#fff;cursor:pointer">大屏</div>
@@ -54,12 +60,26 @@ export default {
   },
   data() {
     return {
-      userName:'',
-      stationname:'',
-      stationNameVal:'',
+      userName: '',
+      stationname: '',
+      stationNameVal: '',
       isMapPage: 'map',
       mapshow: true,
-      logo: require('@/assets/img/logo.png'),
+      photo:require('@/assets/img/logo.png'),
+      logo: require('@/assets/img/g5.png'),
+    
+      hyvalue:'g5',
+      currentIndustry:'5G',
+      hyList: [
+        { value: 'sm', name: '商贸' },
+        { value: 'wl', name: '物流' },
+        { value: 'g5', name: '5G' },
+        { value: 'ld', name: '路灯' },
+        { value: 'cdz', name: '充电桩' },
+        { value: 'gy', name: '工业' },
+        { value: 'zht', name: '综合体' },
+        { value: 'xwy', name: '小微园' },
+      ]
     }
   },
   computed: {},
@@ -75,12 +95,19 @@ export default {
       this.clearInfo();
       this.$router.replace({ name: 'login' })
     },
-    searchStation(){
+    searchStation() {
       this.stationname = this.stationNameVal
-      if(!this.stationNameVal){
+      if (!this.stationNameVal) {
         this.$refs.childNode.getAllMarks();
       }
-      
+
+    },
+    changIndustry(){
+     let obj = this.hyList.filter(({ value, name})=>{
+        return value == this.hyvalue
+      })
+     this.currentIndustry = obj[0]['name'];
+     this.logo = require(`@/assets/img/${obj[0]['value']}.png`);
     },
     toScreen() { this.$router.push({ name: 'screen' }) }
   },
@@ -92,7 +119,7 @@ export default {
 }
 </script>
 <style scoped>
-.searchBtn{
+.searchBtn {
   cursor: pointer;
 }
 </style>

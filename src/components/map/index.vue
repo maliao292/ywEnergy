@@ -83,7 +83,7 @@
     </div>
     <div class="alertWindow yctList" v-if="showList">
       <div class="container">
-        <StationMsg :stationDetail='stationDetail' @close='closeAl'>{{jzname}}</StationMsg>
+        <StationMsg @setChangeMapStatus='setChangeMapStatus' :stationDetail='stationDetail' @close='closeAl'>{{jzname}}</StationMsg>
       </div>
     </div>
   </div>
@@ -153,14 +153,15 @@ export default {
         num6: 0,
       },
       stationDetail: {},
+      searchMapKey: '', // 保存搜索地图关键词
       showList: false,
       menushow: false,
       jzname: '',
       amapManager,
       zoom: 12,
-      center: [120.081079,29.310772],
+      center: [120.081079, 29.310772],
 
-      allmarkers: [],
+      allmarkers: [], // 保存全部marker
       markers: [],
       windows: [],
       window: '',
@@ -191,71 +192,117 @@ export default {
       })
       this.markers = markers
       this.$nextTick(() => {
+        this.searchMapKey = this.stationname
         this.$refs.map.$amap.setFitView()
       })
     },
   },
   mounted() {
-    let self = this
-    let windows = []
-    mapMarker().then((res) => {
-      this.statusNum = res.data.statusNum
-      let markers = res.data.list.map((v, i) => {
-        let icon = require('@/assets/img/s' + (v.runStatus ? v.runStatus : 1) + '.png')
-        let dcColor = 'c1', ktColor = 'c1', dcImg = 1, ktImg = 1, dcText = '充电', ktText = '停止';
-        switch (v.runStatus) {
-          case 3:
-            dcColor = 'c1';
-            ktColor = 'c4';
-            dcImg = 3;
-            ktImg = 6;
-            dcText = '充电';
-            ktText = '停止';
-            break;
-          case 4:
-            dcColor = 'c1';
-            ktColor = 'c5';
-            dcImg = 3;
-            ktImg = 7;
-            dcText = '充电';
-            ktText = '开启';
-            break;
-          case 5:
-            dcColor = 'c2';
-            ktColor = 'c4';
-            dcImg = 4;
-            ktImg = 6;
-            dcText = '放电';
-            ktText = '停止';
-            break;
-          case 6:
-            dcColor = 'c2';
-            ktColor = 'c5';
-            dcImg = 4;
-            ktImg = 7;
-            dcText = '放电';
-            ktText = '开启';
-            break;
-          case 7:
-            dcColor = 'c3';
-            ktColor = 'c4';
-            dcImg = 5;
-            ktImg = 6;
-            dcText = '待机';
-            ktText = '停止';
-            break;
-          case 8:
-            dcColor = 'c3';
-            ktColor = 'c5';
-            dcImg = 5;
-            ktImg = 7;
-            dcText = '待机';
-            ktText = '开启';
-            break;
+    this.getAllMarksData().then(res => {
+
+      if (this.$refs.map.$amap) {
+        this.$nextTick(() => {
+          this.$refs.map.$amap.setFitView()
+        })
+      }
+    })
+
+  },
+  methods: {
+    setmarker({ s }) {
+      let markers = this.allmarkers.filter((v) => {
+        return v.stationName === s
+      })
+      this.markers = markers
+      this.$nextTick(() => {
+        this.searchMapKey = s
+        this.$refs.map.$amap.setFitView()
+      })
+    },
+    getAllMarks() {
+      this.markers = this.allmarkers
+      this.$nextTick(() => {
+        this.$refs.map.$amap.setFitView()
+      })
+    },
+    setChangeMapStatus() {
+      this.getAllMarksData().then(res => {
+        if (!this.searchMapKey) {
+          this.markers = this.allmarkers
+          return
         }
-        windows.push({
-          position: [Number(v.longitude), Number(v.latitude)],
-          content: `
+        let markers = this.allmarkers.filter((v) => {
+          return v.stationName === this.searchMapKey
+        })
+        this.markers = markers
+
+      })
+
+
+
+    },
+    getAllMarksData() {
+      return new Promise((resolve, reject) => {
+        let self = this
+        let windows = []
+        mapMarker().then((res) => {
+          this.statusNum = res.data.statusNum
+          let markers = res.data.list.map((v, i) => {
+            let icon = require('@/assets/img/s' + (v.runStatus ? v.runStatus : 1) + '.png')
+            let dcColor = 'c1', ktColor = 'c1', dcImg = 1, ktImg = 1, dcText = '充电', ktText = '停止';
+            switch (v.runStatus) {
+              case 3:
+                dcColor = 'c1';
+                ktColor = 'c4';
+                dcImg = 3;
+                ktImg = 6;
+                dcText = '充电';
+                ktText = '停止';
+                break;
+              case 4:
+                dcColor = 'c1';
+                ktColor = 'c5';
+                dcImg = 3;
+                ktImg = 7;
+                dcText = '充电';
+                ktText = '开启';
+                break;
+              case 5:
+                dcColor = 'c2';
+                ktColor = 'c4';
+                dcImg = 4;
+                ktImg = 6;
+                dcText = '放电';
+                ktText = '停止';
+                break;
+              case 6:
+                dcColor = 'c2';
+                ktColor = 'c5';
+                dcImg = 4;
+                ktImg = 7;
+                dcText = '放电';
+                ktText = '开启';
+                break;
+              case 7:
+                dcColor = 'c3';
+                ktColor = 'c4';
+                dcImg = 5;
+                ktImg = 6;
+                dcText = '待机';
+                ktText = '停止';
+                break;
+              case 8:
+                dcColor = 'c3';
+                ktColor = 'c5';
+                dcImg = 5;
+                ktImg = 7;
+                dcText = '待机';
+                ktText = '开启';
+                break;
+            }
+            windows.push({
+              position: [Number(v.longitude), Number(v.latitude)],
+              content: `
           <div class='alstyle'>
             <h2>${v.stationName}</h2>
             <ul>
@@ -274,69 +321,53 @@ export default {
             <ul>
           </div>
           `,
-          visible: false,
+              visible: false,
+            })
+            return {
+              stationName: v.stationName,
+              position: [Number(v.longitude), Number(v.latitude)],
+              icon,
+              events: {
+                click: () => {
+                  if (!v.runStatus || v.runStatus == 1) {
+                    return
+                  }
+                  this.jzname = v.stationName
+
+                  this.stationDetail = v
+                  this.showList = true
+                },
+                mousemove: (e) => {
+                  self.windows.forEach((window) => {
+                    window.visible = false
+                  })
+
+                  self.window = self.windows[i]
+                  self.$nextTick(() => {
+                    self.window.visible = true
+                  })
+                },
+
+                mouseout: (e) => {
+                  self.windows.forEach((window) => {
+                    window.visible = false
+                  })
+                },
+              },
+              visible: true,
+              draggable: false,
+              template: markerLabel,
+            }
+          })
+          this.markers = markers
+          this.windows = windows
+          this.allmarkers = markers
+          if (res.success) {
+            resolve(this.allmarkers)
+          } else {
+            reject('失败')
+          }
         })
-        return {
-          stationName: v.stationName,
-          position: [Number(v.longitude), Number(v.latitude)],
-          icon,
-          events: {
-            click: () => {
-              if (!v.runStatus || v.runStatus == 1) {
-                return
-              }
-              this.jzname = v.stationName
-
-              this.stationDetail = v
-              this.showList = true
-            },
-            mousemove: (e) => {
-              self.windows.forEach((window) => {
-                window.visible = false
-              })
-
-              self.window = self.windows[i]
-              self.$nextTick(() => {
-                self.window.visible = true
-              })
-            },
-
-            mouseout: (e) => {
-              self.windows.forEach((window) => {
-                window.visible = false
-              })
-            },
-          },
-          visible: true,
-          draggable: false,
-          template: markerLabel,
-        }
-      })
-      this.markers = markers
-      this.windows = windows
-      this.allmarkers = markers
-      if (this.$refs.map.$amap) {
-        this.$nextTick(() => {
-          this.$refs.map.$amap.setFitView()
-        })
-      }
-    })
-  },
-  methods: {
-    menuShowBtn() { },
-    setmarker({ s }) {
-      let markers = this.allmarkers.filter((v) => {
-        return v.stationName === s
-      })
-      this.markers = markers
-      this.$nextTick(() => {
-        this.$refs.map.$amap.setFitView()
-      })
-    },
-    getAllMarks() {
-      this.markers = this.allmarkers
-      this.$nextTick(() => {
-        this.$refs.map.$amap.setFitView()
       })
     },
     getMap() {

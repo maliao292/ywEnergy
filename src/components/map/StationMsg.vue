@@ -135,7 +135,7 @@
 
 <script>
 import { Message } from 'element-ui'
-import { stationDetailApi, mapLineData } from '@/api'
+import { stationDetailApi, mapLineData, controlerPort } from '@/api'
 import echarts from 'echarts'
 export default {
   props: {
@@ -202,15 +202,18 @@ export default {
 
   },
   methods: {
-    changedc(sta) {
-      if (sta === this.dcBtn) return
+    changedc(sta) { // 电池控制器
+      if (sta === this.dcBtn||sta === 'dcd') return
       let st = '充电'
+      let isOpen = 1;
       switch (sta) {
         case 'dcc':
           st = '充电'
+          isOpen = 1
           break
         case 'dcf':
           st = '放电'
+          isOpen = 0
           break
         case 'dcd':
           st = '待机'
@@ -231,12 +234,22 @@ export default {
         showClose: false,
         customClass: 'yeallowAlert',
       }).then(() => {
+      
         this.dcBtn = sta;
         this.dcimg = this.stationBtnStatus[this.dcBtn]
-        // this.$message({
-        //   type: 'info',
-        //   message: '保存修改'
-        // });
+            controlerPort({ stationId: this.stationDetail.id, type: 3, isOpen}).then(res => {
+
+          let type = res.data == 0 ? 'success' : 'error';
+
+          let message = res.msg
+          this.$message({
+            type, message
+          });
+          if (res.data == 0) {
+            this.dcBtn = sta;
+            this.dcimg = this.stationBtnStatus[this.dcBtn]
+          }
+        })
       });
 
     },
@@ -267,17 +280,27 @@ export default {
         showClose: false,
         customClass: 'yeallowAlert',
       }).then(() => {
-        this.ktBtn = sta;
-        this.ktimg = this.stationBtnStatus[this.ktBtn]
-        // this.$message({
-        //   type: 'info',
-        //   message: '保存修改'
-        // });
+        controlerPort({ stationId: this.stationDetail.id, type: 1, isOpen: this.ktBtn == 'ktt' ? 1 : 0 }).then(res => {
+
+          let type = res.data == 0 ? 'success' : 'error';
+
+          let message = res.msg
+          this.$message({
+            type, message
+          });
+          if (res.data == 0) {
+            this.ktBtn = sta;
+            this.ktimg = this.stationBtnStatus[this.ktBtn]
+          }
+        })
+
       });
 
     },
     changAl(formName) {
       this.$emit('close', false)
+      this.$emit('setChangeMapStatus')
+
     },
     //处理默认选中当前日期
     getNowTime() {
@@ -399,7 +422,8 @@ export default {
       }
       return st
     }
-  }
+  },
+
 }
 </script>
 
