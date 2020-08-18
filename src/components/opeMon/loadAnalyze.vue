@@ -378,7 +378,8 @@
                   }
                 },
                 areaStyle: {
-                  color: '#a5b8ff'
+                  color: '#a5b8ff',
+                  opacity:1
                 },
                 data: stationLoadData.ydataA
               },
@@ -397,7 +398,8 @@
                   }
                 },
                 areaStyle: {
-                  color: '#fffd7a'
+                  color: '#fffd7a',
+                  opacity:1
                 },
                 data: stationLoadData.ydataB
               },
@@ -415,7 +417,8 @@
                   }
                 },
                 areaStyle: {
-                  color: '#7dd656'
+                  color: '#7dd656',
+                  opacity:1
                 },
                 data: stationLoadData.ydataC
               },

@@ -35,7 +35,7 @@
       <div class="monEcharts">
         <!--1-->
         <div class="monEcharts_one">
-          <p class="echartsTit">电流充放电功率</p>
+          <p class="echartsTit">电池充放电功率</p>
           <div class="monEchartsMainDiv">
             <div class="monEcharts_chart" id="chargeDischarge" ref="chargeDischargeChart"></div>
             <div class="monEcharts_info">
@@ -371,22 +371,23 @@
                     fontSize: 14
                   },
                   min:0,
-                  max:5,
+                  max:15,
                   itemStyle: {
                     normal: {
                       color: "#52a4f6",
                     }
                   },
-                  splitNumber : 2,
+                  splitNumber : 3,
                 },
                 {
                   name: "℃",
                   min:0,
-                  max:50,
+                  max:42,
+                  splitLine:{show:false},
                   nameTextStyle :{
                     fontSize: 14
                   },
-                  splitNumber : 2,
+                  splitNumber : 3,
                 }
               ],
               series: [
