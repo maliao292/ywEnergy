@@ -53,7 +53,13 @@
   background: url("../img/opeMon/reportIcon.png") no-repeat center;
 }
 .monitorIcon .active .backOneIcon_report {
-  background: url("../img/opeMon/reportIcon.png") no-repeat center;
+  background: url("../img/opeMon/reportIcon_active.png") no-repeat center;
+}
+.backTwoIcon_report{
+  background: url("../img/opeMon/glAndTemReport.png") no-repeat center;
+}
+.monitorIcon .active .backTwoIcon_report {
+  background: url("../img/opeMon/glAndTemReport_active.png") no-repeat center;
 }
 
 .modelConLeftUl .active{
@@ -216,6 +222,12 @@
 }
 .sw {
   width: 33.3%;
+  text-align: center;
+  height: 100%;
+  line-height: 50px;
+}
+.double_sw {
+  width: 50%;
   text-align: center;
   height: 100%;
   line-height: 50px;

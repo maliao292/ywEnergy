@@ -56,7 +56,12 @@ let router = new Router({
           path: "reportTable",
           name: 'reportTable',
           component: resolve => require(['@/components/report/reportTable'], resolve),
-        }]
+        },{
+          path: "glAndTemTable",
+          name: 'glAndTemTable',
+          component: resolve => require(['@/components/report/glAndTemTable'], resolve),
+        }
+        ]
       }]
     }, {
       path: "/screen",
@@ -84,7 +89,7 @@ router.beforeEach((to, from, next) => {
       next('/login');
       return
     }
-    next();  
+    next();
   }
 })
 
