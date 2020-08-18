@@ -8,6 +8,11 @@
             <span class="backOne backOneIcon_report"></span>
           </router-link>
         </li>
+        <li class="monitorIcon">
+          <router-link tag="div" to='glAndTemTable'>
+            <span class="backOne backTwoIcon_report"></span>
+          </router-link>
+        </li>
       </ul>
     </div>
     <div class="modelCon_right">

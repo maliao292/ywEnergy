@@ -371,23 +371,23 @@
                     fontSize: 14
                   },
                   min:0,
-                  max:15,
+                  max:18,
                   itemStyle: {
                     normal: {
                       color: "#52a4f6",
                     }
                   },
-                  splitNumber : 3,
+                  // splitNumber : 3,
                 },
                 {
                   name: "℃",
                   min:0,
-                  max:42,
+                  max:50,
                   splitLine:{show:false},
                   nameTextStyle :{
                     fontSize: 14
                   },
-                  splitNumber : 3,
+                  // splitNumber : 3,
                 }
               ],
               series: [

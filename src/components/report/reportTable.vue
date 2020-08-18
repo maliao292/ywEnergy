@@ -1,6 +1,6 @@
 <template>
   <div class="MonContent">
-    <p class="monConTit" >报表 - <span class="TitactiveColor">报表</span></p>
+    <p class="monConTit" >报表 - <span class="TitactiveColor">用电量报表</span></p>
     <!--下拉选框-->
     <div class="monChosen" style="justify-content: space-between">
       <div class="reportTopLeft" >
@@ -169,7 +169,7 @@
         // 获取当前时间
         getThisTime(v){
           var _this = this;
-          let yy = new Date().getFullYear();
+          var yy = new Date().getFullYear();
           var mm =new Date().getMonth() < 10 ? "0" + (new Date().getMonth() + 1) : new Date().getMonth() + 1;
           var dd = new Date().getDate() <10 ? "0" + new Date().getDate() : new Date().getDate();
 
@@ -178,7 +178,7 @@
           if (v) {
             if (v == 1) return yy + "-" + mm + "-" + dd;
             if (v == 2) return yy + "-" + mm;
-            if (v == 3) return yy;
+            if (v == 3) return yy + "-" + mm;
           } else {
             return yy + "-" + mm + "-" + dd;
           }
@@ -206,7 +206,7 @@
           exportReport(this.stationParam).then(response => {
             var res=response;//接口响应的数据
             var elink = document.createElement('a');
-            elink.download = "报表.xls";
+            elink.download = "用电量报表-"+this.stationParam.queryDate+".xls";
             elink.style.display = 'none';
             var blob = new Blob([res],{type: 'application/vnd.ms-excel'});
             elink.href =  window.URL.createObjectURL(blob);
