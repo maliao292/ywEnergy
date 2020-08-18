@@ -30,3 +30,7 @@ export let screenMidData = _ =>axios.post('/screen/queryMiddle');
 export let screenFLine = _ =>axios.post('/screen/queryLoadChart');
 // 储能折线
 export let screenCLine = _ =>axios.post('/screen/selectEnergyChart');
+// 能效服务
+export let screenServer = _ =>axios.post('/screen/queryNXFW');
+// 储荷互动
+export let screenChhd = _ =>axios.post('/screen/queryHCHD');

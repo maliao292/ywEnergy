@@ -21,11 +21,11 @@
           <h4 class="modelTitle">能效服务</h4>
           <div>
             <span>用户总数</span>
-            <p><i>4545</i><span>户</span></p>
+            <p><i>{{serverNum.userNum}}</i><span>户</span></p>
           </div>
           <div>
             <span>装机容量</span>
-            <p><i>4545</i><span>MVA</span></p>
+            <p><i>{{serverNum.allVolume}}</i><span>MVA</span></p>
           </div>
         </div>
         <div id="screenPie" class="screenPie eccon" style="width:100%;height:300px"></div>
@@ -90,7 +90,7 @@
               <p>
                 <span>秒切负荷</span><i>kW</i>
               </p>
-              <span>4683.36</span>
+              <span>{{chhdNum.mqfh}}</span>
             </div>
             <div class="third">
               <p>
@@ -102,7 +102,7 @@
               <p>
                 <span>秒投储能</span><i>MW</i>
               </p>
-              <span>4683.36</span>
+              <span>{{chhdNum.mtcn}}</span>
             </div>
             <div class="half">
               <p>
@@ -133,7 +133,7 @@
 
 <script>
 import Time from '../Time'
-import { screenMidData, screenCLine, screenFLine } from '@/api'
+import { screenMidData, screenCLine, screenFLine, screenServer, screenChhd } from '@/api'
 export default {
   components: { Time },
   data() {
@@ -143,6 +143,14 @@ export default {
         allLoadNum: '',
         volume: '',
         stationNum: '',
+      },
+      serverNum: {
+        userNum: '',
+        allVolume: ''
+      },
+      chhdNum: {
+        mqfh: '',
+        mtcn: ''
       },
       ychAllDataContent: {
 
@@ -192,6 +200,12 @@ export default {
   },
   created() {
     this.getMiddleData()
+    screenServer().then(res => {
+      this.serverNum = res.data
+    })
+    screenChhd().then(res => {
+      this.chhdNum = res.data
+    })
   },
   methods: {
     async getMiddleData() {
