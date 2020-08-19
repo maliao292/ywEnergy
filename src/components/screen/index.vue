@@ -32,7 +32,7 @@
         <div class="enerynum jztj">
           <h4 class="modelTitle">节支统计</h4>
           <div class="thisYearJZ">
-            <span>3.5%</span>
+            <span>{{jzNum.thisSave}}%</span>
             <p>本年节支</p>
           </div>
           <div class="zjrl">
@@ -133,7 +133,7 @@
 
 <script>
 import Time from '../Time'
-import { screenMidData, screenCLine, screenFLine, screenServer, screenChhd } from '@/api'
+import { screenMidData, screenCLine, screenFLine, screenServer, screenChhd,screenJzLine } from '@/api'
 export default {
   components: { Time },
   data() {
@@ -151,6 +151,9 @@ export default {
       chhdNum: {
         mqfh: '',
         mtcn: ''
+      },
+      jzNum:{
+        thisSave:'',
       },
       ychAllDataContent: {
 
@@ -208,35 +211,43 @@ export default {
     })
   },
   methods: {
-    async getMiddleData() {
+    async getMiddleData() { // 中间地图数据
       let res = await screenMidData();
       let { c_volume, h_volume, allLoadNum, stationNum } = res.data
       this.ychAllData = { allLoadNum, stationNum }
       this.ychAllData.volume = this.ychAllDataContent['y_volume'] ? this.ychAllDataContent['y_volume'] : 0
       this.ychAllDataContent = { c_volume, h_volume }
       let list = res.data.list
-      let st = '充电'
-      switch (list[1].batteryStatus) {
-        case 0:
-          st = '充电'
-          break
-        case 1:
-          st = '放电'
-          break
-        case 2:
-          st = '待机'
-          break
+
+      function getst(batteryStatus) {
+        let st = '充电'
+        // list[1].batteryStatus
+        switch (batteryStatus) {
+          case 0:
+            st = '充电'
+            break
+          case 1:
+            st = '放电'
+            break
+          case 2:
+            st = '待机'
+            break
+        }
+        return st
       }
+
       this.hMsg.g5[0] = [42, 47.6, { station: '义乌茂后基站', msg: [{ key: '基站负荷：', val: list[0]['allPower'], unit: 'kW' }, { key: '可响应负荷：', val: list[0]['responsiveLoad'], unit: 'kW' }] }];
-      this.cMsg.g5[0] = [45, 41, { station: '义乌溪干西基站', msg: [{ key: '电池状态：', val: st }, { key: '电池容量：', val: list[1].sourceFixPower, unit: 'kW' }, { key: '可响应负荷：', val: list[1].responsiveLoad, unit: 'kW' }] }];
+      this.hMsg.g5[1] = [45, 41, { station: '义乌溪干西基站', msg: [{ key: '基站负荷：', val: list[1]['allPower'], unit: 'kW' }, { key: '可响应负荷：', val: list[1]['responsiveLoad'], unit: 'kW' }] }];
+      this.cMsg.g5[0] = [42, 47.6, { station: '义乌茂后基站', msg: [{ key: '电池状态：', val: getst(list[0].batteryStatus) }, { key: '电池容量：', val: list[0].sourceFixPower, unit: 'kW' }, { key: '可响应负荷：', val: list[0].responsiveLoad, unit: 'kW' }] }];
+      this.cMsg.g5[1] = [45, 41, { station: '义乌溪干西基站', msg: [{ key: '电池状态：', val: getst(list[1].batteryStatus) }, { key: '电池容量：', val: list[1].sourceFixPower, unit: 'kW' }, { key: '可响应负荷：', val: list[1].responsiveLoad, unit: 'kW' }] }];
     },
-    async getFLineData() {
+    async getFLineData() { // 负荷折线图
       let res = await screenFLine()
       let xInterVal = this.$publicMethods.getInterVal({ begin: res.data.xData[0], end: res.data.xData[1] ? res.data.xData[1] : '00:15' })
       let xArr = this.$publicMethods.getMinuteForX(xInterVal)
       this.$chart.screenLine('fh', '负荷', this.getLines(res.data.yData)['legendArr'], xArr, this.getLines(res.data.yData)['seriesArr'])
     },
-    async getCLineData() {
+    async getCLineData() {// 储能折线图
       let res = await screenCLine()
       let xInterVal = this.$publicMethods.getInterVal({ begin: res.data.xData[0], end: res.data.xData[1] ? res.data.xData[1] : '00:15' })
       let xArr = this.$publicMethods.getMinuteForX(xInterVal)
@@ -259,12 +270,12 @@ export default {
         legendArr, seriesArr
       }
     },
-    distChange(val) {
+    distChange(val) { // 行业change
       this.activeDist = val
       let activeStation = this[this.activeModel + 'Msg'] ? this[this.activeModel + 'Msg'][val] : [];
       this.baseStationList = activeStation ? activeStation : []
     },
-    modelChange({ value, text, name, icon, allText }) {
+    modelChange({ value, text, name, icon, allText }) { // 源 荷 储change
       this.ychAllData.volume = this.ychAllDataContent[value + '_volume'] ? this.ychAllDataContent[value + '_volume'] : 0
       this.allText = allText
       this.activeModel = value
@@ -273,16 +284,22 @@ export default {
       let activeStation = this[value + 'Msg'] ? this[value + 'Msg'][this.activeDist] : [];
       this.baseStationList = activeStation ? activeStation : []
     },
-    cpm(val) {
+    async getJZTJData(){
+      let res = await screenJzLine()
+      let {thisYear,lastYear} = res.data.chart
+      this.jzNum.thisSave =res.data.thisSave
+       this.$chart.screenBar('screenBar',thisYear,lastYear)
+    },
+    cpm(val) { // 鼠标移入 地图点
       this.showWindow = true
-
       if (this.showWindow) {
         this.windowMsg = val
       }
     },
-    cpmout() {
+    cpmout() {// 鼠标移出 地图点
       this.showWindow = false
     },
+
     backFun() {
       this.$router.go(-1)
     },
@@ -294,6 +311,7 @@ export default {
   mounted() {
     this.getCLineData()
     this.getFLineData()
+    this.getJZTJData()
     function setData() {
       let arr = []
       for (var i = 0; i < 24; i++) {
@@ -302,7 +320,6 @@ export default {
       return arr
     }
     this.$chart.hzPie('screenPie')
-    this.$chart.screenBar('screenBar')
 
 
   },

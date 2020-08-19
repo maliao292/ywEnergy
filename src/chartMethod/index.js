@@ -416,7 +416,7 @@ let install = function (Vue) {
                             });
                         });
                     },
-                    screenBar(id) {
+                    screenBar(id,thisyearArr=[],lastyearArr=[]) {
                         var myChart = echarts.init(document.getElementById(id))
                         var option = {
                             backgroundColor: 'rgba(0, 0, 0,0)',
@@ -491,7 +491,7 @@ let install = function (Vue) {
                                         barBorderRadius: 12,
                                     },
                                 },
-                                data: [400, 400, 300, 300, 300, 400, 400, 400, 300, 500, 500, 500, 500]
+                                data: thisyearArr
                             },
                             {
                                 name: '去年',
@@ -510,7 +510,7 @@ let install = function (Vue) {
                                     }
 
                                 },
-                                data: [400, 500, 500, 500, 500, 400, 400, 500, 500, 500, 500, 400, 400]
+                                data: lastyearArr
                             }]
                         };
                         myChart.setOption(option);
