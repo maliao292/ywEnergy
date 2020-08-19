@@ -34,3 +34,6 @@ export let screenCLine = _ =>axios.post('/screen/selectEnergyChart');
 export let screenServer = _ =>axios.post('/screen/queryNXFW');
 // 储荷互动
 export let screenChhd = _ =>axios.post('/screen/queryHCHD');
+// 本年节支柱状图
+export let screenJzLine = _ =>axios.post('/screen/queryJZTJ');
+
