@@ -340,9 +340,9 @@
               {
                 axisLabel: {
                   show: true,
-                  interval:3
+                  interval:11
                 },
-                data: this.timeSlot(15),
+                data: this.timeSlot(5),
                 boundaryGap: false,
                 type: 'category',
                 // data: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24']
