@@ -170,7 +170,7 @@
           this.chart_stationPie.dom.setOption({
             tooltip: {
               trigger: 'item',
-              formatter: '{b} : {c} ({d}%)'
+              formatter: '{b} : {c} kWh ({d}%)'
             },
             legend: {
               orient: 'vertical',
@@ -239,7 +239,7 @@
           this.chart_fenshiPie.dom.setOption({
             tooltip: {
               trigger: 'item',
-              formatter: '{b} : {c} ({d}%)'
+              formatter: '{b} : {c} kWh ({d}%)'
             },
             legend: {
               orient: 'vertical',

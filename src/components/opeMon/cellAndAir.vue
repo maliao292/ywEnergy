@@ -371,7 +371,7 @@
                     fontSize: 14
                   },
                   min:0,
-                  max:18,
+                  max:5,
                   itemStyle: {
                     normal: {
                       color: "#52a4f6",
