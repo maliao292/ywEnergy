@@ -35,7 +35,7 @@
       <div class="monEcharts">
         <!--1-->
         <div class="monEcharts_one">
-          <p class="echartsTit">电池充放电功率</p>
+          <p class="echartsTit">电池电压与功率</p>
           <div class="monEchartsMainDiv">
             <div class="monEcharts_chart" id="chargeDischarge" ref="chargeDischargeChart"></div>
             <div class="monEcharts_info">
@@ -118,7 +118,7 @@
             //Y轴的数据
             yAxisData_charge: [],
             yAxisData_discharge: [],
-            legend: ["充电功率","放电功率"],
+            legend: ["充电功率","放电功率",'蓄电池电压'],
           },
           chart_line2: {
             //图表实例
@@ -221,6 +221,7 @@
             this.chart_line1.xAxisData = res.data.xdata
             this.chart_line1.yAxisData1 = res.data.ydataA;
             this.chart_line1.yAxisData2 = res.data.ydataB;
+            this.chart_line1.yAxisData3 = res.data.ydataC;
 
             this.chart_line1.dom = this.$echarts.init(this.$refs.chargeDischargeChart);
             this.chart_line1.dom.setOption({
@@ -268,7 +269,18 @@
                       color: "#52a4f6",
                     }
                   },
-                  splitNumber : 2,
+                  splitNumber : 3,
+                },
+                {
+                  name: "V",
+                  min:47,
+                  max:55,
+                  splitLine:{show:false},
+                  nameTextStyle :{
+                    fontSize: 14
+                  },
+                  interval: 2
+                  // splitNumber : 5,
                 }
               ],
               series: [
@@ -311,6 +323,27 @@
                     }
                   },
                   data:  this.chart_line1.yAxisData2
+                },
+                {
+                  symbol: "none",
+                  name: this.chart_line1.legend[2],
+                  type: "line",
+                  smooth: true,
+                  yAxisIndex: 1,
+                  lineStyle: {
+                    normal: {
+                      width: 2
+                    }
+                  },
+                  itemStyle: {
+                    normal: {
+                      color: "#fc9c1b",
+                      lineStyle: {
+                        color: "#fc9c1b" // 改变折线颜色
+                      }
+                    }
+                  },
+                  data:  this.chart_line1.yAxisData3
                 }
               ]
             });

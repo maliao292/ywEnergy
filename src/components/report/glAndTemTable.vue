@@ -54,7 +54,7 @@
     <!--内容部分-->
     <div class="reportCon_table">
       <el-table
-        :data="tableData.slice((currpage - 1) * pagesize, currpage * pagesize)"
+        :data="sw==1 ? tableData : tableData.slice((currpage - 1) * pagesize, currpage * pagesize)"
         height="720"
         :row-class-name="tabRowClassName"
         style="width: 99%"
@@ -92,6 +92,11 @@
         <el-table-column prop="address" label="蓄电池充电功率" align="center">
           <template slot-scope="scope">
             {{ scope.row.chargePower }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="address" label="蓄电池电压" align="center">
+          <template slot-scope="scope">
+            {{ scope.row.voltage }}
           </template>
         </el-table-column>
         <el-table-column prop="address" label="室内温度" align="center">
