@@ -250,7 +250,6 @@
                 data: this.chart_line1.legend
               },
               xAxis: {
-                // data: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24'],
                 axisLabel: {
                   show: true,
                   interval:11
@@ -274,7 +273,7 @@
                 {
                   name: "V",
                   min:47,
-                  max:55,
+                  max:57,
                   splitLine:{show:false},
                   nameTextStyle :{
                     fontSize: 14
@@ -354,9 +353,7 @@
         // 获取温度与空调
         getWdktImfo() {
           getWdkt(this.stationParam).then(res => {
-
             this.wdykt = res.data
-
             this.chart_line2.xAxisData = res.data.xdata
             this.chart_line2.yAxisData1 = res.data.ydataB;
             this.chart_line2.yAxisData2 = res.data.ydataA;
@@ -389,7 +386,6 @@
                 data: this.chart_line2.legend
               },
               xAxis: {
-                // data: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24']
                 axisLabel: {
                   show: true,
                   interval:11
