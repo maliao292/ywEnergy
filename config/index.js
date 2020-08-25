@@ -12,6 +12,7 @@ module.exports = {
     proxyTable: {
       '/ywptapi': {
         target: 'http://192.168.20.175:9527/', //你要访问的服务器域名
+        // target: 'http://106.75.213.206:9527/', //你要访问的服务器域名
         changeOrigin: true, //允许跨域
         pathRewrite: {
           '^/ywptapi': '/'
