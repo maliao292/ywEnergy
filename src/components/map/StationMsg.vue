@@ -73,12 +73,12 @@
               <div><span>电池充放电策略：</span><b><i class="el-icon-edit"></i>修改策略</b></div>
               <div>
                 <span>
-                  22:00-06:00
+                  19:00-22:00
                   <br>
                   充电
                 </span>
                 <span>
-                  06:00-22:00
+                  22:00-01:00
                   <br>
                   放电
                 </span>
@@ -117,7 +117,7 @@
                   开启温度
                 </span>
                 <span>
-                  26℃
+                  28℃
                   <br>
                   停止温度
                 </span>
@@ -234,7 +234,7 @@ export default {
         showClose: false,
         customClass: 'yeallowAlert',
       }).then(() => {
-      
+
         this.dcBtn = sta;
         this.dcimg = this.stationBtnStatus[this.dcBtn]
             controlerPort({ stationId: this.stationDetail.id, type: 3, isOpen}).then(res => {

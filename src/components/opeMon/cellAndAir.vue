@@ -274,7 +274,7 @@
                 {
                   name: "V",
                   min:47,
-                  max:55,
+                  max:57,
                   splitLine:{show:false},
                   nameTextStyle :{
                     fontSize: 14
