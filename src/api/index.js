@@ -22,7 +22,10 @@ export let mapLineData = dataobj => axios.get('/analysis/jzfh?stationId='+dataob
 
 // 空调/电池控制
 export let controlerPort = ({stationId,type,isOpen}) => axios.get('/switch/air?stationId='+stationId+'&type='+type+'&isOpen='+isOpen);
-
+// 空调电池权限
+export let controlQx = _ => axios.get('/switch/ifSwitch');
+// 空调电池密码 switchPass
+export let controlPassData = ({switchPass}) => axios.get('/switch/switchPass?switchPass='+switchPass);
 
 // 大屏数据
 export let screenMidData = _ =>axios.post('/screen/queryMiddle');

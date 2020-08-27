@@ -22,9 +22,9 @@
             <div class="outBottom cfd">{{stationDetail.batteryStatus | statusFilter}}</div>
           </div>
           <div class="gradientCon">
-            <div class="outTop cft"><span>{{(stationNum.allPower).toFixed(2)}}</span>kW</div>
+            <div class="outTop cft"><span>{{(stationNum.firstLine).toFixed(2)}}</span>kW</div>
             <div class="fh_s ">
-              <b><img :src="kg" alt=""></b><span>{{stationNum.sourcePower}} <b>kW</b> </span>
+              <b><img :src="kg" alt=""></b><span>{{(stationNum.secondLine).toFixed(2)}} <b>kW</b> </span>
             </div>
             <div class="fh_s ">
               <b><img :src="kt" alt=""></b><span>{{stationNum.airPower}} <b>kW</b> </span>
@@ -35,7 +35,7 @@
             <div class="outBottom">负荷</div>
           </div>
           <div class="eledirection">
-            <div class="outTop cft"><span>{{(stationNum.allPower+stationNum.chargePower).toFixed(2)}}</span>kW</div>
+            <div class="outTop cft"><span>{{(stationNum.allPower?stationNum.allPower:0).toFixed(2)}}</span>kW</div>
             <img class="cenarrow" :src="arrowl" alt="">
           </div>
           <div class="gradientCon">
@@ -135,7 +135,7 @@
 
 <script>
 import { Message } from 'element-ui'
-import { stationDetailApi, mapLineData, controlerPort } from '@/api'
+import { stationDetailApi, mapLineData, controlerPort, controlQx, controlPassData } from '@/api'
 import echarts from 'echarts'
 export default {
   props: {
@@ -163,6 +163,7 @@ export default {
       dcimg: require('@/assets/img/alcd.png'),
       ktimg: require('@/assets/img/altz.png'),
       stationNum: {},
+      kgNum:0,
     }
   },
   created() {
@@ -191,19 +192,27 @@ export default {
       }
     }
     let obj = {}
-    let { batteryStatus, chargePower, disChargePower, allPower, sourcePower, airPower, lightPower, temperature, outerTemperature, responsiveLoad } = this.stationDetail
-    this.stationNum = { batteryStatus, chargePower, disChargePower, allPower, sourcePower, airPower, lightPower, temperature, outerTemperature, responsiveLoad }
+    let { batteryStatus, chargePower, disChargePower, allPower, sourcePower, airPower, lightPower, temperature, outerTemperature, responsiveLoad, firstLine, secondLine} = this.stationDetail
+    this.stationNum = { batteryStatus, chargePower, disChargePower, allPower, sourcePower, airPower, lightPower, temperature, outerTemperature, responsiveLoad, firstLine, secondLine}
     stationDetailApi({ stationId: this.stationDetail.id }).then((res) => {
-      let { responsiveLoad, disChargeNum, chargeNum, saveNum } = res.data
+      let { responsiveLoad, disChargeNum, chargeNum, saveNum} = res.data
       obj = { responsiveLoad, disChargeNum, chargeNum, saveNum }
       this.stationNum = { ...this.stationNum, ...obj }
     })
     //temperature outerTemperature responsiveLoad
 
   },
+  computed:{
+
+  },
   methods: {
-    changedc(sta) { // 电池控制器
-      if (sta === this.dcBtn||sta === 'dcd') return
+   async changedc(sta) { // 电池控制器
+      if (sta === this.dcBtn || sta === 'dcd') return
+      let res = await controlQx();
+      if (res && res.data !== 1) {
+        this.$message('暂无权限');
+        return
+      }
       let st = '充电'
       let isOpen = 1;
       switch (sta) {
@@ -223,6 +232,11 @@ export default {
           <ul>
             <li><span>设备名称：</span><b>电池</b></li>
             <li><span>控制指令：</span><b>${st}</b></li>
+                 <li><span>输入密码：</span><br/>
+            <div class='passCon'>
+            <input class='controlPass' type='password'/>
+            </div>
+            </li>
           </ul>
           <h3>即将下发控制指令，是否确认继续</h3>
       `
@@ -233,11 +247,32 @@ export default {
         cancelButtonText: '取消',
         showClose: false,
         customClass: 'yeallowAlert',
+        beforeClose: (action, instance, done) => {
+          console.log(action)
+          if (action === 'confirm') {
+            controlPassData({ switchPass: document.getElementsByClassName('controlPass')[0].value }).then(res => {
+              if (res.data === 1) {
+                document.getElementsByClassName('controlPass')[0].value = ''
+                document.getElementsByClassName('passCon')[0].className = 'passCon'
+                done()
+              } else {
+                let pass = document.getElementsByClassName('controlPass')[0].value
+                document.getElementsByClassName('passCon')[0].className = 'passCon errorMs'
+              }
+            })
+
+
+          } else {
+            document.getElementsByClassName('controlPass')[0].value = ''
+            document.getElementsByClassName('passCon')[0].className = 'passCon'
+            done()
+          }
+        },
       }).then(() => {
 
         this.dcBtn = sta;
         this.dcimg = this.stationBtnStatus[this.dcBtn]
-            controlerPort({ stationId: this.stationDetail.id, type: 3, isOpen}).then(res => {
+        controlerPort({ stationId: this.stationDetail.id, type: 3, isOpen }).then(res => {
 
           let type = res.data == 0 ? 'success' : 'error';
 
@@ -253,8 +288,13 @@ export default {
       });
 
     },
-    changekt(sta) {
+    async changekt(sta) {
       if (sta === this.ktBtn) return
+      let res = await controlQx();
+      if (res && res.data !== 1) {
+        this.$message('暂无权限');
+        return
+      }
       let st = '停止'
       switch (sta) {
         case 'ktt':
@@ -269,6 +309,11 @@ export default {
           <ul>
             <li><span>设备名称：</span><b>空调</b></li>
             <li><span>控制指令：</span><b>${st}</b></li>
+            <li><span>输入密码：</span><br/>
+            <div class='passCon'>
+            <input class='controlPass' type='password'/>
+            </div>
+            </li>
           </ul>
           <h3>即将下发控制指令，是否确认继续</h3>
       `
@@ -279,11 +324,30 @@ export default {
         cancelButtonText: '取消',
         showClose: false,
         customClass: 'yeallowAlert',
+        beforeClose: (action, instance, done) => {
+          console.log(action)
+          if (action === 'confirm') {
+            controlPassData({ switchPass: document.getElementsByClassName('controlPass')[0].value }).then(res => {
+              if (res.data === 1) {
+                document.getElementsByClassName('controlPass')[0].value = ''
+                document.getElementsByClassName('passCon')[0].className = 'passCon'
+                done()
+              } else {
+                let pass = document.getElementsByClassName('controlPass')[0].value
+                document.getElementsByClassName('passCon')[0].className = 'passCon errorMs'
+              }
+            })
+
+
+          } else {
+            document.getElementsByClassName('controlPass')[0].value = ''
+            document.getElementsByClassName('passCon')[0].className = 'passCon'
+            done()
+          }
+        },
       }).then(() => {
         controlerPort({ stationId: this.stationDetail.id, type: 1, isOpen: this.ktBtn == 'ktt' ? 1 : 0 }).then(res => {
-
           let type = res.data == 0 ? 'success' : 'error';
-
           let message = res.msg
           this.$message({
             type, message
