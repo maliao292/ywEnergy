@@ -178,7 +178,7 @@
           if (v) {
             if (v == 1) return yy + "-" + mm + "-" + dd;
             if (v == 2) return yy + "-" + mm;
-            if (v == 3) return yy + "-" + mm;
+            if (v == 3) return String(yy)
           } else {
             return yy + "-" + mm + "-" + dd;
           }
