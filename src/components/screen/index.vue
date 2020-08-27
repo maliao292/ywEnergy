@@ -36,7 +36,7 @@
             <p>本年节支</p>
           </div>
           <div class="zjrl">
-            <p><img :src="co2" alt=""><span>4545</span><span>吨</span></p>
+            <p><img :src="co2" alt=""><span>0</span><span>吨</span></p>
             <span>装机容量</span>
           </div>
         </div>
@@ -47,15 +47,16 @@
           <p>户数</p>
           <p><span>{{ychAllData.stationNum}}</span> <i>户</i> </p>
           <p>容量</p>
-          <p><span>{{ychAllData.volume}}</span> <i>MW</i> </p>
+          <p><span>{{ychAllData.volume}}</span> <i>MW{{activeModel==='h'?'A':''}}</i> </p>
           <p>{{allText}}</p>
-          <p><span>{{ychAllData.allLoadNum}}</span><i>MW</i></p>
+          <p><span>{{ychAllData[activeModel+'AllLoadNum']?ychAllData[activeModel+'AllLoadNum']:0}}</span><i>MW</i></p>
         </div>
         <div class="mapshow">
           <img :src="map" alt="">
-          <span class="mapicon fh" v-for="(val,key) in baseStationList" :key='key' :style="{top:val[0]+'%',left:val[1]+'%'}" @mouseenter="cpm(val)" @mouseleave="cpmout(val)">
+          <span class="mapicon fh" v-for="(val,key) in baseStationList" :key='key' :style="{top:val[0]+'%',left:val[1]+'%',zIndex:hoverIndex===key?30:10}" @mouseenter="cpm(val,key)" @mouseleave="cpmout(val)">
             <img :src="modelIcon">
           </span>
+ <transition name="el-fade-in-linear">
 
           <div class="msgWindow" :class="activeModel" v-show="showWindow" :style="{top:windowMsg[0]+4.3+'%',left:windowMsg[1]-3.8+'%'}">
             <span class="artical"></span>
@@ -66,6 +67,11 @@
               </li>
             </ul>
           </div>
+
+        
+      </transition>
+
+
 
         </div>
         <div class="mapBtn">
@@ -88,15 +94,15 @@
           <div class="chhdNum">
             <div class="third">
               <p>
-                <span>秒切负荷</span><i>kW</i>
+                <span>秒切负荷</span><i>MW</i>
               </p>
               <span>{{chhdNum.mqfh}}</span>
             </div>
             <div class="third">
               <p>
-                <span>目前负荷</span><i>kW</i>
+                <span>日前负荷</span><i>MW</i>
               </p>
-              <span>4683.36</span>
+              <span>0</span>
             </div>
             <div class="third">
               <p>
@@ -108,13 +114,13 @@
               <p>
                 <span>感性无功</span><i>MVA</i>
               </p>
-              <span>4683.36</span>
+              <span>0</span>
             </div>
             <div class="half">
               <p>
                 <span>容性无功</span><i>MVA</i>
               </p>
-              <span>4683.36</span>
+              <span>0</span>
             </div>
 
           </div>
@@ -133,13 +139,16 @@
 
 <script>
 import Time from '../Time'
-import { screenMidData, screenCLine, screenFLine, screenServer, screenChhd,screenJzLine } from '@/api'
+import { screenMidData, screenCLine, screenFLine, screenServer, screenChhd, screenJzLine } from '@/api'
 export default {
   components: { Time },
   data() {
     return {
+      hoverIndex: 0,
       allText: '总发电功率',
       ychAllData: {
+        cAllLoadNum: '',
+        hAllLoadNum: '',
         allLoadNum: '',
         volume: '',
         stationNum: '',
@@ -152,8 +161,8 @@ export default {
         mqfh: '',
         mtcn: ''
       },
-      jzNum:{
-        thisSave:'',
+      jzNum: {
+        thisSave: '',
       },
       ychAllDataContent: {
 
@@ -210,11 +219,13 @@ export default {
       this.chhdNum = res.data
     })
   },
+  
   methods: {
     async getMiddleData() { // 中间地图数据
+      let location = [{ position: [42, 47.6], station: '义乌茂后基站' }, { position: [45, 41], station: '义乌溪干西基站' }, { position: [50, 59], station: '江东商苑站' }, { position: [49, 46], station: '殿口东站' }]
       let res = await screenMidData();
-      let { c_volume, h_volume, allLoadNum, stationNum } = res.data
-      this.ychAllData = { allLoadNum, stationNum }
+      let { c_volume, h_volume, cAllLoadNum, hAllLoadNum, stationNum } = res.data
+      this.ychAllData = { cAllLoadNum, hAllLoadNum, stationNum }
       this.ychAllData.volume = this.ychAllDataContent['y_volume'] ? this.ychAllDataContent['y_volume'] : 0
       this.ychAllDataContent = { c_volume, h_volume }
       let list = res.data.list
@@ -235,11 +246,16 @@ export default {
         }
         return st
       }
-
-      this.hMsg.g5[0] = [42, 47.6, { station: '义乌茂后基站', msg: [{ key: '基站负荷：', val: (list[0]['allPower']).toFixed(2), unit: 'kW' }, { key: '可响应负荷：', val: (list[0]['responsiveLoad']).toFixed(2), unit: 'kW' }] }];
-      this.hMsg.g5[1] = [45, 41, { station: '义乌溪干西基站', msg: [{ key: '基站负荷：', val: (list[1]['allPower']).toFixed(2), unit: 'kW' }, { key: '可响应负荷：', val: (list[1]['responsiveLoad']).toFixed(2), unit: 'kW' }] }];
-      this.cMsg.g5[0] = [42, 47.6, { station: '义乌茂后基站', msg: [{ key: '电池状态：', val: getst(list[0].batteryStatus) }, { key: '电池容量：', val: (list[0].sourceFixPower).toFixed(2), unit: 'kW' }, { key: '可响应负荷：', val: (list[0].responsiveLoad).toFixed(2), unit: 'kW' }] }];
-      this.cMsg.g5[1] = [45, 41, { station: '义乌溪干西基站', msg: [{ key: '电池状态：', val: getst(list[1].batteryStatus) }, { key: '电池容量：', val: (list[1].sourceFixPower).toFixed(2), unit: 'kW' }, { key: '可响应负荷：', val: (list[1].responsiveLoad).toFixed(2), unit: 'kW' }] }];
+      list.forEach((val) => {
+        // console.log(val)
+        let thisStation = location.filter((sta) => {
+          return sta.station === val.stationName
+        })
+        if (thisStation.length > 0) {
+          this.hMsg.g5.push([...thisStation[0]['position'], { station: val.stationName, msg: [{ key: '基站负荷：', val: !!val['allPower'] ? (val['allPower']).toFixed(2) : '', unit: 'kW' }, { key: '可响应负荷：', val: val['hresponsiveLoad'] ? (val['hresponsiveLoad']).toFixed(2) : '', unit: 'kW' }] }])
+          this.cMsg.g5.push([...thisStation[0]['position'], { station: val.stationName, msg: [{ key: '电池状态：', val: getst(val.batteryStatus) }, { key: '电池容量：', val: (val.sourceFixPower).toFixed(2), unit: 'kW' }, { key: '可响应负荷：', val: (val.cresponsiveLoad).toFixed(2), unit: 'kW' }] }]);
+        }
+      })
     },
     async getFLineData() { // 负荷折线图
       let res = await screenFLine()
@@ -284,16 +300,17 @@ export default {
       let activeStation = this[value + 'Msg'] ? this[value + 'Msg'][this.activeDist] : [];
       this.baseStationList = activeStation ? activeStation : []
     },
-    async getJZTJData(){
+    async getJZTJData() {
       let res = await screenJzLine()
-      let {thisYear,lastYear} = res.data.chart
-      this.jzNum.thisSave =res.data.thisSave
-       this.$chart.screenBar('screenBar',thisYear,lastYear)
+      let { thisYear, lastYear } = res.data.chart
+      this.jzNum.thisSave = res.data.thisSave
+      this.$chart.screenBar('screenBar', thisYear, lastYear)
     },
-    cpm(val) { // 鼠标移入 地图点
+    cpm(val, key) { // 鼠标移入 地图点
       this.showWindow = true
       if (this.showWindow) {
         this.windowMsg = val
+        this.hoverIndex = key
       }
     },
     cpmout() {// 鼠标移出 地图点

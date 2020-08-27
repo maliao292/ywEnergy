@@ -22,9 +22,9 @@
             <div class="outBottom cfd">{{stationDetail.batteryStatus | statusFilter}}</div>
           </div>
           <div class="gradientCon">
-            <div class="outTop cft"><span>{{(stationNum.allPower).toFixed(2)}}</span>kW</div>
+            <div class="outTop cft"><span>{{(stationNum.firstLine).toFixed(2)}}</span>kW</div>
             <div class="fh_s ">
-              <b><img :src="kg" alt=""></b><span>{{stationNum.sourcePower}} <b>kW</b> </span>
+              <b><img :src="kg" alt=""></b><span>{{(stationNum.secondLine).toFixed(2)}} <b>kW</b> </span>
             </div>
             <div class="fh_s ">
               <b><img :src="kt" alt=""></b><span>{{stationNum.airPower}} <b>kW</b> </span>
@@ -35,7 +35,7 @@
             <div class="outBottom">负荷</div>
           </div>
           <div class="eledirection">
-            <div class="outTop cft"><span>{{(stationNum.allPower+stationNum.chargePower).toFixed(2)}}</span>kW</div>
+            <div class="outTop cft"><span>{{(stationNum.allPower?stationNum.allPower:0).toFixed(2)}}</span>kW</div>
             <img class="cenarrow" :src="arrowl" alt="">
           </div>
           <div class="gradientCon">
@@ -73,12 +73,12 @@
               <div><span>电池充放电策略：</span><b><i class="el-icon-edit"></i>修改策略</b></div>
               <div>
                 <span>
-                  22:00-06:00
+                  19:00-22:00
                   <br>
                   充电
                 </span>
                 <span>
-                  06:00-22:00
+                  22:00-01:00
                   <br>
                   放电
                 </span>
@@ -117,7 +117,7 @@
                   开启温度
                 </span>
                 <span>
-                  26℃
+                  28℃
                   <br>
                   停止温度
                 </span>
@@ -163,6 +163,7 @@ export default {
       dcimg: require('@/assets/img/alcd.png'),
       ktimg: require('@/assets/img/altz.png'),
       stationNum: {},
+      kgNum:0,
     }
   },
   created() {
@@ -191,14 +192,17 @@ export default {
       }
     }
     let obj = {}
-    let { batteryStatus, chargePower, disChargePower, allPower, sourcePower, airPower, lightPower, temperature, outerTemperature, responsiveLoad } = this.stationDetail
-    this.stationNum = { batteryStatus, chargePower, disChargePower, allPower, sourcePower, airPower, lightPower, temperature, outerTemperature, responsiveLoad }
+    let { batteryStatus, chargePower, disChargePower, allPower, sourcePower, airPower, lightPower, temperature, outerTemperature, responsiveLoad, firstLine, secondLine} = this.stationDetail
+    this.stationNum = { batteryStatus, chargePower, disChargePower, allPower, sourcePower, airPower, lightPower, temperature, outerTemperature, responsiveLoad, firstLine, secondLine}
     stationDetailApi({ stationId: this.stationDetail.id }).then((res) => {
-      let { responsiveLoad, disChargeNum, chargeNum, saveNum } = res.data
+      let { responsiveLoad, disChargeNum, chargeNum, saveNum} = res.data
       obj = { responsiveLoad, disChargeNum, chargeNum, saveNum }
       this.stationNum = { ...this.stationNum, ...obj }
     })
     //temperature outerTemperature responsiveLoad
+
+  },
+  computed:{
 
   },
   methods: {
@@ -230,7 +234,7 @@ export default {
             <li><span>控制指令：</span><b>${st}</b></li>
                  <li><span>输入密码：</span><br/>
             <div class='passCon'>
-            <input class='controlPass'/>
+            <input class='controlPass' type='password'/>
             </div>
             </li>
           </ul>
@@ -307,7 +311,7 @@ export default {
             <li><span>控制指令：</span><b>${st}</b></li>
             <li><span>输入密码：</span><br/>
             <div class='passCon'>
-            <input class='controlPass'/>
+            <input class='controlPass' type='password'/>
             </div>
             </li>
           </ul>
