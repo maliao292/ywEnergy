@@ -3,7 +3,7 @@
     <div class="screenTitle">
       <div>
         <i><img :src="clock" alt=""></i>
-        <Time style="display:inline-block;width:285px" :fontName='fontName' />
+        <Time style="display:inline-block;width:290px" :fontName='fontName' />
         <span class="timeFont">TIME</span>
       </div>
       <div class="stitle">义乌市源荷储智能集成平台</div>
@@ -45,33 +45,28 @@
       <div class="screenMap">
         <div class="msgnum">
           <p>户数</p>
-          <p><span>{{ychAllData.stationNum}}</span> <i>户</i> </p>
+          <p><span>{{activeDist==='g5'?ychAllData.stationNum:0}}</span> <i>户</i> </p>
           <p>容量</p>
-          <p><span>{{ychAllData.volume}}</span> <i>MW{{activeModel==='h'?'A':''}}</i> </p>
+          <p><span>{{activeDist==='g5'?ychAllData.volume:0}}</span> <i>MW{{activeModel==='h'?'A':''}}</i> </p>
           <p>{{allText}}</p>
-          <p><span>{{ychAllData[activeModel+'AllLoadNum']?ychAllData[activeModel+'AllLoadNum']:0}}</span><i>MW</i></p>
+          <p><span>{{activeDist==='g5'?(ychAllData[activeModel+'AllLoadNum']?ychAllData[activeModel+'AllLoadNum']:0):0}}</span><i>MW</i></p>
         </div>
         <div class="mapshow">
           <img :src="map" alt="">
           <span class="mapicon fh" v-for="(val,key) in baseStationList" :key='key' :style="{top:val[0]+'%',left:val[1]+'%',zIndex:hoverIndex===key?30:10}" @mouseenter="cpm(val,key)" @mouseleave="cpmout(val)">
             <img :src="modelIcon">
           </span>
- <transition name="el-fade-in-linear">
-
-          <div class="msgWindow" :class="activeModel" v-show="showWindow" :style="{top:windowMsg[0]+4.3+'%',left:windowMsg[1]-3.8+'%'}">
-            <span class="artical"></span>
-            <h3>{{windowMsg[2].station}}</h3>
-            <ul>
-              <li v-for="(item,key) in windowMsg[2].msg" :key="key">
-                <div><span>{{item.key}}</span><span>{{item.val}}</span><span>{{item.unit}}</span></div>
-              </li>
-            </ul>
-          </div>
-
-        
-      </transition>
-
-
+          <transition name="el-fade-in-linear">
+            <div class="msgWindow" :class="activeModel" v-show="showWindow" :style="{top:windowMsg[0]+4.3+'%',left:windowMsg[1]-3.8+'%'}">
+              <span class="artical"></span>
+              <h3>{{windowMsg[2].station}}</h3>
+              <ul>
+                <li v-for="(item,key) in windowMsg[2].msg" :key="key">
+                  <div><span>{{item.key}}</span><span>{{item.val}}</span><span>{{item.unit}}</span></div>
+                </li>
+              </ul>
+            </div>
+          </transition>
 
         </div>
         <div class="mapBtn">
@@ -191,8 +186,8 @@ export default {
         { value: 'h', text: '荷', name: '负荷', icon: require('@/assets/img/screen/screenFh.png'), allText: '总可响应负荷' },
         { value: 'c', text: '储', name: '储能', icon: require('@/assets/img/screen/screenCn.png'), allText: '总可响应负荷' },
       ],
-      activeDist: 'sm',
-      activeModel: 'y',
+      activeDist: 'g5',
+      activeModel: 'h',
       baseStationList: [],
 
       yMsg: {},
@@ -211,6 +206,8 @@ export default {
     };
   },
   created() {
+    this.distChange(this.activeDist)
+    this.modelChange(this.modelDist[1])
     this.getMiddleData()
     screenServer().then(res => {
       this.serverNum = res.data
@@ -219,7 +216,7 @@ export default {
       this.chhdNum = res.data
     })
   },
-  
+
   methods: {
     async getMiddleData() { // 中间地图数据
       let location = [{ position: [42, 47.6], station: '义乌茂后基站' }, { position: [45, 41], station: '义乌溪干西基站' }, { position: [50, 59], station: '江东商苑站' }, { position: [49, 46], station: '殿口东站' }]
