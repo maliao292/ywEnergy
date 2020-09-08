@@ -67,7 +67,8 @@
     <div class="reportCon_table">
       <el-table
         :data="tableData"
-        max-height="800"
+        max-height="750"
+        show-summary
         :row-class-name="tabRowClassName"
         style="width: 99%"
       >
@@ -81,32 +82,32 @@
             {{ scope.row.time }}
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="空调回路Ep" align="center">
+        <el-table-column prop="airEp" label="空调回路电量" align="center">
           <template slot-scope="scope">
             {{ scope.row.airEp }}
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="照明回路Ep" align="center">
+        <el-table-column prop="lightEp" label="照明回路电量" align="center">
           <template slot-scope="scope">
             {{ scope.row.lightEp }}
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="开关电源回路Ep" align="center">
+        <el-table-column prop="powerEp" label="开关电源回路电量" align="center">
           <template slot-scope="scope">
             {{ scope.row.powerEp }}
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="蓄电池放电Ep" align="center">
+        <el-table-column prop="dischargeEp" label="蓄电池放电电量" align="center">
           <template slot-scope="scope">
             {{ scope.row.dischargeEp }}
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="蓄电池充电Ep" align="center">
+        <el-table-column prop="chargeEp" label="蓄电池充电电量" align="center">
           <template slot-scope="scope">
             {{ scope.row.chargeEp }}
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="合计" align="center">
+        <el-table-column prop="totalEp" label="合计" align="center">
           <template slot-scope="scope">
             {{ scope.row.totalEp }}
           </template>
@@ -260,5 +261,8 @@
   }
   .reportCon_table>>>.el-table tr{
     height: 65px;
+  }
+  .reportCon_table>>>.el-table__footer{
+    font-weight: bold;
   }
 </style>
