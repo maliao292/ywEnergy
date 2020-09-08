@@ -67,9 +67,10 @@ export default {
             res = res.data
             this.loging = false
             let type = res.code == 200 ? 'success' : 'error'
-            this.$message({ type, message: res.msg })
             if (res.code == 200) {
               this.$router.push({ name: 'home' })
+            }else{
+            this.$message({ type, message: res.msg })
             }
           })
         }

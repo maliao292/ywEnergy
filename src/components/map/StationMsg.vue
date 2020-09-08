@@ -75,12 +75,12 @@
                 <span>
                   19:00-22:00
                   <br>
-                  充电
+                  放电
                 </span>
                 <span>
                   22:00-01:00
                   <br>
-                  放电
+                  充电
                 </span>
               </div>
             </div>
@@ -105,7 +105,7 @@
                 <span>室外温度：</span><b>{{stationNum.outerTemperature}}℃</b><span></span>
               </li>
               <li>
-                <span>可响应负荷：</span><b style="color:#4c8aeb">{{stationNum.responsiveLoad}}</b><span>kW</span>
+                <span>可响应负荷：</span><b style="color:#4c8aeb">{{stationNum.allPower}}</b><span>kW</span>
               </li>
             </ul>
             <div class="strategy_s">
