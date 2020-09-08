@@ -59,13 +59,13 @@
             <div class="monEcharts_info">
               <div class="monEcharts_infoEach monEcharts_infoEachDou">
                 <div>
-                  <p class="doubleLineHei">当日室内最高温度 <span class="specialSt1 specialSt3">{{wdykt.snMaxTemp}} ℃</span></p>
+                  <p class="doubleLineHei">当日室内最高温度 <span class="specialSt1 specialSt4">{{wdykt.snMaxTemp}} ℃</span></p>
                   <p class="doubleLineHei">最高时刻 <span class="specialStTime">{{wdykt.snMaxTempTime}}</span></p>
                 </div>
               </div>
               <div class="monEcharts_infoEach">
                 <div>
-                  <p class="doubleLineHei">当日室外最高温度 <span class="specialSt1 specialSt4">{{wdykt.swMaxTemp}} ℃</span></p>
+                  <p class="doubleLineHei">当日室外最高温度 <span class="specialSt1 specialSt3">{{wdykt.swMaxTemp}} ℃</span></p>
                   <p class="doubleLineHei">最高时刻 <span class="specialStTime">{{wdykt.swMaxTempTime}}</span></p>
                 </div>
               </div>
