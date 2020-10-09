@@ -153,7 +153,7 @@
       getThisTime(){
         var _this = this;
         let yy = new Date().getFullYear();
-        var mm =new Date().getMonth() < 10 ? "0" + (new Date().getMonth() + 1) : new Date().getMonth() + 1;
+        var mm =new Date().getMonth() < 10 ? 0+(new Date().getMonth() + 1) : new Date().getMonth() + 1;
         var dd = new Date().getDate() <10 ? "0" + new Date().getDate() : new Date().getDate();
 
         _this.stationParam.queryDate = yy+'-'+mm+'-'+dd
