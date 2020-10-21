@@ -174,14 +174,14 @@
 }
 
 .homeTime {
-  width: 300px;
+  width: 200px;
   line-height: 50px;
   text-align: center;
   flex-shrink: 0;
 }
 
 .userMsg {
-  width: 400px;
+  width: 200px;
   padding: 0 30px;
   line-height: 50px;
 }

@@ -62,6 +62,24 @@ let router = new Router({
           component: resolve => require(['@/components/report/glAndTemTable'], resolve),
         }
         ]
+      },{
+        path: "/home/system",
+        name: 'system',
+        redirect: '/home/system/user',
+        component: resolve => require(['@/components/system/index'], resolve),
+        children: [{
+          path: "user",
+          name: 'user',
+          component: resolve => require(['@/components/system/user/index'], resolve),
+        },{
+          path: "role",
+          name: 'role',
+          component: resolve => require(['@/components/system/role/index'], resolve),
+        },{
+          path: "menu",
+          name: 'menu',
+          component: resolve => require(['@/components/system/menu/index'], resolve),
+        }]
       }]
     }, {
       path: "/screen",

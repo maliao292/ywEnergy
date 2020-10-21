@@ -35,6 +35,9 @@
           <li>
             <router-link tag="div" to='/home/report'><span class="icon iconfont icon-baobiao"></span><span>报表</span></router-link>
           </li>
+          <li>
+            <router-link tag="div" to='/home/system'><span class="icon iconfont icon-baobiao"></span><span>系统管理</span></router-link>
+          </li>
         </ul>
         <div class="homeTime"><Time /></div>
         <div class="userMsg">
@@ -67,7 +70,7 @@ export default {
       mapshow: true,
       photo:require('@/assets/img/logo.png'),
       logo: require('@/assets/img/g5.png'),
-    
+
       hyvalue:'g5',
       currentIndustry:'5G',
       hyList: [
