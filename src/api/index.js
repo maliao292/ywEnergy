@@ -1,18 +1,28 @@
 import axios from './config';
+import request from './config';
 import qs from 'qs'
 
 /**
  * 登录
- * @param {*} dataobj 
+ * @param {*} dataobj
  */
-export let login = dataobj => axios.post('/login',qs.stringify(dataobj));
+// export let login = dataobj => axios.post('/login',qs.stringify(dataobj));
+export function login(dataobj) {
+  return request({
+    url: '/login',
+    method: 'post',
+    headers:{'Content-Type': 'application/x-www-form-urlencoded'},
+    params: dataobj
+  })
+}
+
 // export let logout = dataobj => axios.post('/logout',qs.stringify(dataobj));
 // 地图树
 export let mapTree = dataobj => axios.post('/index/queryTree',qs.stringify(dataobj));
 // 地图 marker
 export let mapMarker = dataobj => axios.post('/index/queryView',qs.stringify(dataobj));
 
-//信息统计TOP 
+//信息统计TOP
 export let topNum = _ => axios.post('/index/queryTop');
 
 // 站点详情

@@ -25,7 +25,7 @@
             </el-option>
           </el-select>
         </div>
-        <ul>
+        <ul style="max-width: 700px;overflow: auto">
           <li>
             <router-link tag="div" to='/home/map'><span class="icon iconfont icon-daohangshouye"></span><span>首页</span></router-link>
           </li>
@@ -34,6 +34,12 @@
           </li>
           <li>
             <router-link tag="div" to='/home/report'><span class="icon iconfont icon-baobiao"></span><span>报表</span></router-link>
+          </li>
+          <li>
+            <router-link tag="div" to='/home/standing'><span class="icon iconfont icon-baobiao"></span><span>设备台账</span></router-link>
+          </li>
+          <li>
+            <router-link tag="div" to='/home/user'><span class="icon iconfont icon-baobiao"></span><span>用户管理</span></router-link>
           </li>
           <li>
             <router-link tag="div" to='/home/system'><span class="icon iconfont icon-baobiao"></span><span>系统管理</span></router-link>

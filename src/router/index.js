@@ -62,7 +62,24 @@ let router = new Router({
           component: resolve => require(['@/components/report/glAndTemTable'], resolve),
         }
         ]
-      },{
+      },
+        {
+        path: "/home/standing",
+        name: 'standing',
+        redirect: '/home/standing/collect',
+        component: resolve => require(['@/components/standing/index'], resolve),
+        children: [{
+          path: "collect",
+          name: 'collect',
+          component: resolve => require(['@/components/standing/collect'], resolve),
+        },{
+          path: "subscriber",
+          name: 'subscriber',
+          component: resolve => require(['@/components/standing/subscriber'], resolve),
+        }
+        ]
+      },
+        {
         path: "/home/system",
         name: 'system',
         redirect: '/home/system/user',
@@ -79,9 +96,33 @@ let router = new Router({
           path: "menu",
           name: 'menu',
           component: resolve => require(['@/components/system/menu/index'], resolve),
+        },{
+          path: "dict",
+          name: 'dict',
+          component: resolve => require(['@/components/system/dict/index'], resolve),
+
+        },{
+          path: 'type/data/:dictId(\\d+)',
+          component: (resolve) => require(['@/components/system/dict/data'], resolve),
+          name: 'Data',
+        }
+        ]
+      },{
+        path: "/home/user",
+        name: 'system',
+        redirect: '/home/user/station',
+        component: resolve => require(['@/components/user/index'], resolve),
+        children: [{
+          path: "station",
+          name: 'station',
+          component: resolve => require(['@/components/user/station/index'], resolve),
         }]
-      }]
-    }, {
+      },
+
+      ]
+    },
+
+    {
       path: "/screen",
       name: "screen",
       component: Screen

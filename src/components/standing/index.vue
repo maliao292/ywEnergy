@@ -3,22 +3,12 @@
     <div class="modelCon_left">
       <ul class="modelConLeftUl">
         <li class="monitorIcon">
-          <router-link tag="div" to='/home/system/user'>
+          <router-link tag="div" to='/home/standing/collect'>
             <span class="backOne backOneIcon_report"></span>
           </router-link>
         </li>
         <li class="monitorIcon">
-          <router-link tag="div" to='/home/system/role'>
-            <span class="backOne backTwoIcon_report"></span>
-          </router-link>
-        </li>
-        <li class="monitorIcon">
-          <router-link tag="div" to='/home/system/menu'>
-            <span class="backOne backTwoIcon_report"></span>
-          </router-link>
-        </li>
-        <li class="monitorIcon">
-          <router-link tag="div" to='/home/system/dict'>
+          <router-link tag="div" to='/home/standing/subscriber'>
             <span class="backOne backTwoIcon_report"></span>
           </router-link>
         </li>
