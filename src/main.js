@@ -28,6 +28,7 @@ Vue.prototype.addDateRange = addDateRange
 Vue.prototype.selectDictLabel = selectDictLabel
 Vue.prototype.parseTime = parseTime
 Vue.prototype.handleTree = handleTree
+Vue.prototype.download = download
 
 Vue.prototype.msgSuccess = function (msg) {
   this.$message({ showClose: true, message: msg, type: "success" });

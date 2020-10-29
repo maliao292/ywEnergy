@@ -3,7 +3,7 @@
  * Copyright (c) 2019 ruoyi
  */
 
-const baseURL = process.env.VUE_APP_BASE_API
+const baseURL = '/ywptapi'+'/ywapi'
 
 // 日期格式化
 export function parseTime(time, pattern) {

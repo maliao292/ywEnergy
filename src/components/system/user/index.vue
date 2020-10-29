@@ -164,11 +164,8 @@
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="控制密码">
-                <el-radio-group v-model="form.switchPass">
-                  <el-radio :label="1">允许</el-radio>
-                  <el-radio :label="0">禁止</el-radio>
-                </el-radio-group>
+              <el-form-item label="控制密码" prop="switchPass">
+                <el-input v-model="form.switchPass" placeholder="请输入控制密码" type="password" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -241,6 +238,9 @@
               ],
               password: [
                 { required: true, message: "用户密码不能为空", trigger: "blur" }
+              ],
+              switchPass: [
+                { required: true, message: "控制密码不能为空", trigger: "blur" }
               ],
               email: [
                 { required: true, message: "邮箱地址不能为空", trigger: "blur" },
@@ -344,8 +344,9 @@
             password: undefined,
             phonenumber: undefined,
             email: undefined,
-            status: 0,
-            ifSwitch: 0,
+            status: 1,
+            ifSwitch: 1,
+            switchPass: undefined,
             remark: undefined,
             roleIds: []
           };
@@ -377,7 +378,7 @@
         },
         /** 修改按钮操作 */
         handleUpdate(row) {
-          console.log(row);
+          // console.log(row);
           this.reset();
           // this.getTreeselect();
           const userId = row.id || this.ids;
@@ -399,7 +400,7 @@
             confirmButtonText: "确定",
             cancelButtonText: "取消"
           }).then(({ value }) => {
-            resetUserPwd(row.userId, value).then(response => {
+            resetUserPwd(row.id, value).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功，新密码是：" + value);
               }

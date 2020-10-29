@@ -13,11 +13,11 @@
         <div class="homeLogo">
           <img :src="logo">
         </div>
-        <div class="homeSearch">
-          <input v-model="stationNameVal" v-show="isMapPage == 'map'" type="text" placeholder="搜索">
-          <span v-show="isMapPage == 'map'" class="el-icon-search searchBtn" @click="searchStation"></span>
-          <b v-show="isMapPage == 'map'"></b>
-        </div>
+        <!--<div class="homeSearch">-->
+          <!--<input v-model="stationNameVal" v-show="isMapPage == 'map'" type="text" placeholder="搜索">-->
+          <!--<span v-show="isMapPage == 'map'" class="el-icon-search searchBtn" @click="searchStation"></span>-->
+          <!--<b v-show="isMapPage == 'map'"></b>-->
+        <!--</div>-->
         <div class="homeProName">义乌市源荷储智能集成平台 -- <b>{{currentIndustry}}</b></div>
         <div class="hySelect">
           <el-select popper-class='hySelect_s' v-model="hyvalue" placeholder="请选择" @change="changIndustry">
@@ -25,24 +25,36 @@
             </el-option>
           </el-select>
         </div>
-        <ul style="max-width: 700px;overflow: auto">
+        <ul style="max-width: 1000px">
           <li>
-            <router-link tag="div" to='/home/map'><span class="icon iconfont icon-daohangshouye"></span><span>首页</span></router-link>
-          </li>
-          <li style="width: 150px;">
-            <router-link tag="div" to='/home/operationMonitor'><span class="icon iconfont icon-jiankong"></span><span>运行监控分析</span></router-link>
+            <router-link tag="div" to='/home/map'><span class="icon iconfont icon-daohangshouye"></span><p>首页</p></router-link>
           </li>
           <li>
-            <router-link tag="div" to='/home/report'><span class="icon iconfont icon-baobiao"></span><span>报表</span></router-link>
+            <router-link tag="div" to='/home/operationMonitor'><span class="icon iconfont icon-jiankong"></span><p>运行监控分析</p></router-link>
           </li>
           <li>
-            <router-link tag="div" to='/home/standing'><span class="icon iconfont icon-baobiao"></span><span>设备台账</span></router-link>
+            <router-link tag="div" to='/home/celue'><span class="icon iconfont icon-yunhangcelveguanli"></span><p>运行策略管理</p></router-link>
           </li>
           <li>
-            <router-link tag="div" to='/home/user'><span class="icon iconfont icon-baobiao"></span><span>用户管理</span></router-link>
+            <router-link tag="div" to='/home/yunxing'><span class="icon iconfont icon-xuqiucexiangyingguanli"></span><p>需求侧响应管理</p></router-link>
           </li>
           <li>
-            <router-link tag="div" to='/home/system'><span class="icon iconfont icon-baobiao"></span><span>系统管理</span></router-link>
+            <router-link tag="div" to='/home/nengxiao'><span class="icon iconfont icon-nengxiaoguanli"></span><p>能效管理</p></router-link>
+          </li>
+          <li>
+            <router-link tag="div" to='/home/user'><span class="icon iconfont icon-yonghuguanli"></span><p>用户管理</p></router-link>
+          </li>
+          <li>
+            <router-link tag="div" to='/home/standing'><span class="icon iconfont icon-shebeiguanli"></span><p>设备管理</p></router-link>
+          </li>
+          <li>
+            <router-link tag="div" to='/home/alarm'><span class="icon iconfont icon-baojingguanli"></span><p>报警管理</p></router-link>
+          </li>
+          <li>
+            <router-link tag="div" to='/home/report'><span class="icon iconfont icon-baobiao"></span><p>报表</p></router-link>
+          </li>
+          <li>
+            <router-link tag="div" to='/home/system'><span class="icon iconfont icon-xitongguanli"></span><p>系统管理</p></router-link>
           </li>
         </ul>
         <div class="homeTime"><Time /></div>
@@ -50,7 +62,7 @@
           <img :src="photo" alt="">
           <span class="username">{{userName}} </span>
         </div>
-        <div @click="toScreen" style="color:#fff;cursor:pointer">大屏</div>
+        <div @click="toScreen" style="color:#fff;cursor:pointer;line-height: 64px">大屏</div>
         <div class="logout icon iconfont icon-tuichu" @click="toLogin"></div>
       </div>
       <div class="homeContent">

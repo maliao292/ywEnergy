@@ -4,22 +4,22 @@
       <ul class="modelConLeftUl">
         <li class="monitorIcon">
           <router-link tag="div" to='/home/system/user'>
-            <span class="backOne backOneIcon_report"></span>
+            <span class="icon iconfont icon-yonghuguanli iconStyle"></span>
           </router-link>
         </li>
         <li class="monitorIcon">
           <router-link tag="div" to='/home/system/role'>
-            <span class="backOne backTwoIcon_report"></span>
+            <span class="icon iconfont icon-yonghuguanli iconStyle"></span>
           </router-link>
         </li>
         <li class="monitorIcon">
           <router-link tag="div" to='/home/system/menu'>
-            <span class="backOne backTwoIcon_report"></span>
+            <span class="icon iconfont icon-yonghuguanli iconStyle"></span>
           </router-link>
         </li>
         <li class="monitorIcon">
           <router-link tag="div" to='/home/system/dict'>
-            <span class="backOne backTwoIcon_report"></span>
+            <span class="icon iconfont icon-yonghuguanli iconStyle"></span>
           </router-link>
         </li>
       </ul>
@@ -37,5 +37,10 @@
 </script>
 
 <style scoped>
-
+  .iconStyle{
+    color: rgb(173,187,200);
+  }
+  .active .iconStyle{
+    color: rgb(66,140,229);
+  }
 </style>

@@ -140,16 +140,16 @@
           <el-col :span="12">
             <el-form-item v-if="form.menuType != 'F'" label="显示状态">
               <el-radio-group v-model="form.visible">
-                <el-radio :label="0">显示</el-radio>
-                <el-radio :label="1">隐藏</el-radio>
+                <el-radio label="0">显示</el-radio>
+                <el-radio label="1">隐藏</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item v-if="form.menuType != 'F'" label="菜单状态">
               <el-radio-group v-model="form.status">
-                <el-radio :label="0">正常</el-radio>
-                <el-radio :label="1">停用</el-radio>
+                <el-radio label="0">正常</el-radio>
+                <el-radio label="1">停用</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -259,9 +259,9 @@
           icon: undefined,
           menuType: "M",
           orderNum: undefined,
-          isFrame: "1",
-          visible: "0",
-          status: "0"
+          isFrame: '1',
+          visible: '0',
+          status: '0'
         };
         this.resetForm("form");
       },
