@@ -237,6 +237,11 @@
               <el-input v-model="form.contactPhone" placeholder="请输入联系人电话" />
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="备注" prop="remark">
+              <el-input v-model="form.remark" placeholder="请输入备注" />
+            </el-form-item>
+          </el-col>
         </el-row>
 
       </el-form>

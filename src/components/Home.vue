@@ -33,7 +33,7 @@
             <router-link tag="div" to='/home/operationMonitor'><span class="icon iconfont icon-jiankong"></span><p>运行监控分析</p></router-link>
           </li>
           <li>
-            <router-link tag="div" to='/home/celue'><span class="icon iconfont icon-yunhangcelveguanli"></span><p>运行策略管理</p></router-link>
+            <router-link tag="div" to='/home/runStrategy'><span class="icon iconfont icon-yunhangcelveguanli"></span><p>运行策略管理</p></router-link>
           </li>
           <li>
             <router-link tag="div" to='/home/yunxing'><span class="icon iconfont icon-xuqiucexiangyingguanli"></span><p>需求侧响应管理</p></router-link>

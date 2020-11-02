@@ -47,7 +47,9 @@ let router = new Router({
           name: 'loadAnalyze',
           component: resolve => require(['@/components/opeMon/loadAnalyze'], resolve),
         }]
-      }, {
+      },
+        {
+          // 报表
         path: "/home/report",
         name: 'report',
         redirect: '/home/report/reportTable',
@@ -64,6 +66,24 @@ let router = new Router({
         ]
       },
         {
+          // 运行策略管理
+          path: "/home/runStrategy",
+          name: 'runStrategy',
+          redirect: '/home/runStrategy/definition',
+          component: resolve => require(['@/components/runStrategy/index'], resolve),
+          children: [{
+            path: "definition",
+            name: 'definition',
+            component: resolve => require(['@/components/runStrategy/definition'], resolve),
+          },{
+            path: "runManage",
+            name: 'runManage',
+            component: resolve => require(['@/components/runStrategy/runManage'], resolve),
+          }
+          ]
+        },
+        {
+          // 设备管理
         path: "/home/standing",
         name: 'standing',
         redirect: '/home/standing/collect',
@@ -80,6 +100,7 @@ let router = new Router({
         ]
       },
         {
+          // 系统管理
         path: "/home/system",
         name: 'system',
         redirect: '/home/system/user',
@@ -107,7 +128,9 @@ let router = new Router({
           name: 'Data',
         }
         ]
-      },{
+      },
+        {
+        // 用户管理
         path: "/home/user",
         name: 'system',
         redirect: '/home/user/station',
