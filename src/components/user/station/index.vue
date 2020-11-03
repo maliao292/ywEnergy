@@ -5,7 +5,7 @@
     <div class="monChosen">
       <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
         <el-form-item label="用户类别" prop="userType">
-          <el-select v-model="queryParams.userType" placeholder="请选择用户类别" clearable size="small">
+          <el-select v-model="queryParams.userType" placeholder="请选择用户类别" clearable >
             <el-option
               v-for="dict in userTypeOptions"
               :key="dict.dictValue"
@@ -19,7 +19,6 @@
             v-model="queryParams.stationName"
             placeholder="请输入用户名称"
             clearable
-            size="small"
             @keyup.enter.native="handleQuery"
           />
         </el-form-item>
@@ -45,6 +44,15 @@
             size="mini"
             @click="handleAdd"
           >新增</el-button>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button
+            type="warning"
+            icon="el-icon-download"
+            size="mini"
+            @click="handleExport"
+
+          >导出</el-button>
         </el-col>
       </el-row>
     </div>
@@ -90,7 +98,7 @@
     </div>
 
     <!-- 添加或修改用户档案对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-row>
           <el-col :span="24">
@@ -105,7 +113,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="用户类别">
-              <el-select v-model="form.userType" placeholder="请选择用户类别" clearable size="small">
+              <el-select v-model="form.userType" placeholder="请选择用户类别" clearable style="width: 100%;">
                 <el-option
                   v-for="dict in userTypeOptions"
                   :key="dict.dictValue"
@@ -122,7 +130,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="基站类型">
-              <el-select v-model="form.type" placeholder="请选择类型">
+              <el-select v-model="form.type" placeholder="请选择类型"  style="width: 100%;">
                 <el-option
                   v-for="dict in stationTypeOptions"
                   :key="dict.dictValue"
@@ -134,7 +142,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="室温告警值" prop="accountno">
-              <el-input v-model="form.alarmTemp" placeholder="请输入户号" />
+              <el-input v-model="form.alarmTemp" placeholder="请输入告警值" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -154,7 +162,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="用电类别">
-              <el-select v-model="form.electype" placeholder="请选择用电类别">
+              <el-select v-model="form.electype" placeholder="请选择用电类别" style="width: 100%;">
                 <el-option
                   v-for="dict in elecTypeOptions"
                   :key="dict.dictValue"
@@ -171,17 +179,17 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="联系人名称" prop="accountno">
-              <el-input v-model="form.contactName" placeholder="请输入户号" />
+              <el-input v-model="form.contactName" placeholder="请输入联系人名称" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="联系人电话" prop="accountno">
-              <el-input v-model="form.contactPhone" placeholder="请输入户号" />
+              <el-input v-model="form.contactPhone" placeholder="请输入联系人电话" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="备注" prop="accountno">
-              <el-input v-model="form.remark" placeholder="请输入户号" />
+              <el-input v-model="form.remark" placeholder="请输入备注" />
             </el-form-item>
           </el-col>
 
@@ -336,6 +344,8 @@ export default {
       }
       getStation(row.id).then(response => {
         this.form = response.data;
+        this.form.type = String(response.data.type)
+        this.form.userType = String(response.data.userType)
         this.open = true;
         this.title = "修改用户档案";
       });
@@ -376,6 +386,19 @@ export default {
           this.getList();
           this.msgSuccess("删除成功");
         }).catch(function() {});
+    },
+    /** 导出按钮操作 */
+    handleExport() {
+      const queryParams = this.queryParams;
+      this.$confirm('是否确认导出所有数据项?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return exportStation(queryParams);
+      }).then(response => {
+        this.download(response.msg);
+      }).catch(function() {});
     },
 
     // 用户类别字典翻译

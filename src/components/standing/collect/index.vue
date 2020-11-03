@@ -100,10 +100,10 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="主键" width="55" align="center" prop="id" />
+        <!--<el-table-column label="主键" width="55" align="center" prop="id" />-->
         <el-table-column label="资产编号" align="center" prop="assetTag" />
         <el-table-column label="设备名称" align="center" prop="deviceName" />
-        <el-table-column label="设备类型" align="center" prop="deviceType" />
+        <el-table-column label="设备类型" align="center" prop="deviceType" :formatter="shebeiFormat"/>
         <el-table-column label="生产厂商" align="center" prop="producer" />
         <el-table-column label="规格型号" align="center" prop="specification" />
         <el-table-column label="使用状况" align="center" prop="status" :formatter="statusFormat"/>
@@ -315,6 +315,9 @@ export default {
   },
   methods: {
     // 字典状态字典翻译
+    shebeiFormat(row, column) {
+      return this.selectDictLabel(this.shebeiOptions, row.deviceType);
+    },
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.status);
     },
