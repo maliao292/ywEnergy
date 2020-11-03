@@ -5,6 +5,7 @@ const store = new Vuex.Store({
     state: {
         ywIdentity: '',
         ywUser: '',
+        mapMarkerName:'',
     },
     getters: {
 
