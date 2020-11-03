@@ -3,6 +3,7 @@ import axios from 'axios';
 axios.defaults.timeout = 150000;
 axios.defaults.baseURL = '/ywptapi/ywapi';
 axios.defaults.withCredentials = true // 允许携带cookie
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 
 // http请求拦截器
 axios.interceptors.request.use(config => {

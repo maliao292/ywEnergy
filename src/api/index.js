@@ -26,7 +26,17 @@ export let mapMarker = dataobj => axios.post('/index/queryView',qs.stringify(dat
 export let topNum = _ => axios.post('/index/queryTop');
 
 // 站点详情
-export let stationDetailApi = dataobj => axios.post('/index/queryInfo',qs.stringify(dataobj));
+// export let stationDetailApi = dataobj => axios.post('/index/queryInfo',qs.stringify(dataobj));
+export function stationDetailApi(dataobj) {
+  return request({
+    url: '/index/queryInfo',
+    method: 'post',
+    headers:{'Content-Type': 'application/x-www-form-urlencoded'},
+    params: dataobj
+  })
+}
+
+
 // 地图详情折线图GET /analysis/jzfh
 export let mapLineData = dataobj => axios.get('/analysis/jzfh?stationId='+dataobj.stationId+'&queryDate='+dataobj.queryDate);
 
