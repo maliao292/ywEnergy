@@ -27,6 +27,7 @@ service.interceptors.request.use(config => {
 
 // 响应拦截器
 service.interceptors.response.use(res => {
+    // console.log(res);
     // 未设置状态码则默认成功状态
     const code = res.data.code || 200;
     // console.log(code);
@@ -42,9 +43,15 @@ service.interceptors.response.use(res => {
           type: 'warning'
         }
       ).then(() => {
-        store.dispatch('clearInfo')
-        this.$router.replace({ name: 'login' })
+        // store.dispatch('clearInfo')
+        localStorage.removeItem('ywIdentity')
+        localStorage.removeItem('ywUserName')
+        // state.ywIdentity = null;
+        // state.ywUser = null;
+        // this.$router.replace({ name: 'login' })
 
+        this.$router.replace({ name: 'login' })
+        location.reload()
       })
     } else if (code === 500) {
       Message({

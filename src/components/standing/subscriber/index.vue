@@ -124,6 +124,7 @@
         <el-table-column label="联系人名称" align="center" prop="contactName" />
         <el-table-column label="联系人电话" align="center" prop="contactPhone" />
         <el-table-column label="备注" align="center" prop="remark" />
+        <el-table-column label="采控终端" align="center" prop="jianCeDianName" />
         <el-table-column label="操作" width="150" align="center" class-name="small-padding">
           <template slot-scope="scope">
             <el-button
@@ -155,7 +156,7 @@
 
     <!-- 添加或修改用户设备管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="110px">
         <el-row>
           <el-col :span="12">
             <el-form-item label="资产编号" prop="assetTag">
@@ -169,7 +170,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="设备类型">
-              <el-select v-model="form.deviceType" placeholder="请选择设备类型">
+              <el-select v-model="form.deviceType" placeholder="请选择设备类型" style="width: 100%;">
                 <el-option
                   v-for="dict in shebeiOptions"
                   :key="dict.dictValue"
@@ -242,6 +243,19 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item label="采控终端" prop="jianCeDianId" >
+              <el-select v-model="form.jianCeDianId" placeholder="请选择采控终端" style="width: 100%;">
+                <el-option
+                  v-for="dict in caikongOptions"
+                  :key="dict.id"
+                  :label="dict.jianCeDianName"
+                  :value="dict.id"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
             <el-form-item label="所属用户" prop="usedby">
               <treeselect
                 v-model="form.usedby"
@@ -261,6 +275,7 @@
               <el-input v-model="form.contactPhone" placeholder="请输入联系人电话" />
             </el-form-item>
           </el-col>
+
         </el-row>
 
       </el-form>
@@ -274,7 +289,8 @@
 
 <script>
   import { listStation } from "@/api/user/station";
-  import { listIotDevice, getIotDevice, delIotDevice, addIotDevice, updateIotDevice, exportIotDevice } from "@/api/device/iotDevice";
+  // import { listIotDevice, getIotDevice, delIotDevice, addIotDevice, updateIotDevice, exportIotDevice,getCaikong } from "@/api/device/iotDevice";
+  import { listCommDevice, getCommDevice, delCommDevice, addCommDevice, updateCommDevice, exportCommDevice,getCaikong } from "@/api/device/CommDevice";
   import Treeselect from "@riophae/vue-treeselect";
   import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
@@ -285,6 +301,7 @@
       return {
         shebeiOptions: [], // 设备下拉
         statusOptions: [],
+        caikongOptions: [],
         // 用户档案树选项
         stationOptions: [],
         // 遮罩层
@@ -331,6 +348,10 @@
       this.getDicts("sys_normal_disable").then(response => {
         this.statusOptions = response.data;
       });
+      // 获取采控终端
+      getCaikong().then(res => {
+        this.caikongOptions = res.data
+      })
     },
     methods: {
       // 字典状态字典翻译
@@ -365,7 +386,7 @@
       /** 查询采集设备管理列表 */
       getList() {
         this.loading = true;
-        listIotDevice(this.queryParams).then(response => {
+        listCommDevice(this.queryParams).then(response => {
           this.iotDeviceList = response.rows;
           this.total = response.total;
           this.loading = false;
@@ -399,7 +420,8 @@
           createBy: undefined,
           createTime: undefined,
           updateBy: undefined,
-          updateTime: undefined
+          updateTime: undefined,
+          jianCeDianId: undefined
         };
         this.resetForm("form");
       },
@@ -423,16 +445,17 @@
       handleAdd() {
         this.reset();
         this.open = true;
-        this.title = "添加采集设备管理";
+        this.title = "添加用户设备管理";
       },
       /** 修改按钮操作 */
       handleUpdate(row) {
         this.reset();
         const id = row.id || this.ids
-        getIotDevice(id).then(response => {
+        getCommDevice(id).then(response => {
           this.form = response.data;
+          this.form.status = String(response.data.status);
           this.open = true;
-          this.title = "修改采集设备管理";
+          this.title = "修改用户设备管理";
         });
       },
       /** 提交按钮 */
@@ -440,7 +463,7 @@
         this.$refs["form"].validate(valid => {
           if (valid) {
             if (this.form.id != undefined) {
-              updateIotDevice(this.form).then(response => {
+              updateCommDevice(this.form).then(response => {
                 if (response.code === 200) {
                   this.msgSuccess("修改成功");
                   this.open = false;
@@ -448,7 +471,7 @@
                 }
               });
             } else {
-              addIotDevice(this.form).then(response => {
+              addCommDevice(this.form).then(response => {
                 if (response.code === 200) {
                   this.msgSuccess("新增成功");
                   this.open = false;
@@ -467,7 +490,7 @@
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return delIotDevice(ids);
+          return delCommDevice(ids);
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
@@ -481,7 +504,7 @@
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return exportIotDevice(queryParams);
+          return exportCommDevice(queryParams);
         }).then(response => {
           this.download(response.msg);
         }).catch(function() {});

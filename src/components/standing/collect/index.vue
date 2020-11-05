@@ -255,7 +255,8 @@
 
 <script>
   import { listStation } from "@/api/user/station";
-import { listCommDevice, getCommDevice, delCommDevice, addCommDevice, updateCommDevice, exportCommDevice } from "@/api/device/CommDevice";
+  // import { listCommDevice, getCommDevice, delCommDevice, addCommDevice, updateCommDevice, exportCommDevice } from "@/api/device/CommDevice";
+  import { listIotDevice, getIotDevice, delIotDevice, addIotDevice, updateIotDevice, exportIotDevice,getCaikong } from "@/api/device/iotDevice";
   import Treeselect from "@riophae/vue-treeselect";
   import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
@@ -345,7 +346,7 @@ export default {
     /** 查询用户设备管理列表 */
     getList() {
       this.loading = true;
-      listCommDevice(this.queryParams).then(response => {
+      listIotDevice(this.queryParams).then(response => {
         this.CommDeviceList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -406,8 +407,9 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getCommDevice(id).then(response => {
+      getIotDevice(id).then(response => {
         this.form = response.data;
+        this.form.status = String(response.data.status);
         this.open = true;
         this.title = "修改用户设备管理";
       });
@@ -417,7 +419,7 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateCommDevice(this.form).then(response => {
+            updateIotDevice(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -425,7 +427,7 @@ export default {
               }
             });
           } else {
-            addCommDevice(this.form).then(response => {
+            addIotDevice(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -444,7 +446,7 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(function() {
-        return delCommDevice(ids);
+        return delIotDevice(ids);
       }).then(() => {
         this.getList();
         this.msgSuccess("删除成功");
@@ -458,7 +460,7 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(function() {
-        return exportCommDevice(queryParams);
+        return exportIotDevice(queryParams);
       }).then(response => {
         this.download(response.msg);
       }).catch(function() {});

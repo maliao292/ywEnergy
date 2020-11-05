@@ -51,3 +51,13 @@ export function exportCommDevice(query) {
     params: query
   })
 }
+
+
+// 获取采控终端
+export function getCaikong(query) {
+  return request({
+    url: '/device/CommDevice/jianCeDianList',
+    method: 'get',
+    params: query
+  })
+}

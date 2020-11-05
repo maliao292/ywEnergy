@@ -86,17 +86,17 @@ let router = new Router({
           // 设备管理
         path: "/home/standing",
         name: 'standing',
-        redirect: '/home/standing/collect',
+        redirect: '/home/standing/subscriber',
         component: resolve => require(['@/components/standing/index'], resolve),
         children: [{
-          path: "collect",
-          name: 'collect',
-          component: resolve => require(['@/components/standing/collect'], resolve),
-        },{
           path: "subscriber",
           name: 'subscriber',
           component: resolve => require(['@/components/standing/subscriber'], resolve),
-        }
+        },{
+          path: "collect",
+          name: 'collect',
+          component: resolve => require(['@/components/standing/collect'], resolve),
+        },
         ]
       },
         {
