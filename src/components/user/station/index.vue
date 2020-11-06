@@ -5,7 +5,7 @@
     <div class="monChosen">
       <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
         <el-form-item label="用户类别" prop="userType">
-          <el-select v-model="queryParams.userType" placeholder="请选择用户类别" clearable >
+          <el-select v-model="queryParams.userType" placeholder="请选择用户类别">
             <el-option
               v-for="dict in userTypeOptions"
               :key="dict.dictValue"
@@ -67,17 +67,19 @@
       >
         <el-table-column label="用户类别" align="center" prop="userType" :formatter="userTypeFormat"/>
         <el-table-column label="用户名称" align="center" prop="stationName" />
-        <el-table-column label="基站类型" align="center" prop="type" :formatter="stationTypeFormat"/>
-        <el-table-column label="室温告警值(℃)" align="center" prop="alarmTemp" />
+        <el-table-column label="户号" align="center" prop="accountno" />
+        <el-table-column label="站点类型" align="center" prop="type" :formatter="stationTypeFormat"/>
         <el-table-column label="经度" align="center" prop="longitude" />
         <el-table-column label="纬度" align="center" prop="latitude" />
-        <el-table-column label="合同容量" align="center" prop="volume" />
+        <el-table-column label="合同容量(kVA)" align="center" prop="volume" />
         <el-table-column label="用电类别" align="center" prop="electype" />
-        <el-table-column label="户号" align="center" prop="accountno" />
+        <el-table-column label="电压等级" align="center" prop="voltageClasses" />
+        <el-table-column label="供电辖区" align="center" prop="area" />
+        <el-table-column label="温度告警值(℃)" align="center" prop="alarmTemp" />
+        <el-table-column label="回路层级" align="center" prop="loopName" />
+        <el-table-column label="联系人" align="center" prop="contactName" />
+        <el-table-column label="邮箱" align="center" prop="contactMail" />
         <el-table-column label="备注" align="center" prop="remark" />
-        <el-table-column label="联系人名称" align="center" prop="contactName" />
-        <el-table-column label="联系人电话" align="center" prop="contactPhone" />
-
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button
@@ -129,7 +131,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="基站类型">
+            <el-form-item label="户号" prop="accountno">
+              <el-input v-model="form.accountno" placeholder="请输入户号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="站点类型">
               <el-select v-model="form.type" placeholder="请选择类型"  style="width: 100%;">
                 <el-option
                   v-for="dict in stationTypeOptions"
@@ -138,11 +145,6 @@
                   :value="dict.dictValue"
                 />
               </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="室温告警值" prop="accountno">
-              <el-input v-model="form.alarmTemp" placeholder="请输入告警值" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -173,22 +175,42 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="户号" prop="accountno">
-              <el-input v-model="form.accountno" placeholder="请输入户号" />
+            <el-form-item label="电压等级" prop="voltageClasses">
+              <el-input v-model="form.voltageClasses" placeholder="请输入告警值" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="联系人名称" prop="accountno">
+            <el-form-item label="供电辖区" prop="area">
+              <el-input v-model="form.area" placeholder="请输入告警值" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="温度告警值" prop="alarmTemp">
+              <el-input v-model="form.alarmTemp" placeholder="请输入告警值" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="回路层级" prop="loopId">
+              <treeselect
+                v-model="form.loopId"
+                :options="loopList"
+                :normalizer="normalizer_loop"
+                placeholder="请选择"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="联系人" prop="contactName">
               <el-input v-model="form.contactName" placeholder="请输入联系人名称" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="联系人电话" prop="accountno">
-              <el-input v-model="form.contactPhone" placeholder="请输入联系人电话" />
+            <el-form-item label="邮箱" prop="contactMail">
+              <el-input v-model="form.contactMail" placeholder="请输入联系人电话" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="备注" prop="accountno">
+            <el-form-item label="备注" prop="remark">
               <el-input v-model="form.remark" placeholder="请输入备注" />
             </el-form-item>
           </el-col>
@@ -205,7 +227,7 @@
 </template>
 
 <script>
-import { listStation, getStation, delStation, addStation, updateStation, exportStation } from "@/api/user/station";
+import { listStation, getStation, delStation, addStation, updateStation, exportStation,getLoopData } from "@/api/user/station";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
@@ -222,6 +244,7 @@ export default {
       elecTypeOptions: [],
       // 用户档案表格数据
       stationList: [],
+      loopList: [],
       // 用户档案树选项
       stationOptions: [],
       // 弹出层标题
@@ -230,7 +253,7 @@ export default {
       open: false,
       // 查询参数
       queryParams: {
-        userType: undefined,
+        userType: '2',
         stationName: undefined,
       },
       // 表单参数
@@ -242,6 +265,7 @@ export default {
   },
   created() {
     this.getList();
+    this.getLoop()
     // 用户类别
     this.getDicts("yw_user_type").then(response => {
       this.userTypeOptions = response.data;
@@ -261,9 +285,16 @@ export default {
       // this.loading = true;
       listStation(this.queryParams).then(response => {
         this.stationList = this.handleTree(response.data, "id", "pid");
-        this.loading = false;
+        console.log(this.stationList);
       });
     },
+    getLoop() {
+      getLoopData().then(response => {
+        this.loopList = this.handleTree(response.data, "id", "pid");
+        console.log(this.loopList);
+      })
+    },
+
     /** 转换用户档案数据结构 */
     normalizer(node) {
       if (node.children && !node.children.length) {
@@ -272,6 +303,16 @@ export default {
       return {
         id: node.id,
         label: node.stationName,
+        children: node.children
+      };
+    },
+    normalizer_loop(node) {
+      if (node.children && !node.children.length) {
+        delete node.children;
+      }
+      return {
+        id: node.id,
+        label: node.name,
         children: node.children
       };
     },
@@ -305,17 +346,12 @@ export default {
         powerLoopId: undefined,
         airLoopId: undefined,
         lightLoopId: undefined,
-        chargeLoopId: undefined,
-        dischargeLoopId: undefined,
-        temperatureLoopId: undefined,
-        outerTemperatureLoopId: undefined,
-        gatewayid: undefined,
-        airFixPower: undefined,
-        lightFixPower: undefined,
-        sourceFixPower: undefined,
         volume: undefined,
         accountno: undefined,
-        electype: undefined
+        electype: undefined,
+        voltageClasses:undefined,
+        area:undefined,
+        loopId: undefined
       };
       this.resetForm("form");
     },

@@ -115,6 +115,7 @@
             <el-button
               type="primary"
               size="mini"
+              @click="allStart"
             >
               全部启用
             </el-button>
@@ -123,6 +124,7 @@
             <el-button
               type="primary"
               size="mini"
+              @click="allClose"
             >
               全部停用
             </el-button>
@@ -149,7 +151,9 @@
                 :active-value="1"
                 :inactive-value="0"
                 active-color="#19D26C"
-                inactive-color="#DCDFE6">
+                inactive-color="#DCDFE6"
+                @change="changeOnlyStatus(scope.row)"
+              >
               </el-switch>
             </template>
           </el-table-column>
@@ -246,7 +250,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="策略名称" prop="funcconfigid">
-                <el-select v-model="form_cl.funcconfigid" placeholder="请选择策略名称" clearable filterable  style="width: 100%;">
+                <el-select v-model="form_cl.funcconfigid" placeholder="请选择策略名称" clearable filterable  style="width: 100%;" @change="changeCelueBingding">
                   <el-option
                     v-for="dict in celueOptions"
                     :key="dict.id"
@@ -312,11 +316,35 @@
 
         <div slot="footer" class="dialog-footer" style="position: relative">
           <div class="cl_chosenInfo">
-            <p>设备总数:{{tableList.length}}</p>
+            <p>设备总数:{{tableList.length}}; 选中设备数: {{ids_cl.length}}</p>
           </div>
 
-          <el-button type="primary" @click="submitForm">确 定</el-button>
+          <el-button type="primary" @click="submitForm_cl">确 定</el-button>
           <el-button @click="cancel_cl">取 消</el-button>
+        </div>
+      </el-dialog>
+
+      <!--批量策略绑定确认下发-->
+      <el-dialog
+        title="提示"
+        :visible.sync="open_clConfirm"
+        width="500px"
+        style="margin-top: 15vh"
+        :show-close="false"
+        append-to-body
+        class="clConfirm_dia"
+      >
+        <div class="clConfirm_tips">
+          <p>策略“{{chosenCelueName}}” 即将绑定下发全部设备</p>
+        </div>
+        <div class="clConfirm_password">
+          <p class="clConfirm_password_tit">输入密码</p>
+          <el-input type="password" v-model="confirmPassword_bd"></el-input>
+        </div>
+        <p class="isContuned">是否确认继续？</p>
+        <div slot="footer" class="dialog-footer" style="text-align: center">
+          <el-button type="primary" @click="submitForm_clConfirm">确 定</el-button>
+          <el-button @click="open_clConfirm = false">取 消</el-button>
         </div>
       </el-dialog>
 
@@ -327,7 +355,7 @@
   import {listConfig} from '@/api/runStrategy/definition'
   import { listStation} from "@/api/user/station";
   import { listIotDevice } from "@/api/device/iotDevice";
-  import {listFucMan,addFucMan,getFucMan,updateFucMan,delFucMan} from '@/api/runStrategy/definitionManagement'
+  import {listFucMan,addFucMan,getFucMan,updateFucMan,delFucMan ,fucBatch,ifAllStart} from '@/api/runStrategy/definitionManagement'
     export default {
       name: "index",
       data() {
@@ -379,7 +407,6 @@
           // 表单校验
           rules: {},
           rules_cl: {
-            type:[{ required: true, message: '请选择策略类型', trigger: 'change' }],
             funcconfigid: [{ required: true, message: '请选择策略名称', trigger: 'change' }]
           },
           // 弹出层标题
@@ -387,9 +414,14 @@
           // 是否显示弹出层
           open: false,
           open_cl: false,
+          open_clConfirm: false,
           // 选中数组
           ids: [],
-          ids_cl: []
+          ids_cl: [],
+          // 策略绑定页面选中的策略名称
+          chosenCelueName: '',
+          // 下发确认密码
+          confirmPassword_bd: '',
         }
       },
       created() {
@@ -429,7 +461,6 @@
             this.total = response.total;
           });
         },
-
         // 取消按钮
         cancel() {
           this.open = false;
@@ -493,6 +524,16 @@
             this.title = "修改";
           });
         },
+
+        // 策略绑定策略下拉切换
+        changeCelueBingding(item) {
+          let chosenData =  this.celueOptions.filter(res=>res.id == item)
+          if(chosenData.length != 0) {
+            this.chosenCelueName = chosenData[0].name
+          }
+          // console.log(chosenData[0].name);
+        },
+
         /** 提交按钮 */
         submitForm: function() {
           this.$refs["form"].validate(valid => {
@@ -517,10 +558,36 @@
             }
           });
         },
+        submitForm_cl: function() {
+          if(this.ids_cl.length == 0) {
+            this.$message({ showClose: true, message: '请选择设备', type: "warning" });
+            return false
+          }
+          this.$refs["form_cl"].validate(valid => {
+            if (valid) {
+              // fucBatch()
+              this.open_clConfirm = true
+            }
+          })
+        },
+        // 确认绑定下发
+        submitForm_clConfirm:function () {
+          let params_cl = {
+            funcConfigId: this.form_cl.funcconfigid,
+            deviceIds: this.ids_cl
+          }
+          console.log(params_cl);
+          fucBatch(params_cl).then(res => {
+            console.log(res);
+            this.msgSuccess("策略下发成功");
+            this.open_clConfirm = false
+          })
+
+        },
         /** 删除按钮操作 */
         handleDelete(row) {
           const ids = row.id || this.ids;
-          this.$confirm('是否确认删除采集设备管理编号为"' + ids + '"的数据项?', "警告", {
+          this.$confirm('是否确认删除编号为"' + ids + '"的数据项?', "警告", {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             type: "warning"
@@ -536,15 +603,83 @@
         defBinding() {
           this.open_cl = true
         },
+        //单个请用或停用
+        changeOnlyStatus(row) {
+          console.log(row);
+          updateFucMan(row).then(response => {
+            if (response.code === 200) {
+              this.msgSuccess("修改成功");
+              this.getList();
+            }
+          });
+        },
+
+        // 全部启用
+        allStart() {
+          this.$confirm('是否确认全部启用?', "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          }).then(function () {
+             return ifAllStart(1)
+          }).then(res => {
+              // console.log(res);
+              this.getList();
+              this.msgSuccess("全部启用成功");
+            })
+        },
+        // 全部停用
+        allClose() {
+          this.$confirm('是否确认全部停用?', "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          }).then(function () {
+             return ifAllStart(0)
+          }).then(res => {
+            // console.log(res);
+            this.getList();
+            this.msgSuccess("全部停用成功");
+          })
+        },
       },
     }
 </script>
 
-<style scoped>
+<style scoped >
 
   .cl_chosenInfo{
     position: absolute;
     left: 10px;
     top: 10px;
+  }
+
+  .clConfirm_dia>>>.el-dialog__header{
+    padding: 10px;
+    background: #ff9f19;
+  }
+  .clConfirm_dia>>>.el-dialog__title{
+    color: #ffffff;
+  }
+  .clConfirm_dia>>>.el-dialog__body{
+    padding: 10px 20px;
+  }
+
+  .clConfirm_tips{
+    width: 100%;
+    font-size: 20px;
+    background: #F7F7F7;
+    padding: 10px;
+  }
+  .clConfirm_password{
+    margin: 15px 0;
+  }
+  .clConfirm_password_tit{
+    margin-bottom: 15px;
+  }
+  .isContuned{
+    text-align: center;
+    color: #ff9f19;
+    font-size: 16px;
   }
 </style>

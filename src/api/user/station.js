@@ -51,3 +51,11 @@ export function exportStation(query) {
     params: query
   })
 }
+
+// 回路层级
+export function getLoopData(id) {
+  return request({
+    url: '/user/Station/loop',
+    method: 'get'
+  })
+}

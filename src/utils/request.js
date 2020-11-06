@@ -34,25 +34,32 @@ service.interceptors.response.use(res => {
     // 获取错误信息
     const message = errorCode[code] || res.data.msg || errorCode['default']
     if (code === 401) {
-      MessageBox.confirm(
-        '登录状态已过期，您可以继续留在该页面，或者重新登录',
-        '系统提示',
-        {
-          confirmButtonText: '重新登录',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      ).then(() => {
-        // store.dispatch('clearInfo')
-        localStorage.removeItem('ywIdentity')
-        localStorage.removeItem('ywUserName')
-        // state.ywIdentity = null;
-        // state.ywUser = null;
-        // this.$router.replace({ name: 'login' })
-
-        this.$router.replace({ name: 'login' })
-        location.reload()
+      Message.error({
+        message: '身份过期，请重新登录'
       })
+      localStorage.removeItem('ywIdentity')
+      localStorage.removeItem('ywUserName')
+      location.reload()
+      // MessageBox.confirm(
+      //   '登录状态已过期，您可以继续留在该页面，或者重新登录',
+      //   '系统提示',
+      //   {
+      //     confirmButtonText: '重新登录',
+      //     cancelButtonText: '取消',
+      //     type: 'warning'
+      //   }
+      // ).then(() => {
+      //   // store.dispatch('clearInfo')
+      //   localStorage.removeItem('ywIdentity')
+      //   localStorage.removeItem('ywUserName')
+      //   location.reload()
+      //   // state.ywIdentity = null;
+      //   // state.ywUser = null;
+      //   // this.$router.replace({ name: 'login' })
+      //
+      //   this.$router.replace({ name: 'login' })
+      //
+      // })
     } else if (code === 500) {
       Message({
         message: message,

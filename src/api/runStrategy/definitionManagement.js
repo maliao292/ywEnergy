@@ -42,3 +42,20 @@ export function delFucMan(id) {
     method: 'delete'
   })
 }
+
+// 全部启用、停用
+export function ifAllStart(id) {
+  return request({
+    url: '/system/funcManage/updateStatus/' +id,
+    method: 'get'
+  })
+}
+
+// 批量策略绑定
+export function fucBatch(data) {
+  return request({
+    url: '/system/funcManage/batch',
+    method: 'post',
+    data: data
+  })
+}
