@@ -289,10 +289,10 @@ export default {
         mapMarker({ userType: this.stationid }).then((res) => {
           this.statusNum = res.data.statusNum ? res.data.statusNum : {}
 
-           // 工业
-            if (this.stationid==5) {
-              this.topNum.allResLoad = res.data.allResLoad
-             }
+          // 工业
+          if (this.stationid == 5) {
+            this.topNum.allResLoad = res.data.allResLoad
+          }
 
           let markers = res.data.list.map((v, i) => {
             let icon = require('@/assets/img/s' + (v.runStatus ? v.runStatus : 1) + '.png')
@@ -346,12 +346,18 @@ export default {
                 dcText = '待机';
                 ktText = '开启';
                 break;
+              case 9:
+                dcColor = 'c3';
+                ktColor = 'c5';
+                dcImg = 5;
+                ktImg = 7;
+                dcText = '待机';
+                ktText = '开启';
+                break;
             }
-           
 
-            windows.push({
-              position: [Number(v.longitude), Number(v.latitude)],
-              content: `
+          /* 图标弹窗 */
+            let alerWins = `
           <div class='alstyle'>
             <h2>${v.stationName}</h2>
             <ul>
@@ -369,7 +375,22 @@ export default {
               <li><span>室内温度：</span><span>${v.temperature ? v.temperature : ''} ℃</span></li>
             <ul>
           </div>
-          `,
+          `
+          if(v.runStatus == 9){
+            alerWins = `
+          <div class='alstyle'>
+            <h2>${v.stationName}</h2>
+            <ul>
+              <li><span>负荷：</span><span>${v.allPower ? (v.allPower).toFixed(2) : ''} kW</span></li>
+              <li><span>可调负荷：</span><span class='param'>${v. adjustPower ? (v.adjustPower).toFixed(2) : ''} kW</span></li>
+            <ul>
+          </div>
+          `
+          }
+
+            windows.push({
+              position: [Number(v.longitude), Number(v.latitude)],
+              content: alerWins,
               visible: false,
             })
             return {
@@ -384,6 +405,9 @@ export default {
                   this.jzname = v.stationName
 
                   this.stationDetail = v
+                  if (v.runStatus == 9) {
+                    this.gyWindowShow = true
+                  }
                   this.showList = true
                 },
                 mousemove: (e) => {

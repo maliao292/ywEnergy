@@ -110,7 +110,7 @@ export default {
       photo: require('@/assets/img/logo.png'),
       logo: require('@/assets/img/g5.png'),
 
-      hyvalue: 2,
+      hyvalue: 5,
       currentIndustry: '5G',
       hyList: [
         { value: 'sm', name: '商贸' },
@@ -126,7 +126,6 @@ export default {
   },
   mounted() {
     ptType().then((result) => {
-      console.log(result)
       this.hyList = result.data
     }).catch((err) => {
       console.log(err)

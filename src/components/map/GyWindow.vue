@@ -11,28 +11,28 @@
       <div class="gyshownum">
         <div>
           <span>可响应负荷</span>
-          <p>960.32</p>
+          <p>{{stationDetail.allPower}}</p>
           <i>kW</i>
         </div>
         <div>
           <div class="numtop">基本概况</div>
           <div class="numCon">
-            <p><span>合同容量</span><b>1030</b><i>kVA</i></p>
-            <p><span>监测分路个数</span><b>29</b><i>个</i></p>
+            <p><span>合同容量</span><b>{{stationDetail.volume}}</b><i>kVA</i></p>
+            <p><span>监测分路个数</span><b>{{dataSratistics.monitorNum}}</b><i>个</i></p>
           </div>
         </div>
         <div>
           <div class="numtop">电量概况</div>
           <div class="numCon">
-            <p><span>本月累计电量</span><b>1030</b><i>万kWh</i></p>
-            <p><span>上月总电量</span><b>29</b><i>万kWh</i></p>
+            <p><span>本月累计电量</span><b>{{dataSratistics.thisMonthEle}}</b><i>万kWh</i></p>
+            <p><span>上月总电量</span><b>{{dataSratistics.lastMonthEle}}</b><i>万kWh</i></p>
           </div>
         </div>
         <div>
           <div class="numtop">负荷概况</div>
           <div class="numCon">
-            <p><span>本月最大负荷</span><b>1030</b><i>kW</i></p>
-            <p><span>本年最大负荷</span><b>29</b><i>kW</i></p>
+            <p><span>本月最大负荷</span><b>{{dataSratistics.thisMonthMaxPower}}</b><i>kW</i></p>
+            <p><span>本年最大负荷</span><b>{{dataSratistics.thisYearMaxPower}}</b><i>kW</i></p>
           </div>
         </div>
       </div>
@@ -41,13 +41,13 @@
         <div class="chatsStatistics">
           <div class="ys">
             <b>昨日最大负荷：</b>
-            <p><span>900</span><i>kW</i></p>
-            <p>09-25 17:00</p>
+            <p><span>{{lineData.yesterdayMax}}</span><i>kW</i></p>
+            <p>{{lineData.yesterdayMaxTime}}</p>
           </div>
           <div class="td ">
             <b>今日最大负荷：</b>
-            <p><span>900</span><i>kW</i></p>
-            <p>09-25 17:00</p>
+            <p><span>{{lineData.todayMax}}</span><i>kW</i></p>
+            <p>{{lineData.todayMaxTime}}</p>
           </div>
         </div>
       </div>
@@ -56,12 +56,12 @@
         <div class="chatsStatistics">
           <div class="ys">
             <b>本月累计电量：</b>
-            <p><span>900</span><i>kW</i></p>
-            <p>截止至2019-09-25 同时段累计对比</p>
-            <div class="scro up">
-              <span class="iconfont icon-icon-shuzhishangsheng"></span>
-              <span class="iconfont icon-shuzhixiajiang"></span>
-              6%
+            <p><span>{{Number(barData.thisMonthSum).toFixed(2)}}</span><i>万kWh</i></p>
+            <p>截止至{{barData.deadLineDate}} 同时段累计对比</p>
+            <div class="scro up" :class="{'up':barData.hb>0,'down':barData.hb<0}">
+              <span v-if="barData.hb>0" class="iconfont icon-icon-shuzhishangsheng"></span>
+              <span v-if="barData.hb<0" class="iconfont icon-shuzhixiajiang"></span>
+              {{barData.hb*100}}%
             </div>
           </div>
         </div>
@@ -73,7 +73,7 @@
 
 <script>
 import { Message } from 'element-ui'
-import { stationDetailApi, mapLineData, controlerPort, controlQx, controlPassData } from '@/api'
+import { gyTopApi, gyLineApi, gyBarApi } from '@/api'
 import echarts from 'echarts'
 export default {
   props: {
@@ -82,10 +82,27 @@ export default {
   data() {
     return {
       jzImg: require('@/assets/img/jz.png'),
+      dataSratistics: {
+        lastMonthEle: '',
+        monitorNum: '',
+        thisMonthEle: '',
+        thisMonthMaxPower: '',
+        thisYearMaxPower: '',
+      },
+      lineData: {
+        todayMax: '',
+        todayMaxTime: '',
+        yesterdayMax: '',
+        yesterdayMaxTime: '',
+      },
+      barData: {
+        deadLineDate: '',
+        hb: 0,
+        thisMonthSum: '',
+      }
     }
   },
   created() {
-
 
   },
   computed: {
@@ -112,46 +129,80 @@ export default {
     }
   },
   mounted() {
-    // let xInterVal = this.$publicMethods.getInterVal()
-    let xArr = this.$publicMethods.getMinuteForX()
-    // screenLine(id, title, legendArr, xArr, seriesArr)
-    // let xArr = [1, 2, 3]
-    let series = [
-      {
-        name: 'a',
-        type: 'line',
-        data: [120, 132, 101, 134, 90, 230, 210]
-      },
-      {
-        name: 'b',
-        type: 'line',
-        data: [220, 182, 191, 234, 290, 330, 310]
+    // 头部数据
+    gyTopApi({ stationId: this.stationDetail.id }).then((res) => {
+      this.dataSratistics = res.data
+    }).catch((err) => {
+      console.log('服务错误')
+    });
+    // 折线
+    gyLineApi({ stationId: this.stationDetail.id }).then((res) => {
+
+      this.lineData = {
+        todayMax: res.data.todayMax,
+        todayMaxTime: res.data.todayMaxTime,
+        yesterdayMax: res.data.yesterdayMax,
+        yesterdayMaxTime: res.data.yesterdayMaxTime,
       }
-    ]
+
+      let chart = res.data.chart
+      let series = [
+        {
+          name: '今天',
+          type: 'line',
+          data: chart.yaxis
+        },
+        {
+          name: '昨天',
+          type: 'line',
+          data: chart.yaxis1
+        }
+      ]
+      this.$chart.homeLine('gyLine', '日负荷曲线', ['今天', '昨天'], chart.xaxis, series, (option, myChart) => {
+        myChart.setOption(option);
+      })
+    }).catch((err) => {
+      console.log('zhexian服务错误')
+    });
 
 
-    this.$chart.homeLine('gyLine', '日负荷曲线', ['a', 'b'], xArr, series, (option, myChart) => {
-      myChart.setOption(option);
-    })
-    let series2 = [
-      {
-        name: 'a',
-        type: 'bar',
-        barWidth: 10,
-        data: [120, 132, 101, 134, 90, 230, 210]
-      },
-      {
-        name: 'b',
-        type: 'bar',
-        barWidth: 10,
-        data: [220, 182, 191, 234, 290, 330, 310]
+    // 柱状图
+    gyBarApi({ stationId: this.stationDetail.id }).then((res) => {
+      this.barData = {
+        deadLineDate: res.data.deadLineDate,
+        hb: res.data.hb,
+        thisMonthSum: res.data.thisMonthSum,
       }
-    ]
-    let arr2 = []
-    this.$publicMethods.getMonthNum(2020,11,arr2)
-    this.$chart.homeBar('gyBar', '月用电量柱图', ['a', 'b'], arr2, series2, (option, myChart) => {
-      myChart.setOption(option);
-    })
+      let chart = res.data.chart
+      console.log(chart)
+
+      let series2 = [
+        {
+          name: '本月',
+          type: 'bar',
+          barWidth: 10,
+          data: chart.yaxis
+        },
+        {
+          name: '上月',
+          type: 'bar',
+          barWidth: 10,
+          data: chart.yaxis1
+        }
+      ]
+
+      this.$chart.homeBar('gyBar', '月用电量柱图', ['本月', '上月'], chart.xaxis, series2, (option, myChart) => {
+        myChart.setOption(option);
+      })
+
+    }).catch((err) => {
+      console.log('zhexian服务错误')
+    });
+
+
+
+
+
   },
 
 
@@ -187,16 +238,16 @@ export default {
 .stationLine #stationLine {
   height: 100%;
 }
-.up{
+.up {
   color: #f00;
 }
-.down{
+.down {
   color: #0f0;
 }
-.scro{
+.scro {
   font-size: 22px;
 }
-.scro span{
+.scro span {
   font-size: 24px;
 }
 </style>
