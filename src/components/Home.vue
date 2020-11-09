@@ -14,47 +14,67 @@
           <img :src="logo">
         </div>
         <!--<div class="homeSearch">-->
-          <!--<input v-model="stationNameVal" v-show="isMapPage == 'map'" type="text" placeholder="搜索">-->
-          <!--<span v-show="isMapPage == 'map'" class="el-icon-search searchBtn" @click="searchStation"></span>-->
-          <!--<b v-show="isMapPage == 'map'"></b>-->
+        <!--<input v-model="stationNameVal" v-show="isMapPage == 'map'" type="text" placeholder="搜索">-->
+        <!--<span v-show="isMapPage == 'map'" class="el-icon-search searchBtn" @click="searchStation"></span>-->
+        <!--<b v-show="isMapPage == 'map'"></b>-->
         <!--</div>-->
         <div class="homeProName">义乌市源荷储智能集成平台 -- <b>{{currentIndustry}}</b></div>
         <div class="hySelect">
           <el-select popper-class='hySelect_s' v-model="hyvalue" placeholder="请选择" @change="changIndustry">
-            <el-option v-for="item in hyList" :key="item.value" :label="item.name" :value="item.value">
+            <el-option v-for="item in hyList" :key="item.dict_sort" :label="item.dict_label" :value="item.dict_sort">
             </el-option>
           </el-select>
         </div>
         <ul style="max-width: 1000px">
           <li>
-            <router-link tag="div" to='/home/map'><span class="icon iconfont icon-daohangshouye"></span><p>首页</p></router-link>
+            <router-link tag="div" to='/home/map'><span class="icon iconfont icon-daohangshouye"></span>
+              <p>首页</p>
+            </router-link>
           </li>
           <li>
-            <router-link tag="div" to='/home/operationMonitor'><span class="icon iconfont icon-jiankong"></span><p>运行监控分析</p></router-link>
+            <router-link tag="div" to='/home/operationMonitor'><span class="icon iconfont icon-jiankong"></span>
+              <p>运行监控分析</p>
+            </router-link>
           </li>
           <li>
-            <router-link tag="div" to='/home/runStrategy'><span class="icon iconfont icon-yunhangcelveguanli"></span><p>运行策略管理</p></router-link>
+            <router-link tag="div" to='/home/runStrategy'><span class="icon iconfont icon-yunhangcelveguanli"></span>
+              <p>运行策略管理</p>
+            </router-link>
           </li>
           <li>
-            <router-link tag="div" to='/home/yunxing'><span class="icon iconfont icon-xuqiucexiangyingguanli"></span><p>需求侧响应管理</p></router-link>
+            <router-link tag="div" to='/home/yunxing'><span class="icon iconfont icon-xuqiucexiangyingguanli"></span>
+              <p>需求侧响应管理</p>
+            </router-link>
           </li>
           <li>
-            <router-link tag="div" to='/home/nengxiao'><span class="icon iconfont icon-nengxiaoguanli"></span><p>能效管理</p></router-link>
+            <router-link tag="div" to='/home/nengxiao'><span class="icon iconfont icon-nengxiaoguanli"></span>
+              <p>能效管理</p>
+            </router-link>
           </li>
           <li>
-            <router-link tag="div" to='/home/user'><span class="icon iconfont icon-yonghuguanli"></span><p>用户管理</p></router-link>
+            <router-link tag="div" to='/home/user'><span class="icon iconfont icon-yonghuguanli"></span>
+              <p>用户管理</p>
+            </router-link>
           </li>
           <li>
-            <router-link tag="div" to='/home/standing'><span class="icon iconfont icon-shebeiguanli"></span><p>设备管理</p></router-link>
+            <router-link tag="div" to='/home/standing'><span class="icon iconfont icon-shebeiguanli"></span>
+              <p>设备管理</p>
+            </router-link>
           </li>
           <li>
-            <router-link tag="div" to='/home/alarm'><span class="icon iconfont icon-baojingguanli"></span><p>报警管理</p></router-link>
+            <router-link tag="div" to='/home/alarm'><span class="icon iconfont icon-baojingguanli"></span>
+              <p>报警管理</p>
+            </router-link>
           </li>
           <li>
-            <router-link tag="div" to='/home/report'><span class="icon iconfont icon-baobiao"></span><p>报表</p></router-link>
+            <router-link tag="div" to='/home/report'><span class="icon iconfont icon-baobiao"></span>
+              <p>报表</p>
+            </router-link>
           </li>
           <li>
-            <router-link tag="div" to='/home/system'><span class="icon iconfont icon-xitongguanli"></span><p>系统管理</p></router-link>
+            <router-link tag="div" to='/home/system'><span class="icon iconfont icon-xitongguanli"></span>
+              <p>系统管理</p>
+            </router-link>
           </li>
         </ul>
         <div class="homeTime"><Time /></div>
@@ -66,7 +86,7 @@
         <div class="logout icon iconfont icon-tuichu" @click="toLogin"></div>
       </div>
       <div class="homeContent">
-        <router-view ref='childNode' :stationname='stationname'></router-view>
+        <router-view ref='childNode' :stationname='stationname' :stationid='hyvalue'></router-view>
       </div>
     </div>
   </div>
@@ -74,6 +94,7 @@
 
 <script>
 import Time from './Time'
+import { ptType } from '@/api'
 import { mapMutations } from 'vuex'
 export default {
   components: {
@@ -86,11 +107,11 @@ export default {
       stationNameVal: '',
       isMapPage: 'map',
       mapshow: true,
-      photo:require('@/assets/img/logo.png'),
+      photo: require('@/assets/img/logo.png'),
       logo: require('@/assets/img/g5.png'),
 
-      hyvalue:'g5',
-      currentIndustry:'5G',
+      hyvalue: 2,
+      currentIndustry: '5G',
       hyList: [
         { value: 'sm', name: '商贸' },
         { value: 'wl', name: '物流' },
@@ -103,7 +124,14 @@ export default {
       ]
     }
   },
-  computed: {},
+  mounted() {
+    ptType().then((result) => {
+      console.log(result)
+      this.hyList = result.data
+    }).catch((err) => {
+      console.log(err)
+    });
+  },
   watch: {
     $route(to, from) {
       this.isMapPage = to.name
@@ -123,12 +151,39 @@ export default {
       }
 
     },
-    changIndustry(){
-     let obj = this.hyList.filter(({ value, name})=>{
-        return value == this.hyvalue
+    changIndustry() {
+      let obj = this.hyList.filter(({ dict_sort, dict_label }) => {
+        return dict_sort == this.hyvalue
       })
-     this.currentIndustry = obj[0]['name'];
-     this.logo = require(`@/assets/img/${obj[0]['value']}.png`);
+      this.currentIndustry = obj[0]['dict_label'];
+      let picname = 'g5'
+      switch (obj[0]['dict_sort']) {
+        case 0:
+          picname = 'sm';
+          break;
+        case 1:
+          picname = 'wl';
+          break;
+        case 2:
+          picname = 'g5';
+          break;
+        case 3:
+          picname = 'ld';
+          break;
+        case 4:
+          picname = 'cdz';
+          break;
+        case 5:
+          picname = 'gy';
+          break;
+        case 6:
+          picname = 'zht';
+          break;
+        case 7:
+          picname = 'xwy';
+          break;
+      }
+      this.logo = require(`@/assets/img/${picname}.png`);
     },
     toScreen() { this.$router.push({ name: 'screen' }) }
   },

@@ -17,25 +17,42 @@
 
     <div class="mapUseEleMsg">
       <ul>
-        <li>
+        <li v-show="stationid==2">
           <p><b>{{topNum.stationNum}}</b><span>个</span></p>
           <span>基站总数</span>
         </li>
-        <li>
+        <li v-show="stationid==2">
           <p><b>{{topNum.disChargeAllNum}}</b><span>kWh</span></p>
           <span>本月总削峰电量</span>
         </li>
-        <li>
+        <li v-show="stationid==2">
           <p><b>{{topNum.chargeAllNum}}</b><span>kWh</span></p>
           <span>本月总填谷电量</span>
         </li>
-        <li>
+        <li v-show="stationid==2">
           <p><b>{{topNum.saveAllNum}}</b><span>元</span></p>
           <span>本月总节省电费</span>
         </li>
-        <li>
+        <li v-show="stationid==2">
           <p><b>{{topNum.allLoadNum}}</b><span>kW</span></p>
           <span>总可响应负荷</span>
+        </li>
+        <!-- 工业 -->
+        <li v-show="stationid==5">
+          <p><b>{{topNum.allUser}}</b><span>个</span></p>
+          <span>工业用户总数</span>
+        </li>
+        <li v-show="stationid==5">
+          <p><b>{{topNum.allResLoad}}</b><span>kW</span></p>
+          <span>总可响应负荷</span>
+        </li>
+        <li v-show="stationid==5">
+          <p><b>{{topNum.allAdjustNoPower}}</b><span>kW</span></p>
+          <span>总可调节无功</span>
+        </li>
+        <li v-show="stationid==5">
+          <p><b>{{topNum.allStoredEnergyVolume}}</b><span>kW</span></p>
+          <span>总储能容量</span>
         </li>
       </ul>
     </div>
@@ -86,6 +103,11 @@
         <StationMsg @setChangeMapStatus='setChangeMapStatus' :stationDetail='stationDetail' @close='closeAl'>{{jzname}}</StationMsg>
       </div>
     </div>
+    <div class="alertWindow yctList" v-if="gyWindowShow">
+      <div class="container">
+        <GyWindow @setChangeMapStatus='setChangeMapStatus' :stationDetail='stationDetail' @close='closeAl'>{{jzname}}</GyWindow>
+      </div>
+    </div>
   </div>
 </template> 
 
@@ -93,6 +115,7 @@
 import Vue from 'vue'
 import VueAMap from 'vue-amap'
 import markerLabel from './markerLabel'
+import GyWindow from './GyWindow'
 import { amapManager, lazyAMapApiLoaderInstance } from 'vue-amap'
 import { mapMarker, topNum } from '@/api'
 import MapMenu from './MapMenu'
@@ -115,9 +138,10 @@ VueAMap.initAMapApiLoader({
 })
 export default {
   props: {
-    stationname: ''
+    stationname: '',
+    stationid: null
   },
-  components: { MapMenu, StationMsg },
+  components: { MapMenu, StationMsg, GyWindow },
   data() {
     return {
       topNum: {
@@ -125,7 +149,12 @@ export default {
         allLoadNum: '',
         saveAllNum: '',
         disChargeAllNum: '',
-        chargeAllNum: ''
+        chargeAllNum: '',
+        /* 工业 */
+        allAdjustNoPower: '',
+        allStoredEnergyVolume: '',
+        allUser: '',
+        allResLoad: '',
       },
       iconImg: {
         d: require('@/assets/img/d.png'),
@@ -154,6 +183,7 @@ export default {
       },
       stationDetail: {},
       searchMapKey: '', // 保存搜索地图关键词
+      gyWindowShow: false,
       showList: false,
       menushow: false,
       jzname: '',
@@ -179,12 +209,24 @@ export default {
     }
   },
   created() {
-    topNum().then((res) => {
+    topNum({ userType: this.stationid }).then((res) => {
       this.topNum = res.data
     })
   },
 
   watch: {
+    stationid() {
+      this.getAllMarksData().then(res => {
+        if (this.$refs.map.$amap) {
+          this.$nextTick(() => {
+            this.$refs.map.$amap.setFitView()
+          })
+        }
+      })
+      topNum({ userType: this.stationid }).then((res) => {
+        this.topNum = res.data
+      })
+    },
     stationname() {
       let reg = new RegExp(this.stationname)
       let markers = this.allmarkers.filter((v) => {
@@ -199,7 +241,6 @@ export default {
   },
   mounted() {
     this.getAllMarksData().then(res => {
-
       if (this.$refs.map.$amap) {
         this.$nextTick(() => {
           this.$refs.map.$amap.setFitView()
@@ -245,8 +286,14 @@ export default {
       return new Promise((resolve, reject) => {
         let self = this
         let windows = []
-        mapMarker().then((res) => {
-          this.statusNum = res.data.statusNum
+        mapMarker({ userType: this.stationid }).then((res) => {
+          this.statusNum = res.data.statusNum ? res.data.statusNum : {}
+
+           // 工业
+            if (this.stationid==5) {
+              this.topNum.allResLoad = res.data.allResLoad
+             }
+
           let markers = res.data.list.map((v, i) => {
             let icon = require('@/assets/img/s' + (v.runStatus ? v.runStatus : 1) + '.png')
             let dcColor = 'c1', ktColor = 'c1', dcImg = 1, ktImg = 1, dcText = '充电', ktText = '停止';
@@ -300,24 +347,26 @@ export default {
                 ktText = '开启';
                 break;
             }
+           
+
             windows.push({
               position: [Number(v.longitude), Number(v.latitude)],
               content: `
           <div class='alstyle'>
             <h2>${v.stationName}</h2>
             <ul>
-              <li><span>基站负荷：</span><span>${ v.allPower ? (v.allPower).toFixed(2) : ''} kW</span></li>
-              <li style="${ v.runStatus == 1 || v.runStatus == 2 || !v.runStatus ? 'display:none' : ''}">
+              <li><span>基站负荷：</span><span>${v.allPower ? (v.allPower).toFixed(2) : ''} kW</span></li>
+              <li style="${v.runStatus == 1 || v.runStatus == 2 || !v.runStatus ? 'display:none' : ''}">
                 <span>电池状态：</span>
                 <span class="${dcColor}">
                 <img src="${this.alsImg['s' + dcImg]}" /> 
                 ${dcText}</span>
               </li>
-              <li style="${ v.runStatus == 1 || v.runStatus == 2 || !v.runStatus ? 'display:none' : ''}">
+              <li style="${v.runStatus == 1 || v.runStatus == 2 || !v.runStatus ? 'display:none' : ''}">
                 <span>空调状态：</span>
                 <span class="${ktColor}"><img src="${this.alsImg['s' + ktImg]}" /> ${ktText}</span>
               </li>
-              <li><span>室内温度：</span><span>${ v.temperature ? v.temperature : ''} ℃</span></li>
+              <li><span>室内温度：</span><span>${v.temperature ? v.temperature : ''} ℃</span></li>
             <ul>
           </div>
           `,
@@ -379,6 +428,7 @@ export default {
 
     closeAl() {
       this.showList = false
+      this.gyWindowShow = false
     },
   },
 }

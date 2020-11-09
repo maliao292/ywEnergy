@@ -20,16 +20,33 @@ export function login(dataobj) {
 // 地图树
 export let mapTree = dataobj => axios.post('/index/queryTree',qs.stringify(dataobj));
 // 地图 marker
-export let mapMarker = dataobj => axios.post('/index/queryView',qs.stringify(dataobj));
+//export let mapMarker = dataobj => axios.post('/index/queryView',qs.stringify(dataobj));
+
+export function mapMarker(dataobj) {
+  return request({
+    url: '/index/queryView',
+    method: 'post',
+    headers:{'Content-Type': 'application/x-www-form-urlencoded'},
+    params: dataobj
+  })
+}
 
 //信息统计TOP
-export let topNum = _ => axios.post('/index/queryTop');
+// export let topNum = dataobj => axios.post('/index/queryTop',qs.stringify(dataobj));
+export function topNum(dataobj) {
+  return request({
+    url: '/index/queryTop',
+    method: 'post',
+    headers:{'Content-Type': 'application/x-www-form-urlencoded'},
+    params: dataobj
+  })
+}
 
 // 站点详情
 // export let stationDetailApi = dataobj => axios.post('/index/queryInfo',qs.stringify(dataobj));
 export function stationDetailApi(dataobj) {
   return request({
-    url: '/index/queryInfo',
+    url: '/index/fiveG/queryInfo',
     method: 'post',
     headers:{'Content-Type': 'application/x-www-form-urlencoded'},
     params: dataobj
@@ -60,3 +77,5 @@ export let screenChhd = _ =>axios.post('/screen/queryHCHD');
 // 本年节支柱状图
 export let screenJzLine = _ =>axios.post('/screen/queryJZTJ');
 
+// 平台类型
+export let ptType = _ =>axios.get('/common/getUserType');

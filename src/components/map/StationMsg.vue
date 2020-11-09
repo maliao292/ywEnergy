@@ -191,6 +191,15 @@ export default {
         this.ktimg = require('@/assets/img/alkq.png');
       }
     }
+    this.getTopNum()
+    //temperature outerTemperature responsiveLoad
+
+  },
+  computed:{
+
+  },
+  methods: {
+    getTopNum(){
     let obj = {}
     let { batteryStatus, chargePower, disChargePower, allPower, sourcePower, airPower, lightPower, temperature, outerTemperature, responsiveLoad, firstLine, secondLine} = this.stationDetail
     this.stationNum = { batteryStatus, chargePower, disChargePower, allPower, sourcePower, airPower, lightPower, temperature, outerTemperature, responsiveLoad, firstLine, secondLine}
@@ -199,13 +208,7 @@ export default {
       obj = { responsiveLoad, disChargeNum, chargeNum, saveNum }
       this.stationNum = { ...this.stationNum, ...obj }
     })
-    //temperature outerTemperature responsiveLoad
-
-  },
-  computed:{
-
-  },
-  methods: {
+    },
    async changedc(sta) { // 电池控制器
       if (sta === this.dcBtn || sta === 'dcd') return
       let res = await controlQx();

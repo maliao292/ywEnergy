@@ -416,7 +416,7 @@ let install = function (Vue) {
                             });
                         });
                     },
-                    screenBar(id,thisyearArr=[],lastyearArr=[]) {
+                    screenBar(id, thisyearArr = [], lastyearArr = []) {
                         var myChart = echarts.init(document.getElementById(id))
                         var option = {
                             backgroundColor: 'rgba(0, 0, 0,0)',
@@ -606,8 +606,191 @@ let install = function (Vue) {
                             // ]
                         };
                         myChart.setOption(option);
-                    }
+                    },
+                    homeLine(id, title, legendArr, xArr, seriesArr, cb) {
+                        if (myChart != null && myChart != "" && myChart != undefined) {
+                            myChart.dispose();
+                        }
+                        var myChart = echarts.init(document.getElementById(id))
+                        let option = {
+                            color: ['#3b84fe', '#fe6635', '#0aa8fe', '#df017c', '#ff4612', '#8660f2', '#ffff40', '#ff9811', '#00e878'],
+                            title: {
+                                text: title,
+                                textStyle: {
+                                    color: '#666',
+                                    fontSize: 16,
+                                }
+                            },
+                            tooltip: {
+                                trigger: 'axis'
+                            },
+                            legend: {
+                                icon: "roundRect",   //  这个字段控制形状  类型包括 circle，rect ，roundRect，triangle，diamond，pin，arrow，none
+                                data: legendArr,
+                                textStyle: {
+                                    color: '#b2bfc8'
+                                }
+                            },
+                            grid: {
+                                left: '3%',
+                                right: '2%',
+                                bottom: '3%',
+                                containLabel: true
+                            },
 
+                            xAxis: {
+                                type: 'category',
+                                boundaryGap: false,
+                                axisLine: {
+                                    lineStyle: {
+                                        color: '#b2bfc8'
+                                    }
+                                },
+                                axisTick: {
+                                    show: false
+                                },
+                                axisLabel: {
+                                    color: '#666'
+                                },
+                                splitLine: {
+                                    show: false
+                                },
+                                data: xArr
+                            },
+                            yAxis: {
+                                name: '单位：kW',
+                                nameTextStyle: {
+                                    color: '#538fec'
+                                },
+                                type: 'value',
+                                axisLine: {
+                                    lineStyle: {
+                                        color: '#b2bfc8'
+                                    }
+                                },
+                                axisTick: {
+                                    show: false
+                                },
+                                axisLabel: {
+                                    color: '#666'
+                                },
+                                splitLine: {
+                                    show: false
+                                },
+                            },
+                            series: seriesArr
+                            // series: [
+                            //     {
+                            //         name: '邮件营销',
+                            //         type: 'line',
+                            //         stack: '总量',
+                            //         data: [120, 132, 101, 134, 90, 230, 210]
+                            //     },
+                            //     {
+                            //         name: '联盟广告',
+                            //         type: 'line',
+                            //         stack: '总量',
+                            //         data: [220, 182, 191, 234, 290, 330, 310]
+                            //     },
+                            //     {
+                            //         name: '视频广告',
+                            //         type: 'line',
+                            //         stack: '总量',
+                            //         data: [150, 232, 201, 154, 190, 330, 410]
+                            //     },
+                            //     {
+                            //         name: '直接访问',
+                            //         type: 'line',
+                            //         stack: '总量',
+                            //         data: [320, 332, 301, 334, 390, 330, 320]
+                            //     },
+                            //     {
+                            //         name: '搜索引擎',
+                            //         type: 'line',
+                            //         stack: '总量',
+                            //         data: [820, 932, 901, 934, 1290, 1330, 1320]
+                            //     }
+                            // ]
+                        };
+                        cb(option, myChart)
+                        //  myChart.setOption(option);
+                    },
+                    homeBar(id, title, legendArr, xArr, seriesArr, cb) {
+                        if (myChart != null && myChart != "" && myChart != undefined) {
+                            myChart.dispose();
+                        }
+                        var myChart = echarts.init(document.getElementById(id))
+                        let option = {
+                            color: ['#4389fe', '#24d1a2', '#0aa8fe', '#df017c', '#ff4612', '#8660f2', '#ffff40', '#ff9811', '#00e878'],
+                            title: {
+                                text: title,
+                                textStyle: {
+                                    color: '#666',
+                                    fontSize: 16,
+                                }
+                            },
+                            tooltip: {
+                                trigger: 'axis'
+                            },
+                            legend: {
+                                icon: "roundRect",   //  这个字段控制形状  类型包括 circle，rect ，roundRect，triangle，diamond，pin，arrow，none
+                                data: legendArr,
+                                textStyle: {
+                                    color: '#b2bfc8'
+                                }
+                            },
+                            grid: {
+                                left: '3%',
+                                right: '2%',
+                                bottom: '3%',
+                                containLabel: true
+                            },
+
+                            xAxis: {
+                                type: 'category',
+                                alignWithLabel: true,
+                                axisLine: {
+                                    lineStyle: {
+                                        color: '#b2bfc8'
+                                    }
+                                },
+                                axisTick: {
+                                    show: false
+                                },
+                                axisLabel: {
+                                    color: '#666'
+                                },
+                                splitLine: {
+                                    show: false
+                                },
+                                data: xArr
+                            },
+                            yAxis: {
+                                name: '单位：kWh',
+                                nameTextStyle: {
+                                    color: '#538fec'
+                                },
+                                type: 'value',
+                                axisLine: {
+                                    lineStyle: {
+                                        color: '#b2bfc8'
+                                    }
+                                },
+                                axisTick: {
+                                    show: true
+                                },
+                                axisLabel: {
+                                    color: '#666'
+                                },
+                                splitLine: {
+                                    show: false
+                                },
+                            },
+                            series: seriesArr
+                         
+                        };
+                        cb(option, myChart)
+                    }
                 }
             }
         }

@@ -134,10 +134,12 @@
   font-size: 20px;
   flex-shrink: 0;
 }
-.homeProName b{
+
+.homeProName b {
   display: inline-block;
   line-height: 50px;
 }
+
 .navigation ul {
   width: 100%;
   flex-shrink: 1;
@@ -174,6 +176,7 @@
   font-size: 20px;
   margin-top: 8px;
 }
+
 .navigation ul li div p {
   margin-top: 2px;
 }
@@ -291,19 +294,19 @@
   font-size: 14px;
 }
 
-.mapUseEleMsg ul li:nth-child(1) {
+.mapUseEleMsg ul li:nth-child(1),.mapUseEleMsg ul li:nth-child(6) {
   background-image: linear-gradient(#327ad2, #5aa3fb);
 }
 
-.mapUseEleMsg ul li:nth-child(2) {
+.mapUseEleMsg ul li:nth-child(2),.mapUseEleMsg ul li:nth-child(7) {
   background-image: linear-gradient(#40b9e2, #5ecdf4);
 }
 
-.mapUseEleMsg ul li:nth-child(3) {
+.mapUseEleMsg ul li:nth-child(3),.mapUseEleMsg ul li:nth-child(8) {
   background-image: linear-gradient(#10c0b6, #2bd7d5);
 }
 
-.mapUseEleMsg ul li:nth-child(4) {
+.mapUseEleMsg ul li:nth-child(4),.mapUseEleMsg ul li:nth-child(9) {
   background-image: linear-gradient(#0abf69, #26d688);
 }
 
@@ -1081,7 +1084,7 @@ div.yeallowAlert {
 .hySelect {
   width: 100px;
   flex-shrink: 0;
-  padding-top:18px;
+  padding-top: 18px;
 }
 
 
@@ -1097,13 +1100,15 @@ div.yeallowAlert {
   content: "\e790";
   color: #fff;
 }
-.hySelect .el-input__inner{
+
+.hySelect .el-input__inner {
   background: #0c88be;
   color: #fff;
   border-radius: 15px;
   border: none;
 }
-.controlPass{
+
+.controlPass {
   width: 100%;
   height: 40px;
   padding: 5px 10px;
@@ -1112,17 +1117,147 @@ div.yeallowAlert {
   outline: none;
   border: 1px solid #ccc;
 }
-.yeallowAlert.el-message-box{
+
+.yeallowAlert.el-message-box {
   width: 300px;
 }
-.yeallowAlert .passCon{
+
+.yeallowAlert .passCon {
   position: relative;
 }
-.yeallowAlert .passCon.errorMs::before{
+
+.yeallowAlert .passCon.errorMs::before {
   content: '密码错误!';
   color: #ff3232;
   float: right;
   position: absolute;
   top: -20px;
   right: 10px;
+}
+
+/* 工业弹窗 */
+.gyshownum {
+  display: flex;
+  justify-content: space-between;
+
+}
+.gyshownum>div{
+  border-radius: 10px;
+  width: 24%;
+  height: 180px;
+  color: #fff;
+  background-color: #edf9f8;
+}
+.gyshownum>div:first-child {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  background-color: #4892e7;
+  text-align: center;
+  padding: 20px;
+}
+.gyshownum>div:first-child>span{
+  font-size: 16px;
+  display: inline-block;
+}
+.gyshownum>div:first-child>p{
+  font-size: 28px;
+  display: inline-block;
+  font-weight: 700;
+}
+.gyshownum>div:first-child>i{
+  font-size: 12px;
+  color: #eee;
+  font-style: normal;
+}
+.numtop{
+  display: inline-block;
+  width: 100%;
+  background-color: #61ba5e;
+  text-align: center;
+  padding: 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.gyshownum>div:not(:first-child) .numCon p{
+  padding: 15px;
+}
+.gyshownum .numCon p span{
+  display: inline-block;
+  width: 40%;
+  text-align: right;
+  font-size: 14px;
+  color: #666;
+}
+.gyshownum .numCon p b{
+  font-size: 26px;
+  color: #57b653;
+  display: inline-block;
+  margin-left: 10%;
+}
+.gyshownum .numCon p i{
+  color: #57b653;
+  font-style: normal;
+  font-size: 14px;
+}
+.gyshownum>div:nth-child(3) .numtop{
+  background-color: #51c5ee;
+}
+.gyshownum>div:nth-child(3) .numCon p b,.gyshownum>div:nth-child(3) .numCon p i{
+  color: #40bce6;
+}
+.gyshownum>div:nth-child(4) .numtop{
+  background-color: #ed8c47;
+}
+.gyshownum>div:nth-child(4) .numCon p b,.gyshownum>div:nth-child(4) .numCon p i{
+  color: #ed8c47;
+}
+.gyshownum>div:nth-child(3){
+   background-color: #ebfaff;
+}
+
+.gyshownum>div:nth-child(4){
+   background-color: #fbf3ed;
+}
+.chartsCon{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px 0;
+}
+.chartsCon:last-child{
+  border-top: 1px solid #ccc;
+}
+.gyChart{
+  flex-shrink: 1;
+}
+.chatsStatistics{
+  width: 150px;
+  flex-shrink: 0;
+}
+.chatsStatistics>div{
+  line-height: 25px;
+  margin-bottom: 20px;
+}
+.chatsStatistics b{
+  font-size: 14px;
+}
+.chatsStatistics .td p span{
+  color: #fe6635;
+}
+.chatsStatistics p span{
+  font-size: 16px;
+  color: #3b84fe;
+  font-weight: 700;
+}
+.chatsStatistics p i{
+  font-size: 12px;
+  color: #666;
+  font-style: normal;
+  display: inline-block;
+  margin-left: 10px;
+}
+.chatsStatistics p{
+    font-size: 12px;
+  color: #666;
 }
