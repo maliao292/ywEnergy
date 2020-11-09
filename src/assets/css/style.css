@@ -315,7 +315,7 @@
 }
 .iconStatus {
     position: absolute;
-    top: 150px;
+    top: 100px;
     right: 20px;
     bottom: 0;
     z-index: 12;
@@ -368,7 +368,7 @@
   color: #0184e2;
 }
 .alstyle .param {
-  color: #0184e2;
+  color: #fd7b35;
 }
 
 .alstyle .c1 {

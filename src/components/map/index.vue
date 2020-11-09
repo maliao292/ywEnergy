@@ -34,7 +34,7 @@
           <span>本月总节省电费</span>
         </li>
         <li v-show="stationid==2">
-          <p><b>{{topNum.allLoadNum}}</b><span>kW</span></p>
+          <p><b>{{Number(topNum.allLoadNum).toFixed(2)}}</b><span>kW</span></p>
           <span>总可响应负荷</span>
         </li>
         <!-- 工业 -->
@@ -43,7 +43,7 @@
           <span>工业用户总数</span>
         </li>
         <li v-show="stationid==5">
-          <p><b>{{topNum.allResLoad}}</b><span>kW</span></p>
+          <p><b>{{Number(topNum.allResLoad).toFixed(2)}}</b><span>kW</span></p>
           <span>总可响应负荷</span>
         </li>
         <li v-show="stationid==5">
@@ -51,7 +51,7 @@
           <span>总可调节无功</span>
         </li>
         <li v-show="stationid==5">
-          <p><b>{{topNum.allStoredEnergyVolume}}</b><span>kVar</span></p>
+          <p><b>{{topNum.allStoredEnergyVolume}}</b><span>kW</span></p>
           <span>总储能容量</span>
         </li>
       </ul>
@@ -77,9 +77,21 @@
           </div>
           <p>{{statusNum.num3}}</p>
         </li>
-        <li>
+        <li v-if="stationid==2">
           <div>
             <img :src="iconImg.t" alt="">
+          </div>
+          <p>{{statusNum.num4}}</p>
+        </li>
+           <li v-if="stationid==5">
+          <div>
+            <img :src="iconImg.g" alt="">
+          </div>
+          <p>{{statusNum.num4}}</p>
+        </li>
+           <li v-if="stationid==5">
+          <div>
+            <img :src="iconImg.r" alt="">
           </div>
           <p>{{statusNum.num4}}</p>
         </li>
@@ -163,6 +175,8 @@ export default {
         t: require('@/assets/img/t.png'),
         w: require('@/assets/img/w.png'),
         l: require('@/assets/img/l.png'),
+        g: require('@/assets/img/g.png'),
+        r: require('@/assets/img/r.png'),
       },
       alsImg: {
         s1: require('@/assets/img/als1.png'),
@@ -359,7 +373,7 @@ export default {
           /* 图标弹窗 */
             let alerWins = `
           <div class='alstyle'>
-            <h2>${v.stationName}</h2>
+            <h2 style='font-weight:700'>${v.stationName}</h2>
             <ul>
               <li><span>基站负荷：</span><span>${v.allPower ? (v.allPower).toFixed(2) : ''} kW</span></li>
               <li style="${v.runStatus == 1 || v.runStatus == 2 || !v.runStatus ? 'display:none' : ''}">
@@ -379,7 +393,7 @@ export default {
           if(v.runStatus == 9){
             alerWins = `
           <div class='alstyle'>
-            <h2>${v.stationName}</h2>
+            <h2 style='font-weight:700'>${v.stationName}</h2>
             <ul>
               <li><span>负荷：</span><span>${v.allPower ? (v.allPower).toFixed(2) : ''} kW</span></li>
               <li><span>可调负荷：</span><span class='param'>${v.adjustPower ? (v.adjustPower).toFixed(2) : ''} kW</span></li>
@@ -423,7 +437,7 @@ export default {
 
                 mouseout: (e) => {
                   self.windows.forEach((window) => {
-                    window.visible = false
+                   // window.visible = false
                   })
                 },
               },
