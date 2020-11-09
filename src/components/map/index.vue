@@ -11,7 +11,7 @@
     </div>
     <transition name='fade'>
       <div v-show='menushow' class="menuList">
-        <MapMenu @setmarker='setmarker' />
+        <MapMenu @setmarker='setmarker' :stationid='stationid'/>
       </div>
     </transition>
 
@@ -47,11 +47,11 @@
           <span>总可响应负荷</span>
         </li>
         <li v-show="stationid==5">
-          <p><b>{{topNum.allAdjustNoPower}}</b><span>kW</span></p>
+          <p><b>{{topNum.allAdjustNoPower}}</b><span>kVar</span></p>
           <span>总可调节无功</span>
         </li>
         <li v-show="stationid==5">
-          <p><b>{{topNum.allStoredEnergyVolume}}</b><span>kW</span></p>
+          <p><b>{{topNum.allStoredEnergyVolume}}</b><span>kVar</span></p>
           <span>总储能容量</span>
         </li>
       </ul>
@@ -382,7 +382,7 @@ export default {
             <h2>${v.stationName}</h2>
             <ul>
               <li><span>负荷：</span><span>${v.allPower ? (v.allPower).toFixed(2) : ''} kW</span></li>
-              <li><span>可调负荷：</span><span class='param'>${v. adjustPower ? (v.adjustPower).toFixed(2) : ''} kW</span></li>
+              <li><span>可调负荷：</span><span class='param'>${v.adjustPower ? (v.adjustPower).toFixed(2) : ''} kW</span></li>
             <ul>
           </div>
           `

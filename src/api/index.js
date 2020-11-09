@@ -18,7 +18,15 @@ export function login(dataobj) {
 
 // export let logout = dataobj => axios.post('/logout',qs.stringify(dataobj));
 // 地图树
-export let mapTree = dataobj => axios.post('/index/queryTree', qs.stringify(dataobj));
+// export let mapTree = dataobj => axios.post('/index/queryTree', qs.stringify(dataobj));
+export function mapTree(dataobj) {
+  return request({
+    url: '/index/queryTree',
+    method: 'post',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    params: dataobj
+  })
+}
 // 地图 marker
 //export let mapMarker = dataobj => axios.post('/index/queryView',qs.stringify(dataobj));
 

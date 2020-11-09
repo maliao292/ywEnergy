@@ -27,11 +27,19 @@
 <script>
 import { mapTree } from '@/api'
 export default {
+  props:{
+    stationid:null
+  },
   components: {},
   data() {
     return {
       menuList: [],
     }
+  },
+  watch: {
+     stationid() {
+        this.getMapTree()
+    },
   },
   created() {
     this.getMapTree()
@@ -39,8 +47,8 @@ export default {
 
   methods: {
     async getMapTree() {
-      let res = await mapTree()
-      this.menuList = res.data[0].children
+      let res = await mapTree({userType:this.stationid})
+      this.menuList = res.data
     },
     changeStation(s){
       this.$emit('setmarker',{s})

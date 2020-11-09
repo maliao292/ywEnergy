@@ -11,7 +11,7 @@
       <div class="gyshownum">
         <div>
           <span>可响应负荷</span>
-          <p>{{stationDetail.allPower}}</p>
+          <p>{{stationDetail.adjustPower}}</p>
           <i>kW</i>
         </div>
         <div>

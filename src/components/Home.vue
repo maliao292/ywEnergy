@@ -110,7 +110,7 @@ export default {
       photo: require('@/assets/img/logo.png'),
       logo: require('@/assets/img/g5.png'),
 
-      hyvalue: 5,
+      hyvalue: 2,
       currentIndustry: '5G',
       hyList: [
         { value: 'sm', name: '商贸' },
