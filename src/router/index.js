@@ -100,6 +100,23 @@ let router = new Router({
           ]
         },
         {
+          // 报警管理
+          path: "/home/alarm",
+          name: 'alarm',
+          redirect: '/home/alarm/alarmSearch',
+          component: resolve => require(['@/components/alarm/index'], resolve),
+          children: [{
+            path: "alarmSearch",
+            name: 'alarmSearch',
+            component: resolve => require(['@/components/alarm/alarmSearch'], resolve),
+          },{
+            path: "alarmConfiguration",
+            name: 'alarmConfiguration',
+            component: resolve => require(['@/components/alarm/alarmConfiguration'], resolve),
+          },
+          ]
+        },
+        {
           // 系统管理
           path: "/home/system",
           name: 'system',
