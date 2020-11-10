@@ -385,11 +385,9 @@
 
       /** 查询采集设备管理列表 */
       getList() {
-        this.loading = true;
         listCommDevice(this.queryParams).then(response => {
           this.iotDeviceList = response.rows;
           this.total = response.total;
-          this.loading = false;
         });
       },
       // 取消按钮

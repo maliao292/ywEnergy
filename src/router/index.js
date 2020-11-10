@@ -50,21 +50,21 @@ let router = new Router({
       },
         {
           // 报表
-        path: "/home/report",
-        name: 'report',
-        redirect: '/home/report/reportTable',
-        component: resolve => require(['@/components/report/report'], resolve),
-        children: [{
-          path: "reportTable",
-          name: 'reportTable',
-          component: resolve => require(['@/components/report/reportTable'], resolve),
-        },{
-          path: "glAndTemTable",
-          name: 'glAndTemTable',
-          component: resolve => require(['@/components/report/glAndTemTable'], resolve),
-        }
-        ]
-      },
+          path: "/home/report",
+          name: 'report',
+          redirect: '/home/report/reportTable',
+          component: resolve => require(['@/components/report/report'], resolve),
+          children: [{
+            path: "reportTable",
+            name: 'reportTable',
+            component: resolve => require(['@/components/report/reportTable'], resolve),
+          },{
+            path: "glAndTemTable",
+            name: 'glAndTemTable',
+            component: resolve => require(['@/components/report/glAndTemTable'], resolve),
+          }
+          ]
+        },
         {
           // 运行策略管理
           path: "/home/runStrategy",
@@ -84,63 +84,63 @@ let router = new Router({
         },
         {
           // 设备管理
-        path: "/home/standing",
-        name: 'standing',
-        redirect: '/home/standing/subscriber',
-        component: resolve => require(['@/components/standing/index'], resolve),
-        children: [{
-          path: "subscriber",
-          name: 'subscriber',
-          component: resolve => require(['@/components/standing/subscriber'], resolve),
-        },{
-          path: "collect",
-          name: 'collect',
-          component: resolve => require(['@/components/standing/collect'], resolve),
+          path: "/home/standing",
+          name: 'standing',
+          redirect: '/home/standing/subscriber',
+          component: resolve => require(['@/components/standing/index'], resolve),
+          children: [{
+            path: "subscriber",
+            name: 'subscriber',
+            component: resolve => require(['@/components/standing/subscriber'], resolve),
+          },{
+            path: "collect",
+            name: 'collect',
+            component: resolve => require(['@/components/standing/collect'], resolve),
+          },
+          ]
         },
-        ]
-      },
         {
           // 系统管理
-        path: "/home/system",
-        name: 'system',
-        redirect: '/home/system/user',
-        component: resolve => require(['@/components/system/index'], resolve),
-        children: [{
-          path: "user",
-          name: 'user',
-          component: resolve => require(['@/components/system/user/index'], resolve),
-        },{
-          path: "role",
-          name: 'role',
-          component: resolve => require(['@/components/system/role/index'], resolve),
-        },{
-          path: "menu",
-          name: 'menu',
-          component: resolve => require(['@/components/system/menu/index'], resolve),
-        },{
-          path: "dict",
-          name: 'dict',
-          component: resolve => require(['@/components/system/dict/index'], resolve),
+          path: "/home/system",
+          name: 'system',
+          redirect: '/home/system/user',
+          component: resolve => require(['@/components/system/index'], resolve),
+          children: [{
+            path: "user",
+            name: 'user',
+            component: resolve => require(['@/components/system/user/index'], resolve),
+          },{
+            path: "role",
+            name: 'role',
+            component: resolve => require(['@/components/system/role/index'], resolve),
+          },{
+            path: "menu",
+            name: 'menu',
+            component: resolve => require(['@/components/system/menu/index'], resolve),
+          },{
+            path: "dict",
+            name: 'dict',
+            component: resolve => require(['@/components/system/dict/index'], resolve),
 
-        },{
-          path: 'type/data/:dictId(\\d+)',
-          component: (resolve) => require(['@/components/system/dict/data'], resolve),
-          name: 'Data',
-        }
-        ]
-      },
+          },{
+            path: 'type/data/:dictId(\\d+)',
+            component: (resolve) => require(['@/components/system/dict/data'], resolve),
+            name: 'Data',
+          }
+          ]
+        },
         {
-        // 用户管理
-        path: "/home/user",
-        name: 'system',
-        redirect: '/home/user/station',
-        component: resolve => require(['@/components/user/index'], resolve),
-        children: [{
-          path: "station",
-          name: 'station',
-          component: resolve => require(['@/components/user/station/index'], resolve),
-        }]
-      },
+          // 用户管理
+          path: "/home/user",
+          name: 'system',
+          redirect: '/home/user/station',
+          component: resolve => require(['@/components/user/index'], resolve),
+          children: [{
+            path: "station",
+            name: 'station',
+            component: resolve => require(['@/components/user/station/index'], resolve),
+          }]
+        },
 
       ]
     },
