@@ -11,7 +11,7 @@
       <div class="gyshownum">
         <div>
           <span>可响应负荷</span>
-          <p>{{stationDetail.adjustPower}}</p>
+          <p>{{stationDetail.adjustPower?stationDetail.adjustPower:0}}</p>
           <i>kW</i>
         </div>
         <div>
@@ -24,7 +24,7 @@
         <div>
           <div class="numtop">电量概况</div>
           <div class="numCon">
-            <p><span>本月累计电量</span><b>{{dataSratistics.thisMonthEle}}</b><i>万kWh</i></p>
+            <p><span>本月累计电量</span><b>{{Number(dataSratistics.thisMonthEle).toFixed(2)}}</b><i>万kWh</i></p>
             <p><span>上月总电量</span><b>{{dataSratistics.lastMonthEle}}</b><i>万kWh</i></p>
           </div>
         </div>

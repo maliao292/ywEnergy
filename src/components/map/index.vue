@@ -14,7 +14,10 @@
         <MapMenu @setmarker='setmarker' :stationid='stationid'/>
       </div>
     </transition>
-
+    <div>
+    
+    <input v-model="stationNameVal" v-show="isMapPage == 'map'" type="text" placeholder="搜索">
+    </div>
     <div class="mapUseEleMsg">
       <ul>
         <li v-show="stationid==2">
@@ -117,7 +120,7 @@
     </div>
     <div class="alertWindow yctList" v-if="gyWindowShow">
       <div class="container">
-        <GyWindow @setChangeMapStatus='setChangeMapStatus' :stationDetail='stationDetail' @close='closeAl'>{{jzname}}</GyWindow>
+        <GyWindow :stationDetail='stationDetail' @close='closeAl'>{{jzname}}</GyWindow>
       </div>
     </div>
   </div>
@@ -396,7 +399,7 @@ export default {
             <h2 style='font-weight:700'>${v.stationName}</h2>
             <ul>
               <li><span>负荷：</span><span>${v.allPower ? (v.allPower).toFixed(2) : ''} kW</span></li>
-              <li><span>可调负荷：</span><span class='param'>${v.adjustPower ? (v.adjustPower).toFixed(2) : ''} kW</span></li>
+              <li><span>可调负荷：</span><span class='param'>${v.adjustPower ? (v.adjustPower).toFixed(2) : 0} kW</span></li>
             <ul>
           </div>
           `
