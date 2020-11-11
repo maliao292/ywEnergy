@@ -53,6 +53,9 @@
         </div>
         <div class="mapshow">
           <img :src="map" alt="">
+          <!-- <span class="mapicon fh test">
+            <img :src="modelIcon">
+          </span> -->
           <span class="mapicon fh" v-for="(val,key) in baseStationList" :key='key' :style="{top:val[0]+'%',left:val[1]+'%',zIndex:hoverIndex===key?30:10}" @mouseenter="cpm(val,key)" @mouseleave="cpmout(val)">
             <img :src="modelIcon">
           </span>
@@ -186,20 +189,25 @@ export default {
         { value: 'h', text: '荷', name: '负荷', icon: require('@/assets/img/screen/screenFh.png'), allText: '总可响应负荷' },
         { value: 'c', text: '储', name: '储能', icon: require('@/assets/img/screen/screenCn.png'), allText: '总可响应负荷' },
       ],
-      activeDist: 'g5',
+      activeDist: 'gy',
       activeModel: 'h',
       baseStationList: [],
 
-      yMsg: {},
+      yMsg: {
+        g5: [],
+        gy: [],
+      },
       hMsg: {
         g5: [
           // [42, 47.6, { station: '义乌茂后基站', msg: [{ key: '基站负荷：', val: 8.6, unit: 'kW' }, { key: '可响应负荷：', val: 2.2, unit: 'kW' }] }],
-        ]
+        ],
+        gy: [],
       },
       cMsg: {
         g5: [
           //   [45, 41, { station: '义乌溪干西基站', msg: [{ key: '电池状态：', val: '待机' }, { key: '电池容量：', val: 8.6, unit: 'kW' }, { key: '可响应负荷：', val: 8.6, unit: 'kW' }] }],
-        ]
+        ],
+        gy: [],
       },
       windowMsg: [0, 0, { station: '', msg: [{ key: '', val: '' }] }],
       showWindow: false,
@@ -219,46 +227,13 @@ export default {
 
   methods: {
     async getMiddleData() { // 中间地图数据
-      let location = [{ position: [42, 47.6], station: '义乌茂后基站' }, { position: [45, 41], station: '义乌溪干西基站' }, { position: [50, 59], station: '江东商苑站' }, { position: [49, 46], station: '殿口东站' }]
-      let res = await screenMidData();
-      let { c_volume, h_volume, cAllLoadNum, hAllLoadNum, stationNum } = res.data
-      this.ychAllData = { cAllLoadNum, hAllLoadNum, stationNum }
-      this.ychAllData.volume = this.ychAllDataContent['y_volume'] ? this.ychAllDataContent['y_volume'] : 0
-      this.ychAllDataContent = { c_volume, h_volume }
-      let list = res.data.list
 
-      function getst(batteryStatus) {
-        let st = '充电'
-        // list[1].batteryStatus
-        switch (batteryStatus) {
-          case 0:
-            st = '充电'
-            break
-          case 1:
-            st = '放电'
-            break
-          case 2:
-            st = '待机'
-            break
-        }
-        return st
-      }
-      list.forEach((val) => {
-        // console.log(val)
-        let thisStation = location.filter((sta) => {
-          return sta.station === val.stationName
-        })
-        if (thisStation.length > 0) {
-          this.hMsg.g5.push([...thisStation[0]['position'], { station: val.stationName, msg: [{ key: '基站负荷：', val: !!val['allPower'] ? (val['allPower']).toFixed(2) : '', unit: 'kW' }, { key: '可响应负荷：', val: val['hresponsiveLoad'] ? (val['hresponsiveLoad']).toFixed(2) : '', unit: 'kW' }] }])
-          this.cMsg.g5.push([...thisStation[0]['position'], { station: val.stationName, msg: [{ key: '电池状态：', val: getst(val.batteryStatus) }, { key: '电池容量：', val: (val.sourceFixPower).toFixed(2), unit: 'kW' }, { key: '可响应负荷：', val: (val.cresponsiveLoad).toFixed(2), unit: 'kW' }] }]);
-        }
-      })
     },
     async getFLineData() { // 负荷折线图
       let res = await screenFLine()
       let xInterVal = this.$publicMethods.getInterVal({ begin: res.data.xData[0], end: res.data.xData[1] ? res.data.xData[1] : '00:15' })
       let xArr = this.$publicMethods.getMinuteForX(xInterVal)
-      this.$chart.screenLine('fh', '负荷', this.getLines(res.data.yData)['legendArr'], xArr, this.getLines(res.data.yData)['seriesArr'])
+      this.$chart.screenLine('fh', '负荷', this.getLines([...res.data.yData,...res.data.yData2])['legendArr'], xArr, this.getLines([...res.data.yData,...res.data.yData2])['seriesArr'])
     },
     async getCLineData() {// 储能折线图
       let res = await screenCLine()
@@ -283,9 +258,87 @@ export default {
         legendArr, seriesArr
       }
     },
-    distChange(val) { // 行业change
-      this.activeDist = val
-      let activeStation = this[this.activeModel + 'Msg'] ? this[this.activeModel + 'Msg'][val] : [];
+    async distChange(valt) { // 行业change
+
+      this.yMsg = { g5: [], gy: [] }
+      this.hMsg = { g5: [], gy: [] }
+      this.cMsg = { g5: [], gy: [] }
+      this.activeDist = valt
+
+      let location = [
+        { position: [48, 64], station: '江东商苑基站' },
+        { position: [57, 54], station: '徐村基站' },
+        { position: [51, 49], station: '环城西路基站' },
+        { position: [49, 56], station: '屋基村西基站' },
+        { position: [40, 39], station: '毛店桥头基站' },
+        { position: [48, 38], station: '溪干西基站' },
+        { position: [50, 45], station: '殿口东基站' },
+        { position: [51, 41], station: '金哥集团二基站' },
+        { position: [41, 52], station: '春晗三区40幢基站' },
+        { position: [47, 50.6], station: '茂后基站' },
+
+        { position: [63, 50.6], station: '义乌市欧雅化妆品有限公司' },
+        { position: [41, 51.6], station: '义乌电力实业倍力健身充电桩' },
+        { position: [45, 51.6], station: '电力大厦充电桩' },
+        { position: [48, 51.6], station: '出租车服务区充电桩' },
+        { position: [51, 51], station: '伊琳饰品' },
+        { position: [56, 47], station: '华莱印刷包装科技产业园' },
+        // { position: [42, 47.6], station: '义乌茂后基站' },
+        // { position: [45, 41], station: '义乌溪干西基站' },
+        // { position: [50, 59], station: '江东商苑站' },
+        // { position: [49, 46], station: '殿口东站' }
+      ]
+      let userType = 2
+      switch (valt) {
+        case 'g5':
+          userType = 2;
+          break;
+        case 'gy':
+          userType = 5;
+          break;
+        default:
+          userType = 2;
+
+      }
+      if(valt!=='g5'&&valt!=='gy') return
+      let res = await screenMidData({ userType });
+      let { c_volume, h_volume, cAllLoadNum, hAllLoadNum, stationNum } = res.data
+      this.ychAllData = { cAllLoadNum, hAllLoadNum, stationNum }
+      this.ychAllData.volume = this.ychAllDataContent['y_volume'] ? this.ychAllDataContent['y_volume'] : 0
+      this.ychAllDataContent = { c_volume, h_volume }
+      let list = res.data.list
+
+      function getst(batteryStatus) {
+        let st = '充电'
+        // list[1].batteryStatus
+        switch (batteryStatus) {
+          case 0:
+            st = '充电'
+            break
+          case 1:
+            st = '放电'
+            break
+          case 2:
+            st = '待机'
+            break
+        }
+        return st
+      }
+      list.forEach((val) => {
+        let thisStation = location.filter((sta) => {
+          return sta.station === val.stationName
+        })
+        if (thisStation.length > 0) {
+          if (this.activeDist == 'g5') {
+            this.hMsg.g5.push([...thisStation[0]['position'], { station: val.stationName, msg: [{ key: '基站负荷：', val: !!val['allPower'] ? (val['allPower']).toFixed(2) : '', unit: 'kW' }, { key: '可响应负荷：', val: val['hresponsiveLoad'] ? (val['hresponsiveLoad']).toFixed(2) : '', unit: 'kW' }] }])
+            this.cMsg.g5.push([...thisStation[0]['position'], { station: val.stationName, msg: [{ key: '电池状态：', val: getst(val.batteryStatus) }, { key: '电池容量：', val: (val.sourceFixPower).toFixed(2), unit: 'kW' }, { key: '可响应负荷：', val: (val.cresponsiveLoad).toFixed(2), unit: 'kW' }] }]);
+          } else if (this.activeDist == 'gy') {
+            this.hMsg.gy.push([...thisStation[0]['position'], { station: val.stationName, msg: [{ key: '负荷：', val: !!val['allPower'] ? (val['allPower']).toFixed(2) : '', unit: 'kW' }, { key: '可调负荷：', val: val['adjustPower'] ? (val['adjustPower']).toFixed(2) : 0, unit: 'kW' }] }])
+          }
+
+        }
+      })
+      let activeStation = this[this.activeModel + 'Msg'] ? this[this.activeModel + 'Msg'][valt] : [];
       this.baseStationList = activeStation ? activeStation : []
     },
     modelChange({ value, text, name, icon, allText }) { // 源 荷 储change

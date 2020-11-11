@@ -11,12 +11,12 @@
     </div>
     <transition name='fade'>
       <div v-show='menushow' class="menuList">
-        <MapMenu @setmarker='setmarker' :stationid='stationid'/>
+        <MapMenu @setmarker='setmarker' :stationid='stationid' />
       </div>
     </transition>
-    <div>
-    
-    <input v-model="stationNameVal" v-show="isMapPage == 'map'" type="text" placeholder="搜索">
+    <div class="mapSearch">
+      <input v-model="stationNameVal" type="text" placeholder="搜站点">
+      <span class="el-icon-search searchBtn" @click="searchMapName"></span>
     </div>
     <div class="mapUseEleMsg">
       <ul>
@@ -86,13 +86,13 @@
           </div>
           <p>{{statusNum.num4}}</p>
         </li>
-           <li v-if="stationid==5">
+        <li v-if="stationid==5">
           <div>
             <img :src="iconImg.g" alt="">
           </div>
           <p>{{statusNum.num4}}</p>
         </li>
-           <li v-if="stationid==5">
+        <li v-if="stationid==5">
           <div>
             <img :src="iconImg.r" alt="">
           </div>
@@ -115,7 +115,7 @@
     </div>
     <div class="alertWindow yctList" v-if="showList">
       <div class="container">
-        <StationMsg @setChangeMapStatus='setChangeMapStatus' :stationDetail='stationDetail' @close='closeAl'>{{jzname}}</StationMsg>
+        <StationMsg :stationDetail='stationDetail' @close='closeAl'>{{jzname}}</StationMsg>
       </div>
     </div>
     <div class="alertWindow yctList" v-if="gyWindowShow">
@@ -153,12 +153,13 @@ VueAMap.initAMapApiLoader({
 })
 export default {
   props: {
-    stationname: '',
     stationid: null
   },
   components: { MapMenu, StationMsg, GyWindow },
   data() {
     return {
+      stationname: '',
+
       topNum: {
         stationNum: '',
         allLoadNum: '',
@@ -198,6 +199,8 @@ export default {
         num5: 0,
         num6: 0,
       },
+      searchName:'',
+      stationNameVal: '',
       stationDetail: {},
       searchMapKey: '', // 保存搜索地图关键词
       gyWindowShow: false,
@@ -245,6 +248,10 @@ export default {
       })
     },
     stationname() {
+      if (!this.stationNameVal) {
+        this.getAllMarks();
+        return
+      }
       let reg = new RegExp(this.stationname)
       let markers = this.allmarkers.filter((v) => {
         return reg.test(v.stationName)
@@ -282,6 +289,9 @@ export default {
       this.$nextTick(() => {
         this.$refs.map.$amap.setFitView()
       })
+    },
+    searchMapName(){
+      this.stationname = this.stationNameVal
     },
     setChangeMapStatus() {
       this.getAllMarksData().then(res => {
@@ -373,7 +383,7 @@ export default {
                 break;
             }
 
-          /* 图标弹窗 */
+            /* 图标弹窗 */
             let alerWins = `
           <div class='alstyle'>
             <h2 style='font-weight:700'>${v.stationName}</h2>
@@ -393,8 +403,8 @@ export default {
             <ul>
           </div>
           `
-          if(v.runStatus == 9){
-            alerWins = `
+            if (v.runStatus == 9) {
+              alerWins = `
           <div class='alstyle'>
             <h2 style='font-weight:700'>${v.stationName}</h2>
             <ul>
@@ -403,7 +413,7 @@ export default {
             <ul>
           </div>
           `
-          }
+            }
 
             windows.push({
               position: [Number(v.longitude), Number(v.latitude)],
@@ -440,7 +450,7 @@ export default {
 
                 mouseout: (e) => {
                   self.windows.forEach((window) => {
-                   // window.visible = false
+                    window.visible = false
                   })
                 },
               },

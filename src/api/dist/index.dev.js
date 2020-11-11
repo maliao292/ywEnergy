@@ -3,7 +3,16 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.screenJzLine = exports.screenChhd = exports.screenServer = exports.screenCLine = exports.screenFLine = exports.screenMidData = exports.controlPassData = exports.controlQx = exports.controlerPort = exports.mapLineData = exports.stationDetailApi = exports.topNum = exports.mapMarker = exports.mapTree = exports.login = void 0;
+exports.login = login;
+exports.mapTree = mapTree;
+exports.mapMarker = mapMarker;
+exports.topNum = topNum;
+exports.stationDetailApi = stationDetailApi;
+exports.screenMidData = screenMidData;
+exports.gyTopApi = gyTopApi;
+exports.gyLineApi = gyLineApi;
+exports.gyBarApi = gyBarApi;
+exports.ptType = exports.screenJzLine = exports.screenChhd = exports.screenServer = exports.screenCLine = exports.screenFLine = exports.controlPassData = exports.controlQx = exports.controlerPort = exports.mapLineData = void 0;
 
 var _config = _interopRequireDefault(require("./config"));
 
@@ -13,43 +22,73 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 
 /**
  * 登录
- * @param {*} dataobj 
+ * @param {*} dataobj
  */
-var login = function login(dataobj) {
-  return _config["default"].post('/login', _qs["default"].stringify(dataobj));
-}; // export let logout = dataobj => axios.post('/logout',qs.stringify(dataobj));
+// export let login = dataobj => axios.post('/login',qs.stringify(dataobj));
+function login(dataobj) {
+  return (0, _config["default"])({
+    url: '/login',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    params: dataobj
+  });
+} // export let logout = dataobj => axios.post('/logout',qs.stringify(dataobj));
 // 地图树
+// export let mapTree = dataobj => axios.post('/index/queryTree', qs.stringify(dataobj));
 
 
-exports.login = login;
-
-var mapTree = function mapTree(dataobj) {
-  return _config["default"].post('/index/queryTree', _qs["default"].stringify(dataobj));
-}; // 地图 marker
-
-
-exports.mapTree = mapTree;
-
-var mapMarker = function mapMarker(dataobj) {
-  return _config["default"].post('/index/queryView', _qs["default"].stringify(dataobj));
-}; //信息统计TOP 
-
-
-exports.mapMarker = mapMarker;
-
-var topNum = function topNum(_) {
-  return _config["default"].post('/index/queryTop');
-}; // 站点详情
+function mapTree(dataobj) {
+  return (0, _config["default"])({
+    url: '/index/queryTree',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    params: dataobj
+  });
+} // 地图 marker
+//export let mapMarker = dataobj => axios.post('/index/queryView',qs.stringify(dataobj));
 
 
-exports.topNum = topNum;
+function mapMarker(dataobj) {
+  return (0, _config["default"])({
+    url: '/index/queryView',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    params: dataobj
+  });
+} //信息统计TOP
+// export let topNum = dataobj => axios.post('/index/queryTop',qs.stringify(dataobj));
 
-var stationDetailApi = function stationDetailApi(dataobj) {
-  return _config["default"].post('/index/queryInfo', _qs["default"].stringify(dataobj));
-}; // 地图详情折线图GET /analysis/jzfh
+
+function topNum(dataobj) {
+  return (0, _config["default"])({
+    url: '/index/queryTop',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    params: dataobj
+  });
+} // 站点详情
+// export let stationDetailApi = dataobj => axios.post('/index/queryInfo',qs.stringify(dataobj));
 
 
-exports.stationDetailApi = stationDetailApi;
+function stationDetailApi(dataobj) {
+  return (0, _config["default"])({
+    url: '/index/fiveG/queryInfo',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    params: dataobj
+  });
+} // 地图详情折线图GET /analysis/jzfh
+
 
 var mapLineData = function mapLineData(dataobj) {
   return _config["default"].get('/analysis/jzfh?stationId=' + dataobj.stationId + '&queryDate=' + dataobj.queryDate);
@@ -79,16 +118,22 @@ var controlPassData = function controlPassData(_ref2) {
   var switchPass = _ref2.switchPass;
   return _config["default"].get('/switch/switchPass?switchPass=' + switchPass);
 }; // 大屏数据
+// export let screenMidData = _ => axios.post('/screen/queryMiddle');
 
 
 exports.controlPassData = controlPassData;
 
-var screenMidData = function screenMidData(_) {
-  return _config["default"].post('/screen/queryMiddle');
-}; // 负荷折线
+function screenMidData(dataobj) {
+  return (0, _config["default"])({
+    url: '/screen/queryMiddle',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    params: dataobj
+  });
+} // 负荷折线
 
-
-exports.screenMidData = screenMidData;
 
 var screenFLine = function screenFLine(_) {
   return _config["default"].post('/screen/queryLoadChart');
@@ -120,6 +165,49 @@ exports.screenChhd = screenChhd;
 
 var screenJzLine = function screenJzLine(_) {
   return _config["default"].post('/screen/queryJZTJ');
-};
+}; // 平台类型
+
 
 exports.screenJzLine = screenJzLine;
+
+var ptType = function ptType(_) {
+  return _config["default"].get('/common/getUserType');
+}; // 工业-智慧电务 
+
+
+exports.ptType = ptType;
+
+function gyTopApi(dataobj) {
+  return (0, _config["default"])({
+    url: '/index/wisdomEle/queryInfo',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    params: dataobj
+  });
+} // 工业 折线 
+
+
+function gyLineApi(dataobj) {
+  return (0, _config["default"])({
+    url: '/index/wisdomEle/getDayChart',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    params: dataobj
+  });
+} // 工业 柱状图 
+
+
+function gyBarApi(dataobj) {
+  return (0, _config["default"])({
+    url: '/index/wisdomEle/getMonthChart',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    params: dataobj
+  });
+}
