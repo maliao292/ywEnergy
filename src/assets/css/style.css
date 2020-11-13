@@ -1326,3 +1326,109 @@ div.yeallowAlert {
     top: 42%;
     left: 47.6%;
 }
+
+.bg_fff {
+    background: #fff;
+}
+
+.res_table .searchText {
+    padding-bottom: 10px;
+}
+
+.yctListCon .el-form--inline .el-form-item__content {
+    width: 100%;
+}
+
+.yctListCon .el-select {
+    width: 100%;
+}
+
+.yctListCon .el-form--inline .el-form-item__label {
+    flex-shrink: 0;
+}
+
+.yctListCon .el-date-editor.el-input {
+    width: 100%;
+}
+
+.bottomBtn {
+    text-align: center;
+    padding-bottom: 30px;
+}
+
+.page {
+    text-align: right;
+}
+
+.bgTitle {
+    background: #eeeeef;
+    padding: 0 20px;
+    margin-top: 20px;
+}
+
+.bgTitle .name {
+    display: inline-block;
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    height: 40px;
+    line-height: 40px;
+}
+
+.titledata {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 20px 0;
+}
+
+.titledata span {
+    font-size: 14px;
+    color: #666;
+}
+
+.title_status {
+    display: inline-block;
+    height: 40px;
+    line-height: 40px;
+}
+
+.title_status_wxf {
+    color: #d85816;
+}
+
+.title_status_xf {
+    color: #007cbb;
+}
+
+.tableCon {
+    padding: 20px;
+}
+
+.tableCon .el-table th.is-leaf {
+    background-color: #f2f2f2;
+}
+
+.tableCon .el-table td,
+.tableCon .el-table th.is-leaf,
+.tableCon .el-table td,
+.tableCon .el-table th.is-leaf {
+    border-bottom: 1px solid #c4c4c4;
+}
+
+.tableCon .el-table--border td,
+.tableCon .el-table--border th,
+.tableCon .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed {
+    border-bottom: 1px solid #c4c4c4;
+    border-right: 1px solid #c4c4c4;
+}
+
+.tableCon .el-table--border,
+.tableCon .el-table--group {
+    border: 1px solid #c4c4c4;
+}
+
+.tableCon .el-table--border td,
+.tableCon.el-table--border th,
+.tableCon .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed {
+    border-right: 1px solid #c4c4c4;
+}

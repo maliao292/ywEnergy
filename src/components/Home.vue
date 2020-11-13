@@ -42,7 +42,7 @@
             </router-link>
           </li>
           <li>
-            <router-link tag="div" to='/home/yunxing'><span class="icon iconfont icon-xuqiucexiangyingguanli"></span>
+            <router-link tag="div" to='/home/sideDemand'><span class="icon iconfont icon-xuqiucexiangyingguanli"></span>
               <p>需求侧响应管理</p>
             </router-link>
           </li>
