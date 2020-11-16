@@ -57,8 +57,8 @@
               <template slot-scope="scope">
                 <div>
                   <el-button type="primary" plain size="mini" @click="zbfj(scope.row)">指标分解</el-button>
-                  <el-button type="primary" plain size="mini" :disabled="scope.row.QUOTASTATUS==2||scope.row.QUOTASTATUS==0" @click="zbxf(scope.row.DT)">指标下发</el-button>
-                  <el-button type="primary" plain size="mini" @click="editnewBtn(scope.row)" :disabled="scope.row.QUOTASTATUS==2">修改</el-button>
+                  <el-button type="primary" plain size="mini" :disabled="scope.row.currentStatus==1||scope.row.currentStatus==3" @click="zbxf(scope.row.id)">指标下发</el-button>
+                  <el-button type="primary" plain size="mini" @click="editnewBtn(scope.row)" :disabled="scope.row.currentStatus==3">修改</el-button>
                 </div>
               </template>
             </el-table-column>
@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import { targetList as list, delTarget as del, xfTarget } from '@/api/sideDemand'
+import { targetList as list, delTarget as del,targetSaveOrEdit as xfTarget } from '@/api/sideDemand'
 
 import AddNew from './Edit'
 import Fj from './Fj'
@@ -197,7 +197,7 @@ export default {
           })
         })
     },
-    zbxf(dt) {
+    zbxf(id) {
       // 指标下发
       this.$confirm('是否下发?', '提示', {
         confirmButtonText: '下发',
@@ -205,11 +205,10 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          xfTarget({ dt }).then(res => {
-            let val = res
-            let type = val.STATUS == 1 ? 'success' : 'error'
-            this.$message({ type, message: val.INFO })
-            if (val.STATUS == 1) this.getData()
+          xfTarget({ id ,currentStatus:3}).then(res => {
+            let type = res.success == 1 ? 'success' : 'error'
+            this.$message({ type, message: res.msg })
+            if (res.success == 1) this.getData()
           })
         })
         .catch(() => {
@@ -230,7 +229,7 @@ export default {
       this.getData()
     },
     selectInit(row) {
-      if (row.QUOTASTATUS == '2') {
+      if (row.currentStatus == '3') {
         return false
       } else {
         return true

@@ -8,24 +8,24 @@
     <div class="titledata">
       <div>
         <span>响应日期：</span>
-        <span>{{detailObj.QUOTATIME}}</span>
+        <span>{{detailObj.resDate}}</span>
       </div>
       <div>
         <span>需求负荷（kW）：</span>
-        <span>{{detailObj.QUOTAXYFH}}</span>
+        <span>{{detailObj.resPower}}</span>
       </div>
       <div>
         <span>响应开始时间：</span>
-        <span>{{detailObj.TIME1}}</span>
+        <span>{{detailObj.resStartTime}}</span>
       </div>
       <div>
         <span>响应结束时间：</span>
-        <span>{{detailObj.TIME2}}</span>
+        <span>{{detailObj.resEndTime}}</span>
       </div>
     </div>
     <div class="bgTitle">
       <span class="name">分解</span>
-      <span v-if="status!=2" style="font-size:14px">满足要求时段的用户约定响应能力总计 {{allPower}} kW，最近5日平均负荷总计 {{avgPower}} kW，已选择 {{selectPowert}} kW。</span>
+      <span v-if="status!=3" style="font-size:14px">满足要求时段的用户约定响应能力总计 {{allPower}} kW，最近5日平均负荷总计 {{avgPower}} kW，已选择 {{selectPowert}} kW。</span>
     </div>
     <div class="tableCon">
       <el-table :data="tableData" border height="300" style="width: 100%" @selection-change="handleSelectionChange">
@@ -45,7 +45,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <div class="bottomBtn" v-if="status!=2">
+    <div class="bottomBtn" v-if="status!=3">
       <el-button type="primary" :loading="saving" style="margin-right:50px" @click="save">保存</el-button>
       <el-button type="primary" pain @click="changAl">取消</el-button>
     </div>
@@ -73,7 +73,7 @@ export default {
     }
   },
   created() {
-    this.status = Number(this.detailObj.QUOTASTATUS)
+    this.status = Number(this.detailObj.currentStatus)
     fjList({ targetId: this.detailObj.id }).then(res => {
       this.tableData = res.data.list
       this.allPower = res.data.allAppointPower
@@ -102,23 +102,15 @@ export default {
       }
       this.saving = true
 
-      // let ids2 = this.CheckedSelection.reduce((prev,curr) => {
-      //   console.log(prev,curr)
-      //   return prev.push(curr.DT)
-      // },[])
-      // // console.log(ids2)
-      // return
-
       let ids = this.CheckedSelection.map(res => {
         return res.appointId
       })
-      fjSave({ dt:this.detailObj.DT,sign: ids.join(',') })
+      fjSave({ targetId:this.detailObj.id,appointIds: ids.join(',') })
         .then(res => {
           this.saving = false
-          let val = res
-          let type = val.STATUS == 1 ? 'success' : 'error'
-          this.$message({ type, message: val.INFO })
-          if (val.STATUS == 1) this.$emit('close', false)
+          let type = res.success? 'success' : 'error'
+          this.$message({ type, message: res.msg })
+          if (res.success) this.$emit('close', false)
         })
         .catch(err => {
           this.$message({ type: 'error', message: '分解失败' })

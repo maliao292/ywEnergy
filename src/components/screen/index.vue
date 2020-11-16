@@ -45,11 +45,14 @@
       <div class="screenMap">
         <div class="msgnum">
           <p>户数</p>
-          <p><span>{{activeDist==='g5'?ychAllData.stationNum:0}}</span> <i>户</i> </p>
+          <p>
+            <span>{{activeDist==='g5'||activeDist==='gy'?ychAllData.stationNum:0}}</span>
+             <i>户</i>
+              </p>
           <p>容量</p>
-          <p><span>{{activeDist==='g5'?ychAllData.volume:0}}</span> <i>MW{{activeModel==='h'?'A':''}}</i> </p>
+          <p><span>{{activeDist==='g5'||activeDist==='gy'?ychAllData.volume:0}}</span> <i>MW{{activeModel==='h'?'A':''}}</i> </p>
           <p>{{allText}}</p>
-          <p><span>{{activeDist==='g5'?(ychAllData[activeModel+'AllLoadNum']?ychAllData[activeModel+'AllLoadNum']:0):0}}</span><i>MW</i></p>
+          <p><span>{{activeDist==='g5'||activeDist==='gy'?(ychAllData[activeModel+'AllLoadNum']?ychAllData[activeModel+'AllLoadNum']:0):0}}</span><i>MW</i></p>
         </div>
         <div class="mapshow">
           <img :src="map" alt="">
