@@ -31,47 +31,47 @@
               <p>首页</p>
             </router-link>
           </li>
-          <li>
+          <li v-show="$Permission('Home/operationMonitor')">
             <router-link tag="div" to='/home/operationMonitor'><span class="icon iconfont icon-jiankong"></span>
               <p>运行监控分析</p>
             </router-link>
           </li>
-          <li>
+          <li v-show="$Permission('Home/runStrategy')">
             <router-link tag="div" to='/home/runStrategy'><span class="icon iconfont icon-yunhangcelveguanli"></span>
               <p>运行策略管理</p>
             </router-link>
           </li>
-          <li>
+          <li v-show="$Permission('SideDemand')">
             <router-link tag="div" to='/home/sideDemand'><span class="icon iconfont icon-xuqiucexiangyingguanli"></span>
               <p>需求侧响应管理</p>
             </router-link>
           </li>
-          <li>
+          <li v-show="false">
             <router-link tag="div" to='/home/nengxiao'><span class="icon iconfont icon-nengxiaoguanli"></span>
               <p>能效管理</p>
             </router-link>
           </li>
-          <li>
+          <li v-show="$Permission('Home/user')">
             <router-link tag="div" to='/home/user'><span class="icon iconfont icon-yonghuguanli"></span>
               <p>用户管理</p>
             </router-link>
           </li>
-          <li>
+          <li v-show="$Permission('Home/standing')">
             <router-link tag="div" to='/home/standing'><span class="icon iconfont icon-shebeiguanli"></span>
               <p>设备管理</p>
             </router-link>
           </li>
-          <li>
+          <li v-show="$Permission('Home/alarm')">
             <router-link tag="div" to='/home/alarm'><span class="icon iconfont icon-baojingguanli"></span>
               <p>报警管理</p>
             </router-link>
           </li>
-          <li>
+          <li v-show="$Permission('Home/report')">
             <router-link tag="div" to='/home/report'><span class="icon iconfont icon-baobiao"></span>
               <p>报表</p>
             </router-link>
           </li>
-          <li>
+          <li v-show="$Permission('System')">
             <router-link tag="div" to='/home/system'><span class="icon iconfont icon-xitongguanli"></span>
               <p>系统管理</p>
             </router-link>
@@ -96,6 +96,7 @@
 import Time from './Time'
 import { ptType } from '@/api'
 import { mapMutations } from 'vuex'
+import { getRouters } from '@/api/menu'
 export default {
   components: {
     Time,
@@ -121,7 +122,8 @@ export default {
         { value: 'gy', name: '工业' },
         { value: 'zht', name: '综合体' },
         { value: 'xwy', name: '小微园' },
-      ]
+      ],
+      menusRole: {}
     }
   },
   mounted() {
@@ -130,6 +132,7 @@ export default {
     }).catch((err) => {
       console.log(err)
     });
+    // console.log(this.$router);
   },
   watch: {
     $route(to, from) {
@@ -189,6 +192,10 @@ export default {
   created() {
     this.userName = localStorage.getItem('ywUserName')
     this.isMapPage = this.$route.name
+
+    // this.$store.dispatch('setmenuRoleList')
+
+    // this.menusRole = this.$store.getters.getmenuRole
   },
 
 }

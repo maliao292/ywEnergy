@@ -47,6 +47,16 @@ export default {
         ],
         password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
       },
+      redirect:undefined
+    }
+  },
+  watch: {
+    $route: {
+      handler: function(route) {
+        console.log(route);
+        this.redirect = route.query && route.query.redirect;
+      },
+      immediate: true
     }
   },
   created() {
@@ -54,8 +64,8 @@ export default {
   },
   methods: {
     ...mapMutations(['setToken','setUser']),
-    dologin(formName) {
-      this.$refs[formName].validate((valid) => {
+     dologin(formName) {
+       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loging = true
           login({
@@ -67,12 +77,19 @@ export default {
             res = res.data
             this.loging = false
             let type = res.code == 200 ? 'success' : 'error'
-            if (res.code == 200) {
-              this.$router.push({ name: 'home' })
-            }else{
-            this.$message({ type, message: res.msg })
-            }
+            // if (res.code == 200) {
+             return this.$store.dispatch('setmenuRoleList')
+
+            // }else{
+            // this.$message({ type, message: res.msg })
+            // }
           })
+            .then((res)=>{
+              // console.log(res);
+              // console.log(localStorage.getItem("menuList"));
+              this.$router.push({ name: 'home' })
+
+            })
         }
       })
     },

@@ -42,6 +42,27 @@ Vue.prototype.msgInfo = function (msg) {
   this.$message.info(msg);
 }
 
+function ifShowFirstModel (value) {
+  // this.$store.dispatch('setmenuRoleList')
+  // console.log(value);
+  let FirstStatus = false
+  let locMenu = localStorage.getItem('menuList') ? localStorage.getItem('menuList') : '[]'
+  let menus = JSON.parse(locMenu)
+  // console.log(menus.list);
+
+  if(menus.list) {
+    menus.list.forEach(item => {
+      // console.log(item);
+      if(item.name == value){
+        FirstStatus = true
+      }
+    })
+  }
+
+  return FirstStatus
+}
+Vue.prototype.$Permission = ifShowFirstModel
+
 // 全局组件挂载
 Vue.component('Pagination', Pagination)
 

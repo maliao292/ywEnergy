@@ -123,14 +123,21 @@
         <GyWindow :stationDetail='stationDetail' @close='closeAl'>{{jzname}}</GyWindow>
       </div>
     </div>
+    <div class="alertWindow yctList" v-if="wugongWindowShow">
+      <div class="container" style="width: 1350px;">
+        <wugong-window :stationDetail='stationDetail' @close='closeAl'>{{jzname}}</wugong-window>
+      </div>
+    </div>
   </div>
-</template> 
+</template>
 
 <script>
 import Vue from 'vue'
 import VueAMap from 'vue-amap'
 import markerLabel from './markerLabel'
 import GyWindow from './GyWindow'
+import wugongWindow from './wugongWindow'
+
 import { amapManager, lazyAMapApiLoaderInstance } from 'vue-amap'
 import { mapMarker, topNum } from '@/api'
 import MapMenu from './MapMenu'
@@ -155,7 +162,7 @@ export default {
   props: {
     stationid: null
   },
-  components: { MapMenu, StationMsg, GyWindow },
+  components: { MapMenu, StationMsg, GyWindow,wugongWindow },
   data() {
     return {
       stationname: '',
@@ -191,6 +198,11 @@ export default {
         s6: require('@/assets/img/als6.png'),
         s7: require('@/assets/img/als7.png'),
       },
+      wugongIcon : {
+        rong:require('@/assets/img/wugong/wugong_rong.png'),
+        gan:require('@/assets/img/wugong/wugong_gan.png'),
+        dai:require('@/assets/img/wugong/wugong_dai.png'),
+      },
       statusNum: {
         num1: 0,
         num2: 0,
@@ -204,6 +216,7 @@ export default {
       stationDetail: {},
       searchMapKey: '', // 保存搜索地图关键词
       gyWindowShow: false,
+      wugongWindowShow: false,
       showList: false,
       menushow: false,
       jzname: '',
@@ -324,6 +337,7 @@ export default {
           let markers = res.data.list.map((v, i) => {
             let icon = require('@/assets/img/s' + (v.runStatus ? v.runStatus : 1) + '.png')
             let dcColor = 'c1', ktColor = 'c1', dcImg = 1, ktImg = 1, dcText = '充电', ktText = '停止';
+            let wugongColor = 'c1' ,wugongImg = 'dai' ,wugongText = '待机';
             switch (v.runStatus) {
               case 3:
                 dcColor = 'c1';
@@ -381,6 +395,56 @@ export default {
                 dcText = '待机';
                 ktText = '开启';
                 break;
+              case 10:
+                if(v.batteryStatus == 0) { // 电池充电
+                  dcColor = 'c1';
+                  dcImg = 3;
+                  dcText = '充电';
+                } else if(v.batteryStatus == 1){ // 电池放电
+                  dcColor = 'c2';
+                  dcImg = 4;
+                  dcText = '放电';
+                } else if(v.batteryStatus == 2){ // 电池待机
+                  dcColor = 'c3';
+                  dcImg = 5;
+                  dcText = '待机';
+                }
+
+                if(v.noPowerStatus == 1) { // 无功-容性
+                  wugongColor = 'c1';
+                  wugongImg = 'rong';
+                  wugongText = '容性';
+                } else if(v.noPowerStatus == 2){ // 无功-感性
+                  wugongColor = 'c2';
+                  wugongImg = 'gan';
+                  wugongText = '感性';
+                } else if(v.noPowerStatus == 3){ // 无功-待机
+                  wugongColor = 'c3';
+                  wugongImg = 'dai';
+                  wugongText = '待机';
+                }
+                if(v.batteryStatus == 0&&v.noPowerStatus == 1){
+                  icon = require('@/assets/img/wugong/cAndr.png') // 充和容
+                } else if (v.batteryStatus == 0&&v.noPowerStatus == 2){
+                  icon = require('@/assets/img/wugong/cAndg.png') // 充和感
+                } else if (v.batteryStatus == 0&&v.noPowerStatus == 3){
+                  icon = require('@/assets/img/wugong/cAndd.png') // 充和带
+                }
+                if(v.batteryStatus == 1&&v.noPowerStatus == 1){
+                  icon = require('@/assets/img/wugong/fAndr.png') // 放和容
+                } else if (v.batteryStatus == 1&&v.noPowerStatus == 2){
+                  icon = require('@/assets/img/wugong/fAndg.png') // 放和感
+                } else if (v.batteryStatus == 1&&v.noPowerStatus == 3){
+                  icon = require('@/assets/img/wugong/fAndd.png') // 放和带
+                }
+                if(v.batteryStatus == 2&&v.noPowerStatus == 1){
+                  icon = require('@/assets/img/wugong/dAndr.png') // 带和容
+                } else if (v.batteryStatus == 2&&v.noPowerStatus == 2){
+                  icon = require('@/assets/img/wugong/dAndg.png') // 带和感
+                } else if (v.batteryStatus == 2&&v.noPowerStatus == 3){
+                  icon = require('@/assets/img/wugong/dAndd.png') // 带和带
+                }
+                break;
             }
 
             /* 图标弹窗 */
@@ -392,7 +456,7 @@ export default {
               <li style="${v.runStatus == 1 || v.runStatus == 2 || !v.runStatus ? 'display:none' : ''}">
                 <span>电池状态：</span>
                 <span class="${dcColor}">
-                <img src="${this.alsImg['s' + dcImg]}" /> 
+                <img src="${this.alsImg['s' + dcImg]}" />
                 ${dcText}</span>
               </li>
               <li style="${v.runStatus == 1 || v.runStatus == 2 || !v.runStatus ? 'display:none' : ''}">
@@ -410,6 +474,33 @@ export default {
             <ul>
               <li><span>负荷：</span><span>${v.allPower ? (v.allPower).toFixed(2) : ''} kW</span></li>
               <li><span>可调负荷：</span><span class='param'>${v.adjustPower ? (v.adjustPower).toFixed(2) : 0} kW</span></li>
+            <ul>
+          </div>
+          `
+            }
+
+            if(v.runStatus == 10) { // 无功
+               alerWins = `
+          <div class='alstyle alstyle_wugong'>
+            <h2 style='font-weight:700'>${v.stationName}</h2>
+            <ul>
+              <li><span>充电功率：</span><span>${v.activePower ? (v.activePower).toFixed(2) : '-'} kW</span></li>
+              <li>
+                <span>电池状态：</span>
+                <span class="${dcColor}">
+                <img src="${this.alsImg['s' + dcImg]}" />
+                ${dcText}</span>
+              </li>
+              <li><span>电池容量：</span><span class="blueFontColor">${v.fixActivePower ? (v.fixActivePower).toFixed(2) : '-'} kW</span></li>
+              <hr style='background-color:#5b7dfe; height:1px; border:none;''>
+              <li><span>无功输出：</span><span class="blueFontColor">${v.reactivePower ? (v.reactivePower).toFixed(2) : '-'} kVar</span></li>
+              <li>
+                <span>无功状态：</span>
+                <span class="${wugongColor}">
+                <img src="${this.wugongIcon[wugongImg]}" />
+                ${wugongText}</span>
+              </li>
+              <li><span>无功容量：</span><span class="blueFontColor">${v.fixReactivePower ? (v.fixReactivePower).toFixed(2) : '-'} kVar</span></li>
             <ul>
           </div>
           `
@@ -434,6 +525,9 @@ export default {
                   this.stationDetail = v
                   if (v.runStatus == 9) {
                     this.gyWindowShow = true
+                  }
+                  if (v.runStatus == 10) {
+                    this.wugongWindowShow = true
                   }
                   this.showList = true
                 },
@@ -480,6 +574,7 @@ export default {
     closeAl() {
       this.showList = false
       this.gyWindowShow = false
+      this.wugongWindowShow = false
     },
   },
 }

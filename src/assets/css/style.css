@@ -370,6 +370,9 @@
 .alstyle ul li:first-child span:last-child {
     color: #0184e2;
 }
+.alstyle_wugong ul li .blueFontColor{
+  color: #0184e2;
+}
 
 .alstyle .param {
     color: #fd7b35;
@@ -1118,6 +1121,16 @@ div.yeallowAlert {
     outline: none;
     border: 1px solid #ccc;
 }
+.wugongKz{
+    width: 100px;
+    height: 40px;
+    padding: 5px 10px;
+    margin-top: 10px;
+    margin-right: 10px;
+    border-radius: 10px;
+    outline: none;
+    border: 1px solid #ccc;
+}
 
 .yeallowAlert.el-message-box {
     width: 300px;
@@ -1295,7 +1308,7 @@ div.yeallowAlert {
     position: absolute;
     left: 70px;
     top: 30px;
-    z-index: 100;
+    z-index: 15;
     font-size: 0;
 }
 

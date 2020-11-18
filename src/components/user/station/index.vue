@@ -73,8 +73,8 @@
         <el-table-column label="纬度" align="center" prop="latitude" />
         <el-table-column label="合同容量(kVA)" align="center" prop="volume" />
         <el-table-column label="用电类别" align="center" prop="electype" />
-        <el-table-column label="电压等级" align="center" prop="voltageClasses" />
-        <el-table-column label="供电辖区" align="center" prop="area" />
+        <el-table-column label="电压等级" align="center" prop="voltageClasses" :formatter="dydjFormat"/>
+        <el-table-column label="供电辖区" align="center" prop="area" :formatter="gongdianFormat"/>
         <el-table-column label="温度告警值(℃)" align="center" prop="alarmTemp" />
         <el-table-column label="回路层级" align="center" prop="loopName" />
         <el-table-column label="联系人" align="center" prop="contactName" />
@@ -103,19 +103,9 @@
     <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-row>
-          <el-col :span="24">
-            <el-form-item label="上级用户" prop="pid">
-              <treeselect
-                v-model="form.pid"
-                :options="stationOptions"
-                :normalizer="normalizer"
-                placeholder="请选择上级用户"
-              />
-            </el-form-item>
-          </el-col>
           <el-col :span="12">
             <el-form-item label="用户类别">
-              <el-select v-model="form.userType" placeholder="请选择用户类别" clearable style="width: 100%;">
+              <el-select v-model="form.userType" placeholder="请选择用户类别" clearable style="width: 100%;" @change="changeUserType">
                 <el-option
                   v-for="dict in userTypeOptions"
                   :key="dict.dictValue"
@@ -148,6 +138,16 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item label="所属街道" prop="pid" class="treeSelect">
+              <treeselect
+                v-model="form.pid"
+                :options="stationOptions"
+                :normalizer="normalizer"
+                placeholder="请选择所属街道"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
             <el-form-item label="经度" prop="longitude">
               <el-input v-model="form.longitude" placeholder="请输入经度" />
             </el-form-item>
@@ -176,12 +176,26 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="电压等级" prop="voltageClasses">
-              <el-input v-model="form.voltageClasses" placeholder="请输入告警值" />
+              <el-select v-model="form.voltageClasses" placeholder="请选择电压等级" style="width: 100%;">
+                <el-option
+                  v-for="dict in dydjOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="供电辖区" prop="area">
-              <el-input v-model="form.area" placeholder="请输入告警值" />
+              <el-select v-model="form.area" placeholder="请选择供电辖区" style="width: 100%;">
+                <el-option
+                  v-for="dict in gongdianOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -190,7 +204,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="回路层级" prop="loopId">
+            <el-form-item label="回路层级" prop="loopId" class="treeSelect">
               <treeselect
                 v-model="form.loopId"
                 :options="loopList"
@@ -214,9 +228,7 @@
               <el-input v-model="form.remark" placeholder="请输入备注" />
             </el-form-item>
           </el-col>
-
         </el-row>
-
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -242,6 +254,8 @@ export default {
       userTypeOptions: [],
       stationTypeOptions: [],
       elecTypeOptions: [],
+      dydjOptions: [],
+      gongdianOptions: [],
       // 用户档案表格数据
       stationList: [],
       loopList: [],
@@ -277,6 +291,14 @@ export default {
     // 用电类型
     this.getDicts("yw_elec_type").then(response => {
       this.elecTypeOptions = response.data;
+    });
+    // 电压等级
+    this.getDicts("yw_station_voltageClasses").then(response => {
+      this.dydjOptions = response.data;
+    });
+    // 供电辖区
+    this.getDicts("yw_station_area").then(response => {
+      this.gongdianOptions = response.data;
     });
   },
   methods: {
@@ -318,13 +340,22 @@ export default {
     },
 	/** 查询部门下拉树结构 */
     getTreeselect() {
-      listStation().then(response => {
+      let SearchParam = {
+        userType: this.form.userType,
+        type: '3', // 默认3 只查街道
+      }
+      listStation(SearchParam).then(response => {
         this.stationOptions = [];
-        const data = { id: 0, stationName: '顶级节点', children: [] };
+        const data = { id: 0, stationName: '浙江', children: [] };
         data.children = this.handleTree(response.data, "id", "pid");
         this.stationOptions.push(data);
       });
     },
+    // 切换用户类别
+    changeUserType() {
+      this.getTreeselect()
+    },
+
     // 取消按钮
     cancel() {
       this.open = false;
@@ -334,23 +365,17 @@ export default {
     reset() {
       this.form = {
         id: undefined,
-        userType: undefined,
+        userType: '2', // 默认2
         stationName: undefined,
         pid: undefined,
         longitude: undefined,
         latitude: undefined,
         type: undefined,
-        powerEmptyLoopId: undefined,
-        airEmptyLoopId: undefined,
-        lightEmptyLoopId: undefined,
-        powerLoopId: undefined,
-        airLoopId: undefined,
-        lightLoopId: undefined,
         volume: undefined,
         accountno: undefined,
         electype: undefined,
-        voltageClasses:undefined,
-        area:undefined,
+        voltageClasses:'1',
+        area:'1',
         loopId: undefined
       };
       this.resetForm("form");
@@ -445,6 +470,17 @@ export default {
     stationTypeFormat(row, column) {
       return this.selectDictLabel(this.stationTypeOptions, row.type);
     },
+    dydjFormat(row, column) {
+      return this.selectDictLabel(this.dydjOptions, row.voltageClasses);
+    },
+    gongdianFormat(row, column) {
+      return this.selectDictLabel(this.gongdianOptions, row.area);
+    },
   }
 };
 </script>
+<style scoped>
+  .treeSelect>>>.el-form-item__content{
+    line-height: 38px;
+  }
+</style>
