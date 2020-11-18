@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-view />113312
+    <router-view />113312qww
   </div>
 </template>
 
